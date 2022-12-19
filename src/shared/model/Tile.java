@@ -1,4 +1,4 @@
-package elements;
+package shared.model;
 
 import interfaces.Placeable;
 

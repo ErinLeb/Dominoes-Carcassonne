@@ -1,10 +1,10 @@
-package domino;
+package domino.model;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import elements.Deck;
+import shared.model.Deck;
 import interfaces.Placeable.Direction;
 import utilities.Pair;
 

@@ -1,0 +1,163 @@
+package domino.controller;
+
+import java.util.Scanner;
+
+import domino.model.GameDomino;
+import domino.model.PlayerDomino;
+import domino.view.terminal.GameDominoView;
+import interfaces.Placeable;
+import interfaces.Placeable.Direction;
+
+/**
+ * This class represents the controller of the Domino game, following an MVC
+ * model
+ */
+public class GameDominoController {
+    // attributes
+    GameDomino model;
+    GameDominoView view = new GameDominoView(model);
+
+    Scanner sc = new Scanner(System.in);
+
+    public GameDominoController(GameDomino game, GameDominoView view) {
+        this.model = game;
+        this.view = view;
+    }
+
+    /**
+     * Plays a single round of the game (just a player's turn)
+     */
+    public void playRound() {
+        System.out.println("Round " + model.getNbRounds() + " :");
+
+        model.updateGameRound();
+        view.printUpdateGameRound();
+
+        String command;
+
+        do {
+            System.out.println("Enter a command: ");
+            command = sc.nextLine();
+        } while (!parseInput(command, model.getCurrentPlayer()));
+    }
+
+    /**
+     * The main loop of the game
+     */
+    public void gameLoop() {
+
+        while (model.isGameOn()) {
+            playRound();
+        }
+
+    }
+
+    /**
+     * Parses the command given by the player and executes it.
+     * 
+     * @param input  The command given by the player
+     * @param player The player who gave the command
+     * @return {@code true} if the command was executed and the turn should be
+     *         finished, {@code false} otherwise
+     */
+    public boolean parseInput(String input, PlayerDomino player) {
+
+        String[] args = input.split(" ");
+
+        try {
+            switch (args[0].toLowerCase()) {
+                case "pass":
+                    // TODO : implement pass()
+                    return true;
+                case "print":
+                    if (args.length == 1) {
+                        view.printBoard();
+                    } else if (args.length == 2) {
+                        if (args[1].toLowerCase().equals("b")) {
+                            view.printBoard();
+                        } else {
+                            view.printTileToPlace();
+                        }
+                    } else {
+                        throw new IllegalArgumentException("Invalid number of arguments");
+                    }
+                    return false;
+                case "printtile":
+                    view.printTileToPlace();
+                    return false;
+                case "printboard":
+                    view.printBoard();
+                    return false;
+                case "surrender":
+                    model.surrender(player);
+                    return true;
+                case "move":
+                    if (args.length != 2)
+                        throw new IllegalArgumentException("Invalid number of arguments");
+
+                    Direction direction = Placeable.stringToDirection(args[1].toUpperCase());
+                    model.move(direction);
+                    return false;
+                case "turn":
+                    if (args.length == 1) {
+                        model.turn(true, 1);
+                        view.printTileToPlace();
+
+                    } else {
+                        if (args.length != 3)
+                            throw new IllegalArgumentException("Invalid number of arguments");
+
+                        model.turn(args[1].toUpperCase().charAt(0) == 'R', Integer.parseInt(args[2]));
+                        view.printTileToPlace();
+
+                    }
+                    return false;
+                case "turnLeft":
+                    if (args.length == 1) {
+                        model.turn(false, 1);
+                        view.printTileToPlace();
+
+                    } else {
+                        if (args.length != 2)
+                            throw new IllegalArgumentException("Invalid number of arguments");
+
+                        model.turn(false, Integer.parseInt(args[1]));
+                        view.printTileToPlace();
+
+                    }
+                    return false;
+                case "turnRight":
+                    if (args.length == 1) {
+                        model.turn(true, 1);
+                        view.printTileToPlace();
+
+                    } else {
+                        if (args.length != 2)
+                            throw new IllegalArgumentException("Invalid number of arguments");
+
+                        model.turn(true, Integer.parseInt(args[1]));
+                        view.printTileToPlace();
+
+                    }
+                    return false;
+                case "place":
+                    if (args.length != 3)
+                        throw new IllegalArgumentException("Invalid number of arguments");
+                    model.place(args[1], args[2], player);
+                    return true;
+                case "quit":
+                    model.quit();
+                    return true;
+                default:
+                    System.out.println("Invalid command");
+                    return false;
+            }
+        } catch (Exception e) {
+            System.out.println("Invalid command");
+            System.out.println(e.getMessage());
+            e.printStackTrace(); // TODO: remove this line in the final version
+        }
+
+        return false;
+    }
+}

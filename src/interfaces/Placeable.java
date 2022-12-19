@@ -2,7 +2,7 @@ package interfaces;
 
 import java.util.List;
 
-import elements.Side;
+import shared.model.Side;
 import utilities.Pair;
 
 /**

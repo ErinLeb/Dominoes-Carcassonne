@@ -1,4 +1,4 @@
-package elements;
+package shared.model;
 
 public class Player {
     private int score = 0;
