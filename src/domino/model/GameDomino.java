@@ -1,4 +1,4 @@
-package domino;
+package domino.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,6 +70,23 @@ public class GameDomino {
         return isGameOn;
     }
 
+    public List<List<TileDomino>> getSubArray(int x, int y, int length) {
+        return board.getSubArray(x, y, length);
+    }
+
+    public List<List<TileDomino>> getCurrentSubArray() {
+        return board.getSubArray(currentPosition.first, currentPosition.second,
+                NB_TILES_TO_SHOW);
+    }
+
+    public TileDomino getTileToPlace() {
+        return tileToPlace;
+    }
+
+    public PlayerDomino getCurrentPlayer() {
+        return players[currentPlayer];
+    }
+
     // Methods
 
     /**
@@ -82,115 +99,6 @@ public class GameDomino {
     // TODO: implement move more than one tile and move pov to a specific tile (id)
     // TODO: test if can be placed
     // TODO: implement turn 2 = turn right 2
-
-    /**
-     * Parses the command given by the player and executes it.
-     * 
-     * @param input  The command given by the player
-     * @param player The player who gave the command
-     * @return {@code true} if the command was executed and the turn should be
-     *         finished, {@code false} otherwise
-     */
-    public boolean parseInput(String input, PlayerDomino player) {
-
-        String[] args = input.split(" ");
-
-        try {
-            switch (args[0].toLowerCase()) {
-                case "pass":
-                    // TODO : implement pass()
-                    return true;
-                case "print":
-                    if (args.length == 1) {
-                        printBoard();
-                    } else if (args.length == 2) {
-                        if (args[1].toLowerCase().equals("b")) {
-                            printBoard();
-                        } else {
-                            printTileToPlace();
-                        }
-                    } else {
-                        throw new IllegalArgumentException("Invalid number of arguments");
-                    }
-                    return false;
-                case "printtile":
-                    printTileToPlace();
-                    return false;
-                case "printboard":
-                    printBoard(); 
-                    return false;
-                case "surrender":
-                    surrender(player);
-                    return true;
-                case "move":
-                    if (args.length != 2)
-                        throw new IllegalArgumentException("Invalid number of arguments");
-
-                    Direction direction = Placeable.stringToDirection(args[1].toUpperCase());
-                    move(direction);
-                    return false;
-                case "turn":
-                    if (args.length == 1) {
-                        turn(true, 1);
-                        printTileToPlace();
-
-                    } else {
-                        if (args.length != 3)
-                            throw new IllegalArgumentException("Invalid number of arguments");
-
-                        turn(args[1].toUpperCase().charAt(0) == 'R', Integer.parseInt(args[2]));
-                        printTileToPlace();
-
-                    }
-                    return false;
-                case "turnLeft":
-                    if (args.length == 1) {
-                        turn(false, 1);
-                        printTileToPlace();
-
-                    } else {
-                        if (args.length != 2)
-                            throw new IllegalArgumentException("Invalid number of arguments");
-
-                        turn(false, Integer.parseInt(args[1]));
-                        printTileToPlace();
-
-                    }
-                    return false;
-                case "turnRight":
-                    if (args.length == 1) {
-                        turn(true, 1);
-                        printTileToPlace();
-
-                    } else {
-                        if (args.length != 2)
-                            throw new IllegalArgumentException("Invalid number of arguments");
-
-                        turn(true, Integer.parseInt(args[1]));
-                        printTileToPlace();
-
-                    }
-                    return false;
-                case "place":
-                    if (args.length != 3)
-                        throw new IllegalArgumentException("Invalid number of arguments");
-                    place(args[1], args[2], player);
-                    return true;
-                case "quit":
-                    quit();
-                    return true;
-                default:
-                    System.out.println("Invalid command");
-                    return false;
-            }
-        } catch (Exception e) {
-            System.out.println("Invalid command");
-            System.out.println(e.getMessage());
-            e.printStackTrace(); // TODO: remove this line in the final version
-        }
-
-        return false;
-    }
 
     /**
      * Moves the current tile on the board in the given direction.
@@ -343,105 +251,8 @@ public class GameDomino {
     public void updateGameRound() {
         nbRounds++;
         currentPlayer = (currentPlayer + 1) % players.length;
-        System.out.println(players[currentPlayer]);
 
         tileToPlace = deck.draw();
-        printTileToPlace();
-
-        printBoard();
-    }
-
-    /**
-     * Plays a round for the player {@code} player}
-     * 
-     * @param player Player who plays the round
-     * @return {@code true} if the command was executed and the turn
-     *         should be finished, {@code false} otherwise
-     */
-    public boolean playRound(String command) {
-        PlayerDomino player = players[currentPlayer];
-
-        return parseInput(command, player);
-    }
-
-    /**
-     * Helper function for {@link #printBoard()}. Returns an array of {@code String}
-     * which represents a line of the relative board.
-     * 
-     * @param relativeBoard The relative board
-     * @param y             Y coordinate of the line
-     * @return An array of {@code String} which represents a line of the relative
-     *         board
-     */
-    private String[] getStringLine(List<List<TileDomino>> relativeBoard, int y) {
-        String[] lines = new String[TileDomino.COLUMNS_LENGTH];
-
-        String voidLine = " ".repeat(TileDomino.LENGTH_OF_LINE);
-
-        // Get the line number
-        for (int j = 0; j < lines.length; j++)
-            lines[j] = j == TileDomino.COLUMNS_LENGTH / 2 ? Integer.toString(y + 1) + " " : "  ";
-
-        // Get the information of the lines
-        for (int i = 0; i < relativeBoard.get(y).size(); i++) {
-            // If the tile is null we add the corresponding spaces
-            if (relativeBoard.get(y).get(i) == null) {
-                for (int j = 0; j < lines.length; j++)
-                    lines[j] += voidLine;
-
-            } else {
-                String[] stringRepresentation = relativeBoard.get(y).get(i).getStringRepresentation();
-                for (int j = 0; j < lines.length; j++)
-                    lines[j] += stringRepresentation[j];
-            }
-        }
-
-        return lines;
-    }
-
-    /**
-     * Prints on the screen the tile to be placed
-     */
-    public void printTileToPlace() {
-        if (tileToPlace == null)
-            return;
-
-        System.out.println("Current tile: ");
-        tileToPlace.printTile();
-        System.out.println("-----------------------------------------------");
-    }
-
-    /**
-     * Prints the relative board.
-     */
-    public void printBoard() {
-        System.out.println("-------------------- Board --------------------");
-
-        // Get the sub array to print
-        List<List<TileDomino>> relativeBoard = board.getSubArray(currentPosition.first, currentPosition.second,
-                NB_TILES_TO_SHOW);
-
-        // Print the column numbers
-        System.out.print("  ");
-
-        String spaceString = " ".repeat((TileDomino.LENGTH_OF_LINE - 1) / 2);
-
-        for (int i = 1; i <= relativeBoard.get(0).size(); i++) {
-            System.out.print(spaceString + i + spaceString + " ");
-        }
-
-        System.out.println();
-
-        // Print all the lines
-        for (int i = 0; i < relativeBoard.size(); i++) {
-            String[] lines = getStringLine(relativeBoard, i);
-
-            for (String line : lines)
-                System.out.println(line);
-        }
-
-        System.out.println("-----------------------------------------------");
-
     }
 
     /**
@@ -463,7 +274,7 @@ public class GameDomino {
     public static void main(String[] args) {
         // Random tests for the moment
         GameDomino game = new GameDomino(2, 28);
-        game.printBoard();// game.parseInput("d", null);
+        // game.printBoard();// game.parseInput("d", null);
 
         int[] tab0 = { 0, 0, 0 };
         int[] tab1 = { 1, 1, 1 };
@@ -480,7 +291,7 @@ public class GameDomino {
         game.currentTileDomino = initialTile;
         game.board.set(0, 0, initialTile);
 
-        game.printBoard();
+        // game.printBoard();
 
         SideDomino[] sides0 = new SideDomino[] { side0, side0, side0, side0 };
         SideDomino[] sides1 = new SideDomino[] { side1, side1, side1, side1 };
@@ -500,13 +311,13 @@ public class GameDomino {
         System.out.println("-----------------------");
 
         game.tileToPlace = tile0;
-        game.parseInput("place -1 0", null);
+        // game.parseInput("place -1 0", null);
         game.tileToPlace = tile3;
-        game.parseInput("place 1 -1", null);
+        // game.parseInput("place 1 -1", null);
         game.tileToPlace = tile2;
-        game.parseInput("place 2 1", null);
+        // game.parseInput("place 2 1", null);
         game.tileToPlace = tile1;
-        game.parseInput("place 1 2", null);
+        // game.parseInput("place 1 2", null);
 
         // System.out.println("----------------------------");
         // System.out.println(game.board.toString());
@@ -529,12 +340,12 @@ public class GameDomino {
 
         System.out.println("-----------------------");
 
-        game.printBoard();
+        // game.printBoard();
 
         System.out.println(game.currentPosition);
 
         // game.parseInput("move u", null);
-        game.printBoard();
+        // game.printBoard();
 
         System.out.println("-----------------------");
 
@@ -544,7 +355,7 @@ public class GameDomino {
 
         System.out.println("-----------------------");
 
-        game.printBoard();
+        // game.printBoard();
 
     }
 }

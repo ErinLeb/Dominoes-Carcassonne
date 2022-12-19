@@ -1,9 +1,9 @@
-package domino;
+package domino.model;
 
 import java.util.Arrays;
 import java.util.Random;
 
-import elements.Side;
+import shared.model.Side;
 
 //TODO: decide what to do with the link between the sides.
 

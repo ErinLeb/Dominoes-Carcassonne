@@ -29,3 +29,6 @@ hs_err_pid*
 *.prettierrc
 .vscode/
 *settings.json
+
+# Project 
+bin/

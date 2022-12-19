@@ -1,9 +1,9 @@
-package domino;
+package domino.model;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import elements.Tile;
+import shared.model.Tile;
 import exceptions.UnableToTurnException;
 
 import interfaces.Placeable;

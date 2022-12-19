@@ -1,6 +1,6 @@
-package domino;
+package domino.model;
 
-import elements.Player;
+import shared.model.Player;
 
 /**
  * Represents a player of the domino game.
