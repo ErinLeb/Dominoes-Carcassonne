@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import shared.model.Deck;
 import interfaces.Placeable.Direction;
+import shared.model.Deck;
 import utilities.Pair;
 
 /**
@@ -33,6 +33,7 @@ public class DeckDomino extends Deck {
      * Fills the list of tiles with the correct number of tiles. The algorithm also
      * creates a game which has a solution.
      * 
+     * @param nbTiles The number of tiles to generate.
      */
     private void createDeck(int nbTiles) {
         Random rand = new Random();
@@ -44,11 +45,10 @@ public class DeckDomino extends Deck {
 
             // Generates a random number of tiles to add to the deck. These tiles will be
             // linked to a new tile (just after the last one)
-
             int toGenerate = rand.nextInt(3);
+
             // We handle the case where the number of tiles to be generated is bigger than
             // the number of tiles left to generate
-
             toGenerate = Math.min(toGenerate, nbTiles - tiles.size() - 1);
 
             // We choose a random free side of the last tile of the list to link to a new
@@ -63,7 +63,7 @@ public class DeckDomino extends Deck {
             tiles.add(tile);
 
             // We generate the other tiles to link to the new one
-            for (int i = 0; i < toGenerate; i++) {
+            for (int i = 0; i < toGenerate - 1; i++) {
                 // Random side selector
                 sides = tile.getUnlinkedSides();
                 side = sides.get(rand.nextInt(sides.size()));
