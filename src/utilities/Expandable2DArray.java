@@ -57,18 +57,21 @@ public class Expandable2DArray<T> {
     public List<Pair<T, Direction>> getNeighbors(int x, int y) {
         List<Pair<T, Direction>> neighbors = new ArrayList<>();
 
-        if (y < 0 || y >= array.get(0).size() || x < 0 || x >= array.size()) // out of bounds
-            return neighbors; // empty
-
-        if (x > 0 && get(x - 1, y) != null)
+        if (x > 0 && get(x - 1, y) != null) {
             neighbors.add(new Pair<>(get(x - 1, y), Direction.UP));
-        if (x < array.size() - 1 && get(x + 1, y) != null)
-            neighbors.add(new Pair<>(get(x + 1, y), Direction.DOWN));
+        }
 
-        if (y > 0 && get(x, y - 1) != null)
+        if (x < array.size() - 1 && get(x + 1, y) != null) {
+            neighbors.add(new Pair<>(get(x + 1, y), Direction.DOWN));
+        }
+
+        if (y > 0 && get(x, y - 1) != null) {
             neighbors.add(new Pair<>(get(x, y - 1), Direction.LEFT));
-        if (y < array.get(0).size() - 1 && get(x, y + 1) != null)
+        }
+
+        if (y < array.get(0).size() - 1 && get(x, y + 1) != null) {
             neighbors.add(new Pair<>(get(x, y + 1), Direction.RIGHT));
+        }
 
         return neighbors;
     }
@@ -94,11 +97,13 @@ public class Expandable2DArray<T> {
                 array.get(0).forEach(l -> newLine.add(null));
                 array.add(0, newLine);
                 break;
+
             case DOWN:
                 newLine = new ArrayList<>();
                 array.get(0).forEach(l -> newLine.add(null));
                 array.add(newLine);
                 break;
+
             case LEFT:
                 array.forEach(l -> l.add(0, null));
                 break;
@@ -127,11 +132,13 @@ public class Expandable2DArray<T> {
         if (x < -1 || y < -1 || x > array.size() || y > array.get(0).size())
             throw new IndexOutOfBoundsException();
 
-        if (x == array.size())
+        if (x == array.size()) {
             expand(Direction.DOWN);
+        }
 
-        if (y == array.get(0).size())
+        if (y == array.get(0).size()) {
             expand(Direction.RIGHT);
+        }
 
         if (x == -1) {
             expand(Direction.UP);
@@ -156,14 +163,14 @@ public class Expandable2DArray<T> {
      * 
      * @param x    X coordinate of the center
      * @param y    Y coordinate of the center
-     * @param size The size of the sub-array
+     * @param size The size of the sub-array. Must be odd and positive in order to
+     *             have a center.
      * @return The sub-array
      */
     public List<List<T>> getSubArray(int x, int y, int size) {
 
         if (x < 0 || y < 0 || x > array.size() || y > array.get(0).size())
             throw new IndexOutOfBoundsException();
-
         if (size < 0)
             throw new IllegalArgumentException("Size must be positive");
         if (size % 2 == 0)
@@ -172,20 +179,24 @@ public class Expandable2DArray<T> {
         int xStart = x - size / 2;
         int yStart = y - size / 2;
 
-        if (xStart < 0)
+        if (xStart < 0) {
             xStart = 0;
+        }
 
-        if (yStart < 0)
+        if (yStart < 0) {
             yStart = 0;
+        }
 
         int xEnd = x + size / 2;
         int yEnd = y + size / 2;
 
-        if (xEnd > array.size())
+        if (xEnd > array.size()) {
             xEnd = array.size();
+        }
 
-        if (yEnd > array.get(0).size())
+        if (yEnd > array.get(0).size()) {
             yEnd = array.get(0).size();
+        }
 
         List<List<T>> subArray = new ArrayList<>();
 

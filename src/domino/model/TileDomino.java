@@ -138,14 +138,14 @@ public class TileDomino extends Tile<SideDomino> {
         this.sides = tab;
     }
 
-    @Override
-    public void setSide(SideDomino side, Direction direction) {
+    /**
+     * Sets the side of the object in the direction {@code direction} to {@code side}.
+     * 
+     * @param side      the side to set
+     * @param direction the direction of the side to set
+     */
+    private void setSide(SideDomino side, Direction direction) {
         SideDomino toChange = this.sides[directionToInt(direction)];
-
-        // if the side we want to change is already linked, we can't change it
-        if (!toChange.isLinked()) {
-            toChange = side;
-        }
     }
 
     // TODO : (E) the neighbors' setters should be inherited from Placeable

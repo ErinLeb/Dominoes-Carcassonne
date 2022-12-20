@@ -26,14 +26,6 @@ public interface Placeable<T extends Side> {
     public T getSide(Direction direction);
 
     /**
-     * Sets the side of the object in the direction {@code direction} to the side.
-     * 
-     * @param side      the side to set
-     * @param direction the direction of the side to set
-     */
-    public void setSide(T side, Direction direction);
-
-    /**
      * Returns the opposite direction of the direction {@code direction}.
      * 
      * @param direction the direction to get the opposite
