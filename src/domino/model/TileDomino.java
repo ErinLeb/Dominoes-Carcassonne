@@ -26,9 +26,7 @@ public class TileDomino extends Tile<SideDomino> {
 
     private int id; // id of the tile
 
-    // TODO : (E) put sides in final
-    // TODO : (E)remove sides setters
-    private SideDomino[] sides = new SideDomino[4]; // Sides of the tile
+    private SideDomino[] sides; // Sides of the tile
     // tab[0] = upperSide, tab[1] = right side, tab[2] = lower side, tab[3] = left
     // side
 
@@ -40,6 +38,8 @@ public class TileDomino extends Tile<SideDomino> {
 
     public TileDomino(SideDomino[] tab) {
         this.id = nbTile++;
+
+        validSides(tab);
         this.sides = tab;
     }
 
@@ -107,19 +107,12 @@ public class TileDomino extends Tile<SideDomino> {
         return unlinkedSides;
     }
 
-    // TODO : (E) neighbors' getters should be in the interface Placeable
-
-    /**
-     * Returns the tile linked with the side indicated by {@code direction}
-     */
+    @Override
     public TileDomino getNeighbor(Direction direction) {
         return neighbors[directionToInt(direction)];
     }
 
-    /**
-     * Returns an array of the tiles linked to each side of the tile. Null if a side
-     * is not linked.
-     */
+    @Override
     public TileDomino[] getNeighbors() {
         return neighbors;
     }
@@ -134,12 +127,13 @@ public class TileDomino extends Tile<SideDomino> {
      * The sides of the tile are replaced by {@code tab}
      */
     public void setAllSides(SideDomino[] tab) {
-        // TODO : (E) verify the validity of tab (e.g. none of tab[i] is null)
+        validSides(tab);
         this.sides = tab;
     }
 
     /**
-     * Sets the side of the object in the direction {@code direction} to {@code side}.
+     * Sets the side of the object in the direction {@code direction} to
+     * {@code side}.
      * 
      * @param side      the side to set
      * @param direction the direction of the side to set
@@ -148,11 +142,10 @@ public class TileDomino extends Tile<SideDomino> {
         SideDomino toChange = this.sides[directionToInt(direction)];
     }
 
-    // TODO : (E) the neighbors' setters should be inherited from Placeable
-
     public void setNeighbor(TileDomino tile, Direction direction) {
         if (this.neighbors[directionToInt(direction)] != tile) { // test needed to avoid a loop
             this.neighbors[directionToInt(direction)] = tile;
+
             // The neighbor is also set on the other side
             tile.setNeighbor(this, Placeable.getOpposite(direction));
         }
@@ -165,6 +158,18 @@ public class TileDomino extends Tile<SideDomino> {
     }
 
     // Methods
+
+    @Override
+    public void validSides(SideDomino[] tab) {
+        if (tab.length != 4) {
+            throw new IllegalArgumentException("The length of the array must be 4");
+        }
+        for (int i = 0; i < 4; i++) {
+            if (tab[i] == null) {
+                throw new IllegalArgumentException("No side should be null");
+            }
+        }
+    }
 
     @Override
     public boolean doesSideMatch(SideDomino side, Direction direction) {
@@ -278,7 +283,8 @@ public class TileDomino extends Tile<SideDomino> {
     }
 
     /**
-     * Prints the result from {@link #getStringRepresentation()}.
+     * Prints the tile line by line, using the result from
+     * {@link #getStringRepresentation()}.
      */
     public void printTile() {
         String[] tileInfo = getStringRepresentation();
