@@ -14,22 +14,22 @@ public class SideDomino extends Side {
     // Attributes
     public static final int MAX_VALUE = 3; // Max value of a side
 
-    // TODO : (E) put fig final
-    // TODO : (E) remove fig setters
-    private int[] fig = new int[3]; // The figures on the side
+    private final int[] fig; // The figures on the side
     private SideDomino linked = null; // The linked side
 
     // Constructors
     public SideDomino(int[] tab) {
-        // TODO : (E) fonction qui vérifie la validité de tab
+        validFig(tab);
         fig = tab;
     }
 
     public SideDomino() {
         Random rand = new Random();
 
-        for (int i = 0; i < 3; i++)
+        fig = new int[3];
+        for (int i = 0; i < 3; i++) {
             fig[i] = rand.nextInt(MAX_VALUE + 1);
+        }
     }
 
     // Getters
@@ -50,10 +50,6 @@ public class SideDomino extends Side {
 
     // Setters
 
-    public void setFig(int[] fig) {
-        this.fig = fig;
-    }
-
     public void setLinked(SideDomino linked) {
         if (linked != this.linked) {
             this.linked = linked;
@@ -63,6 +59,21 @@ public class SideDomino extends Side {
     }
 
     // Methods
+
+    /**
+     * Verifies if {@code tab} is an array of 3 integers between 0 and
+     * {@code MAX_VALUE}
+     */
+    public static void validFig(int[] tab) {
+        if (tab.length != 3) {
+            throw new IllegalArgumentException("Length of the array is illegal");
+        }
+        for (int i = 0; i < 3; i++) {
+            if (tab[i] < 0 || tab[i] > MAX_VALUE) {
+                throw new IllegalArgumentException("Figures in the array are not correct");
+            }
+        }
+    }
 
     /**
      * Returns {@code true} if the side is linked to another side.
