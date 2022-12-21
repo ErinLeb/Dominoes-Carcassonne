@@ -17,7 +17,9 @@ public class GameDomino {
     // TODO: Implement player naming and information.
 
     // Attributes
-    private static final int NB_TILES_TO_SHOW = 5; // Length of the side of the square of tiles to show
+    // Length of the side of the square of tiles to show
+    // It should be an odd number
+    private static final int NB_TILES_TO_SHOW = 5;
 
     private PlayerDomino[] players; // Players of the game
     private DeckDomino deck; // Deck of the game
@@ -215,6 +217,9 @@ public class GameDomino {
         // Placeable<SideDomino>)
         board.getNeighbors(x, y).forEach(p -> neighbors.add(new Pair<>(p.first, p.second)));
 
+        if (neighbors.isEmpty())
+            throw new IllegalArgumentException("The tile must be placed next to another tile");
+
         if (!tileToPlace.canBePlaced(neighbors))
             throw new IllegalArgumentException("The tile cannot be placed at this position");
 
@@ -266,9 +271,11 @@ public class GameDomino {
 
         try {
             if (arg2.matches("^\\d+") || arg2.matches("^-\\d+")) {
-                int x = Integer.parseInt(arg1) - 1;
-                int y = Integer.parseInt(arg2) - 1;
-                place(x, y, player);
+                // The arguments given are coordinates of the tile to place on the board
+                // relative to the minimap
+                int dx = Integer.parseInt(arg1) - (NB_TILES_TO_SHOW / 2 + 1);
+                int dy = Integer.parseInt(arg2) - (NB_TILES_TO_SHOW / 2 + 1);
+                place(currentPosition.first + dx, currentPosition.second + dy, player);
             } else {
                 int id = Integer.parseInt(arg1);
                 Direction direction = Placeable.stringToDirection(arg2.toUpperCase());
