@@ -78,11 +78,6 @@ public class DeckDomino extends Deck {
         tiles.forEach(TileDomino::unlink);
     }
 
-    /**
-     * Returns {@code true} if the deck is empty.
-     * 
-     * @return
-     */
     public boolean isEmpty() {
         return tiles.isEmpty();
     }

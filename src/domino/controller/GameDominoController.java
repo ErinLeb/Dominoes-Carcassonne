@@ -1,12 +1,15 @@
 package domino.controller;
 
+import java.util.List;
 import java.util.Scanner;
 
 import domino.model.GameDomino;
 import domino.model.PlayerDomino;
 import domino.view.terminal.GameDominoView;
+import exceptions.TileCanBePlacedException;
 import interfaces.Placeable;
 import interfaces.Placeable.Direction;
+import utilities.Pair;
 
 /**
  * This class represents the controller of the Domino game, following an MVC
@@ -52,6 +55,9 @@ public class GameDominoController {
 
     }
 
+    // TODO: implement move more than one tile and move pov to a specific tile (id)
+    // TODO: implement turn 2 = turn right 2
+
     /**
      * Parses the command given by the player and executes it.
      * 
@@ -67,13 +73,17 @@ public class GameDominoController {
         try {
             switch (args[0].toLowerCase()) {
                 case "pass":
-                    // TODO : implement pass()
-                    return true;
+                    List<Pair<Integer, Integer>> p = model.findPossiblePlacement();
+
+                    if (p.isEmpty())
+                        return true;
+
+                    throw new TileCanBePlacedException();
                 case "print":
                     if (args.length == 1) {
                         view.printBoard();
                     } else if (args.length == 2) {
-                        if (args[1].toLowerCase().equals("b")) {
+                        if (args[1].equalsIgnoreCase("b")) {
                             view.printBoard();
                         } else {
                             view.printTileToPlace();

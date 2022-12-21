@@ -124,7 +124,9 @@ public class TileDomino extends Tile<SideDomino> {
     }
 
     /**
-     * The sides of the tile are replaced by {@code tab}
+     * The sides of the tile are replaced by {@code tab}.
+     * 
+     * @param tab the new sides of the tile
      */
     public void setAllSides(SideDomino[] tab) {
         validSides(tab);
@@ -139,7 +141,7 @@ public class TileDomino extends Tile<SideDomino> {
      * @param direction the direction of the side to set
      */
     private void setSide(SideDomino side, Direction direction) {
-        SideDomino toChange = this.sides[directionToInt(direction)];
+        this.sides[directionToInt(direction)] = side;
     }
 
     public void setNeighbor(TileDomino tile, Direction direction) {
@@ -152,6 +154,13 @@ public class TileDomino extends Tile<SideDomino> {
 
     }
 
+    /**
+     * Sets the liked tiles of this object to the tiles given by {@code tiles} in
+     * the directions given by {@code directions}.
+     * 
+     * @param tiles      the tiles to link
+     * @param directions the directions of the sides to link
+     */
     public void setNeighbors(TileDomino[] tiles, Direction[] directions) {
         for (int i = 0; i < tiles.length; i++)
             setNeighbor(tiles[i], directions[i]);
@@ -290,6 +299,36 @@ public class TileDomino extends Tile<SideDomino> {
         String[] tileInfo = getStringRepresentation();
         for (String line : tileInfo)
             System.out.println(line);
+    }
+
+    /**
+     * Checks if the tile can be placed on the board after a certain amount of
+     * rotations.
+     * 
+     * @return {@code true} if the tile could be placed on the board after a certain
+     *         amount of rotations
+     */
+    public boolean canBePlacedWithRotation(List<Pair<Placeable<SideDomino>, Direction>> tiles) {
+        for (int z = 0; z < 4; z++) {
+            if (canBePlaced(tiles))
+                return true;
+
+            try {
+                turnRight(1);
+            } catch (UnableToTurnException e) {
+                //
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Returns a copy of the tile.
+     * 
+     * @return a copy of the tile
+     */
+    public TileDomino copy() {
+        return new TileDomino(new SideDomino[] { sides[0].copy(), sides[1].copy(), sides[2].copy(), sides[3].copy() });
     }
 
     public static void main(String[] args) {

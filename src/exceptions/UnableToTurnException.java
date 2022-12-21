@@ -6,6 +6,6 @@ package exceptions;
 public class UnableToTurnException extends Exception {
     // Constructor
     public UnableToTurnException() {
-        super("Cannot turn tile");
+        super("Cannot turn tile.");
     }
 }

@@ -39,6 +39,9 @@ public class GameDomino {
     /**
      * Creates a game of Domino with {@code nbPlayers} players and {@code nbTiles}
      * tiles.
+     * 
+     * @param nbPlayers Number of players
+     * @param nbTiles   Number of tiles
      */
     public GameDomino(int nbPlayers, int nbTiles) {
         // Creation of the players
@@ -58,31 +61,71 @@ public class GameDomino {
 
     // Getters
 
+    /**
+     * Returns the current tile on the board.
+     * 
+     * @return The current tile on the board
+     */
     public TileDomino getCurrentTileDomino() {
         return currentTileDomino;
     }
 
+    /**
+     * Returns the number of rounds played.
+     * 
+     * @return The number of rounds played
+     */
     public int getNbRounds() {
         return nbRounds;
     }
 
+    /**
+     * Returns {@code true} if the game is on, {@code false} otherwise.
+     * 
+     * @return {@code true} if the game is on, {@code false} otherwise
+     */
     public boolean isGameOn() {
         return isGameOn;
     }
 
+    /**
+     * Returns the relative array centered on {@code x,y}.
+     * 
+     * @param x      X coordinate of the center
+     * @param y      Y coordinate of the center
+     * @param length Length of the side of the square
+     * @return The relative array centered on {@code x,y}
+     */
     public List<List<TileDomino>> getSubArray(int x, int y, int length) {
         return board.getSubArray(x, y, length);
     }
 
+    /**
+     * Returns the relative array centered on the current tile. It uses the
+     * {@code NB_TILES_TO_SHOW} constant to determine the length of the side of the
+     * square.
+     * 
+     * @return The relative array centered on the current tile
+     */
     public List<List<TileDomino>> getCurrentSubArray() {
         return board.getSubArray(currentPosition.first, currentPosition.second,
                 NB_TILES_TO_SHOW);
     }
 
+    /**
+     * Returns the tile to place.
+     * 
+     * @return The tile to place
+     */
     public TileDomino getTileToPlace() {
         return tileToPlace;
     }
 
+    /**
+     * Returns the current player, the one who is playing.
+     * 
+     * @return The current player
+     */
     public PlayerDomino getCurrentPlayer() {
         return players[currentPlayer];
     }
@@ -95,10 +138,6 @@ public class GameDomino {
     public void initGame() {
         // TODO: implement initGame().
     }
-
-    // TODO: implement move more than one tile and move pov to a specific tile (id)
-    // TODO: test if can be placed
-    // TODO: implement turn 2 = turn right 2
 
     /**
      * Moves the current tile on the board in the given direction.
@@ -152,36 +191,32 @@ public class GameDomino {
         List<Pair<Placeable<SideDomino>, Direction>> neighbors = new ArrayList<>();
 
         // I do not know if this is the best way to do it, but it works. (I cannot use
-        // only board.getNeighbors(x, y) i need to downcast it up to
+        // only board.getNeighbors(x, y) i need to upcast it up to
         // Placeable<SideDomino>)
-        board.getNeighbors(x, y).forEach(p -> {
-            neighbors.add(new Pair<>(p.first, p.second));
-            System.out.println(p.first + " " + p.second);
-        });
+        board.getNeighbors(x, y).forEach(p -> neighbors.add(new Pair<>(p.first, p.second)));
 
-        if (tileToPlace.canBePlaced(neighbors)) {
-            board.add(x, y, tileToPlace);
-
-            // Takes care of the coordinates of the current tile if the board has been
-            // expanded
-            if (x == -1)
-                x = 0;
-            if (y == -1)
-                y = 0;
-
-            currentPosition = new Pair<>(x, y);
-            currentTileDomino = tileToPlace;
-
-            // increments score according to what's just been played
-            int score = 0;
-
-            for (Pair<Placeable<SideDomino>, Direction> p : neighbors)
-                score += tileToPlace.getSide(p.second).getFigSum();
-
-            player.addScore(score);
-        } else
+        if (!tileToPlace.canBePlaced(neighbors))
             throw new IllegalArgumentException("The tile cannot be placed at this position");
 
+        board.add(x, y, tileToPlace);
+
+        // Takes care of the coordinates of the current tile if the board has been
+        // expanded
+        if (x == -1)
+            x = 0;
+        if (y == -1)
+            y = 0;
+
+        currentPosition = new Pair<>(x, y);
+        currentTileDomino = tileToPlace;
+
+        // increments score according to what's just been played
+        int score = 0;
+
+        for (Pair<Placeable<SideDomino>, Direction> p : neighbors)
+            score += tileToPlace.getSide(p.second).getFigSum();
+
+        player.addScore(score);
     }
 
     /**
@@ -234,15 +269,18 @@ public class GameDomino {
      *                  anticlockwise
      * @param times     Number of times to turn the tile
      * 
-     * @throws UnableToTurnException
+     * @throws UnableToTurnException If the tile to turn is null or if the tile is
+     *                               already placed on the board
      */
     public void turn(boolean clockwise, int times) throws UnableToTurnException {
         if (tileToPlace == null)
-            return;
-        if (clockwise)
+            throw new UnableToTurnException();
+
+        if (clockwise) {
             tileToPlace.turnRight(times);
-        else
+        } else {
             tileToPlace.turnLeft(times);
+        }
     }
 
     /**
@@ -257,10 +295,19 @@ public class GameDomino {
 
     /**
      * {@code player} surrenders the game.
+     * 
+     * @param player Player who surrenders
      */
     public void surrender(PlayerDomino player) {
         System.out.println("Player " + player + " has surrendered");
         isGameOn = false;
+    }
+
+    /**
+     * The current player surrenders.
+     */
+    public void surrender() {
+        surrender(players[currentPlayer]);
     }
 
     /**
@@ -269,6 +316,46 @@ public class GameDomino {
     public void quit() {
         // TODO: implement better way of doing it
         isGameOn = false;
+    }
+
+    /**
+     * Returns the list of possible locations where the tile can be placed.
+     * 
+     * @return List of possible locations
+     */
+    public List<Pair<Integer, Integer>> findPossiblePlacement() {
+        ArrayList<Pair<Integer, Integer>> possibleLocations = new ArrayList<>();
+
+        // We create a copy of the tile to place so that we can rotate it without
+        // modifying the original tile
+        TileDomino tileToPlaceCopy = tileToPlace.copy();
+
+        // We check all the coordinates of the board and the immediate cases around it
+        // (-1 and width/height)
+        for (int i = -1; i <= board.getWidth(); i++) {
+            for (int j = -1; j <= board.getHeight(); j++) {
+                // If there is no tile at the given position or if the position is out of bounds
+                // we check if the tile can be placed there
+                if (board.isOutOfBounds(i, j) || board.get(i, j) == null) {
+                    // We get the neighbors of the tile
+                    List<Pair<Placeable<SideDomino>, Direction>> neighbors = new ArrayList<>();
+
+                    // In order to use the function canBePlacedWithRotation, we need to have the
+                    // neighbors in a list of pairs of Placeable and Direction
+                    // For that we need to convert the list of neighbors of the board to a list of
+                    // pairs of Placeable and Direction
+                    board.getNeighbors(i, j).forEach(n -> neighbors.add(new Pair<>(n.first, n.second)));
+
+                    // We check if the tile can be placed ignoring the rotations
+                    // If it can, we add the position to the list of possible locations
+                    if (tileToPlaceCopy.canBePlacedWithRotation(neighbors)) {
+                        possibleLocations.add(new Pair<>(i, j));
+                    }
+                }
+            }
+        }
+
+        return possibleLocations;
     }
 
     public static void main(String[] args) {
