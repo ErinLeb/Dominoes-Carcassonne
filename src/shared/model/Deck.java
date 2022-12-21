@@ -1,16 +1,11 @@
 package shared.model;
 
-public abstract class Deck {
+import interfaces.InterfaceDeck;
+
+public abstract class Deck implements InterfaceDeck {
     // Getters
 
     // Methods
-
-    /**
-     * Returns {@code true} if the deck is empty
-     * 
-     * @return
-     */
-    public abstract boolean isEmpty();
 
     /**
      * Returns the number of dominoes in the deck

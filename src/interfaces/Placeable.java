@@ -191,9 +191,13 @@ public interface Placeable<T extends Side> {
      * @return True if the tile can be placed
      */
     public default boolean canBePlaced(List<Pair<Placeable<T>, Direction>> tiles) {
-        for (Pair<Placeable<T>, Direction> tile : tiles)
+        if (tiles == null || tiles.isEmpty())
+            return false;
+
+        for (Pair<Placeable<T>, Direction> tile : tiles) {
             if (!doesSideMatch(tile.first.getSide(getOpposite(tile.second)), tile.second))
                 return false;
+        }
 
         return true;
     }

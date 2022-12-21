@@ -23,6 +23,9 @@ public class SideDomino extends Side {
         fig = tab;
     }
 
+    /**
+     * Creates a random side.
+     */
     public SideDomino() {
         Random rand = new Random();
 
@@ -41,6 +44,11 @@ public class SideDomino extends Side {
         return linked;
     }
 
+    /**
+     * Returns the sum of the figures on the side.
+     * 
+     * @return The sum of the figures on the side.
+     */
     public int getFigSum() {
         int sum = 0;
         for (int i : fig)
@@ -111,6 +119,15 @@ public class SideDomino extends Side {
      */
     public boolean hasSameFig(SideDomino side) {
         return Arrays.equals(fig, side.getFig());
+    }
+
+    /**
+     * Returns a copy of the side.
+     * 
+     * @return a copy of the side
+     */
+    public SideDomino copy() {
+        return new SideDomino(new int[] { fig[0], fig[1], fig[2] });
     }
 
     @Override

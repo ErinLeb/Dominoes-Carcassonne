@@ -57,19 +57,22 @@ public class Expandable2DArray<T> {
     public List<Pair<T, Direction>> getNeighbors(int x, int y) {
         List<Pair<T, Direction>> neighbors = new ArrayList<>();
 
-        if (x > 0 && get(x - 1, y) != null) {
+        if (!isInsideExpandableBounds(x, y))
+            throw new IndexOutOfBoundsException();
+
+        if (!isOutOfBounds(x - 1, y) && get(x - 1, y) != null) {
             neighbors.add(new Pair<>(get(x - 1, y), Direction.UP));
         }
 
-        if (x < array.size() - 1 && get(x + 1, y) != null) {
+        if (!isOutOfBounds(x + 1, y) && get(x + 1, y) != null) {
             neighbors.add(new Pair<>(get(x + 1, y), Direction.DOWN));
         }
 
-        if (y > 0 && get(x, y - 1) != null) {
+        if (!isOutOfBounds(x, y - 1) && get(x, y - 1) != null) {
             neighbors.add(new Pair<>(get(x, y - 1), Direction.LEFT));
         }
 
-        if (y < array.get(0).size() - 1 && get(x, y + 1) != null) {
+        if (!isOutOfBounds(x, y + 1) && get(x, y + 1) != null) {
             neighbors.add(new Pair<>(get(x, y + 1), Direction.RIGHT));
         }
 
@@ -312,6 +315,19 @@ public class Expandable2DArray<T> {
      */
     public boolean isInsideExpandableBounds(Pair<Integer, Integer> index) {
         return isInsideExpandableBounds(index.first, index.second);
+    }
+
+    /**
+     * Iterates over the array and applies the action to each index.
+     * 
+     * @param action The action to apply
+     */
+    public void iteri(Consumer<Pair<Integer, Integer>> action) {
+        for (int i = 0; i < array.size(); i++) {
+            for (int j = 0; j < array.get(i).size(); j++) {
+                action.accept(new Pair<>(i, j));
+            }
+        }
     }
 
     @Override
