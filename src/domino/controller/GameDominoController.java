@@ -55,7 +55,7 @@ public class GameDominoController {
 
     }
 
-    // TODO: implement move more than one tile and move pov to a specific tile (id)
+    // TODO: move pov to a specific tile (id)
     // TODO: implement turn 2 = turn right 2
 
     /**
@@ -83,7 +83,8 @@ public class GameDominoController {
                     if (args.length == 1) {
                         view.printBoard();
                     } else if (args.length == 2) {
-                        if (args[1].equalsIgnoreCase("b")) {
+                        if (args[1].equalsIgnoreCase("b") || args[1].equalsIgnoreCase("board")) {
+
                             view.printBoard();
                         } else {
                             view.printTileToPlace();
@@ -102,11 +103,11 @@ public class GameDominoController {
                     model.surrender(player);
                     return true;
                 case "move":
-                    if (args.length != 2)
+                    if (args.length > 3 || args.length < 2)
                         throw new IllegalArgumentException("Invalid number of arguments");
 
                     Direction direction = Placeable.stringToDirection(args[1].toUpperCase());
-                    model.move(direction);
+                    model.move(direction, args.length == 3 ? Integer.parseInt(args[2]) : 1);
                     return false;
                 case "turn":
                     if (args.length == 1) {

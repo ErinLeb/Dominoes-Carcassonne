@@ -140,32 +140,52 @@ public class GameDomino {
     }
 
     /**
-     * Moves the current tile on the board in the given direction.
+     * Moves the current position of the current tile on the board in the given
+     * {@code direction} by {@code nbTiles}.
      * 
-     * @param direction Direction to move the current tile
-     * @throws TileNotFoundException If the tile to move is not on the board
+     * @param direction Direction to move
+     * @param nbTiles   Number of tiles to move
      */
-    public void move(Direction direction) throws TileNotFoundException {
-        // TODO: Update this method to allow moving to null tiles (isOutOfBounds()).
-        if (currentTileDomino.getNeighbor(direction) == null)
-            throw new TileNotFoundException();
+    public void move(Direction direction, int nbTiles) {
+        if (nbTiles < 0)
+            throw new IllegalArgumentException("The number of tiles to move must be positive");
 
-        currentTileDomino = currentTileDomino.getNeighbor(direction);
+        if (nbTiles == 0)
+            return;
+
+        Pair<Integer, Integer> nextPosition = new Pair<>(currentPosition.first, currentPosition.second);
 
         switch (direction) {
             case UP:
-                currentPosition.first--;
+                nextPosition.first -= nbTiles;
                 break;
             case RIGHT:
-                currentPosition.second++;
+                nextPosition.second += nbTiles;
                 break;
             case DOWN:
-                currentPosition.first++;
+                nextPosition.first += nbTiles;
                 break;
             case LEFT:
-                currentPosition.second--;
+                nextPosition.second -= nbTiles;
                 break;
         }
+
+        if (board.isOutOfBounds(nextPosition))
+            throw new IllegalArgumentException("The next position is out of bounds.");
+
+        this.currentPosition = nextPosition;
+        this.currentTileDomino = board.get(currentPosition);
+
+    }
+
+    /**
+     * Moves the current tile on the board in the given direction once.
+     * 
+     * @param direction Direction to move the current tile
+     */
+    public void move(Direction direction) {
+        move(direction, 1);
+
     }
 
     // TODO: implement can only place next to a tile
