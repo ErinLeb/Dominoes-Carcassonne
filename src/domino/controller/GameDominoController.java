@@ -3,9 +3,11 @@ package domino.controller;
 import java.util.List;
 import java.util.Scanner;
 
+import domino.model.BotDomino;
 import domino.model.GameDomino;
 import domino.model.PlayerDomino;
 import domino.view.terminal.GameDominoView;
+import exceptions.NoPossibleMovementsException;
 import exceptions.TileCanBePlacedException;
 import interfaces.Placeable;
 import interfaces.Placeable.Direction;
@@ -31,9 +33,20 @@ public class GameDominoController {
      * Plays a single round of the game (just a player's turn)
      */
     public void playRound() {
-        System.out.println("Round " + model.getNbRounds() + " :");
-
         model.updateGameRound();
+
+        if (model.getCurrentPlayer() instanceof BotDomino) {
+            try {
+                ((BotDomino) model.getCurrentPlayer()).play(model);
+            } catch (NoPossibleMovementsException e) {
+                System.out.println("Bot " + model.getCurrentPlayer().getName() + " passed");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            view.printUpdateGameRound();
+            return;
+        }
+
         view.printUpdateGameRound();
 
         String command;
@@ -73,7 +86,7 @@ public class GameDominoController {
         try {
             switch (args[0].toLowerCase()) {
                 case "pass":
-                    List<Pair<Integer, Integer>> p = model.findPossiblePlacement();
+                    List<Pair<Integer, Integer>> p = model.findPossiblePlacements();
 
                     if (p.isEmpty())
                         return true;

@@ -1,7 +1,7 @@
 package shared.model;
 
 public class Player {
-    private int score = 0;
+    protected int score = 0;
 
     // Constructor
     public Player() {
@@ -16,9 +16,9 @@ public class Player {
     /**
      * Add {@code points} to the score of the player
      * 
-     * @param score
+     * @param points
      */
-    public void addScore(int points) {
+    public void incrementScore(int points) {
         this.score += points;
     }
 

@@ -9,8 +9,7 @@ public class PlayerDomino extends Player {
     private static int nbPlayers;
 
     private int id;
-    private String name;
-    private int score;
+    protected String name;
 
     // Constructors
     public PlayerDomino() {
@@ -45,15 +44,6 @@ public class PlayerDomino extends Player {
     }
 
     // Methods
-
-    /**
-     * Adds {@code score} to the player's score.
-     * 
-     * @param score Score to add
-     */
-    public void incrementScore(int score) {
-        this.score += score;
-    }
 
     /**
      * Prints the player's id, name and score.

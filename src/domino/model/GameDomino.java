@@ -61,6 +61,19 @@ public class GameDomino {
         currentPlayer = 0;
     }
 
+    public GameDomino(PlayerDomino[] players, int nbTiles) {
+        // Creation of the players
+        this.players = players;
+        // Creation of the deck
+        deck = new DeckDomino(nbTiles);
+
+        currentTileDomino = deck.draw();
+        currentPosition = new Pair<>(0, 0);
+        board = new Expandable2DArray<>(currentTileDomino);
+
+        currentPlayer = 0;
+    }
+
     // Getters
 
     /**
@@ -261,7 +274,7 @@ public class GameDomino {
         for (Pair<Placeable<SideDomino>, Direction> p : neighbors)
             score += tileToPlace.getSide(p.second).getFigSum();
 
-        player.addScore(score);
+        player.incrementScore(score);
     }
 
     /**
@@ -335,7 +348,10 @@ public class GameDomino {
      */
     public void updateGameRound() {
         nbRounds++;
-        currentPlayer = (currentPlayer + 1) % players.length;
+
+        if (nbRounds != 1) {
+            currentPlayer = (currentPlayer + 1) % players.length;
+        }
 
         tileToPlace = deck.draw();
     }
@@ -370,7 +386,7 @@ public class GameDomino {
      * 
      * @return List of possible locations
      */
-    public List<Pair<Integer, Integer>> findPossiblePlacement() {
+    public List<Pair<Integer, Integer>> findPossiblePlacements() {
         ArrayList<Pair<Integer, Integer>> possibleLocations = new ArrayList<>();
 
         // We create a copy of the tile to place so that we can rotate it without
@@ -401,8 +417,37 @@ public class GameDomino {
                 }
             }
         }
-
         return possibleLocations;
+    }
+
+    public int pointsIfPlaced(int x, int y, TileDomino tile) {
+
+        if (tile == null)
+            throw new IllegalArgumentException("Tile is null");
+
+        if (!board.isInsideExpandableBounds(x, y))
+            throw new IndexOutOfBoundsException();
+
+        if (!board.isOutOfBounds(x, y) && board.get(x, y) != null)
+            throw new IllegalArgumentException("There is already a tile at this position");
+
+        List<Pair<Placeable<SideDomino>, Direction>> neighbors = new ArrayList<>();
+
+        board.getNeighbors(x, y).forEach(p -> neighbors.add(new Pair<>(p.first, p.second)));
+
+        if (neighbors.isEmpty())
+            throw new IllegalArgumentException("The tile must be placed next to another tile");
+
+        if (!tile.canBePlaced(neighbors))
+            return 0;
+
+        int score = 0;
+
+        for (Pair<Placeable<SideDomino>, Direction> p : neighbors)
+            score += tile.getSide(p.second).getFigSum();
+
+        return score;
+
     }
 
     public static void main(String[] args) {
