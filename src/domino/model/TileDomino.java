@@ -12,7 +12,6 @@ import utilities.Pair;
 
 //TODO: decide what to do with the methods that are not used
 //TODO: decide what to do with the link between the tiles
-//TODO: (E) implement toString()
 
 /**
  * This class represents a domino tile.
