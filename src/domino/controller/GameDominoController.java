@@ -92,6 +92,7 @@ public class GameDominoController {
                         return true;
 
                     throw new TileCanBePlacedException();
+                case "p":
                 case "print":
                     if (args.length == 1) {
                         view.printBoard();
@@ -115,6 +116,7 @@ public class GameDominoController {
                 case "surrender":
                     model.surrender(player);
                     return true;
+                case "mv":
                 case "move":
                     if (args.length < 2 || args.length > 3)
                         throw new IllegalArgumentException("Invalid number of arguments");
@@ -129,6 +131,7 @@ public class GameDominoController {
                     view.printBoard();
 
                     return false;
+                case "tr":
                 case "turn":
                     if (args.length == 1) {
                         model.turn(true, 1);
@@ -175,11 +178,13 @@ public class GameDominoController {
 
                     }
                     return false;
+                case "pl":
                 case "place":
                     if (args.length != 3)
                         throw new IllegalArgumentException("Invalid number of arguments");
                     model.place(args[1], args[2], player);
                     return true;
+                case "q":
                 case "quit":
                     model.quit();
                     return true;
