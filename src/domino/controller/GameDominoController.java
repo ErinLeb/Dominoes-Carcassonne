@@ -103,11 +103,18 @@ public class GameDominoController {
                     model.surrender(player);
                     return true;
                 case "move":
-                    if (args.length > 3 || args.length < 2)
+                    if (args.length < 2 || args.length > 3)
                         throw new IllegalArgumentException("Invalid number of arguments");
 
-                    Direction direction = Placeable.stringToDirection(args[1].toUpperCase());
-                    model.move(direction, args.length == 3 ? Integer.parseInt(args[2]) : 1);
+                    if (args[1].matches("^\\d+")) {
+                        model.move(Integer.parseInt(args[1]));
+                    } else {
+                        Direction direction = Placeable.stringToDirection(args[1].toUpperCase());
+                        model.move(direction, args.length == 3 ? Integer.parseInt(args[2]) : 1);
+                    }
+
+                    view.printBoard();
+
                     return false;
                 case "turn":
                     if (args.length == 1) {
@@ -115,7 +122,11 @@ public class GameDominoController {
                         view.printTileToPlace();
 
                     } else {
-                        if (args.length != 3)
+                        if (args.length == 2) {
+                            model.turn(true, Integer.parseInt(args[1]));
+                            view.printTileToPlace();
+                        }
+                        if (args.length > 3)
                             throw new IllegalArgumentException("Invalid number of arguments");
 
                         model.turn(args[1].toUpperCase().charAt(0) == 'R', Integer.parseInt(args[2]));

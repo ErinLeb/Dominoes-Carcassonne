@@ -132,6 +132,10 @@ public class GameDomino {
         return players[currentPlayer];
     }
 
+    public Pair<Integer, Integer> getCurrentPosition() {
+        return currentPosition;
+    }
+
     // Methods
 
     /**
@@ -188,6 +192,22 @@ public class GameDomino {
     public void move(Direction direction) {
         move(direction, 1);
 
+    }
+
+    /**
+     * Moves the center of the minimap to the tile with the given id.
+     * 
+     * @param id Id of the tile to move to
+     * @throws TileNotFoundException If the tile is not on the board
+     */
+    public void move(int id) throws TileNotFoundException {
+        Pair<Integer, Integer> position = board.findIndex(t -> t != null && t.getId() == id);
+
+        if (position == null)
+            throw new TileNotFoundException();
+
+        this.currentPosition = position;
+        this.currentTileDomino = board.get(currentPosition);
     }
 
     // TODO: implement can only place next to a tile
