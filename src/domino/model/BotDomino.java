@@ -46,11 +46,11 @@ public class BotDomino extends PlayerDomino {
         if (possibleMoves.isEmpty())
             throw new NoPossibleMovementsException();
 
-        for (var move : possibleMoves) {
+        for (Pair<Integer, Integer> move : possibleMoves) {
             for (int i = 0; i < 4; i++) {
                 int pointsToPlace = model.pointsIfPlaced(move.first, move.second, tileToPlace);
 
-                if (pointsToPlace > points) {
+                if (pointsToPlace >= points) {
                     points = pointsToPlace;
                     position = move;
                     nbTurns = i;
