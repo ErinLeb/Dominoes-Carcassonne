@@ -4,6 +4,7 @@ import java.util.List;
 
 import domino.model.BotDomino;
 import domino.model.GameDomino;
+import domino.model.PlayerDomino;
 import domino.model.TileDomino;
 
 public class GameDominoView {
@@ -117,4 +118,51 @@ public class GameDominoView {
         printBoard();
     }
 
+    public void surrender(PlayerDomino p) {
+        System.out.println("Player " + p.getName() + " has surrendered");
+    }
+
+    /**
+     * Print the winner(s).
+     */
+    private void printWinners() {
+        List<PlayerDomino> winners = model.getWinners();
+
+        if (winners == null || winners.size() == 0 || winners.get(0) == null) {
+            System.out.println("There is no winner !");
+        }
+
+        String message = "";
+        for (int i = 0; i < winners.size(); i++) {
+            if (i == winners.size() - 1) {
+                message += winners.get(i).getName() + " ";
+            } else if (i == winners.size() - 2) {
+                message += winners.get(i).getName() + " and ";
+            } else {
+                message += winners.get(i).getName() + ", ";
+            }
+        }
+
+        if (winners.size() > 1) {
+            System.out.println("Equality :");
+        }
+        System.out.println(message + "won !");
+    }
+
+    /**
+     * Print the winner(s) and the ranking of the players.
+     */
+    public void endGame() {
+        System.out
+                .println("===================================== End of the Game =====================================");
+        // print the winners
+        printWinners();
+
+        // print the ranking
+        PlayerDomino[] ranking = model.getRanking();
+        System.out.println("This is the ranking : ");
+        for (PlayerDomino p : ranking) {
+            System.out.println(p.getName() + " : " + p.getScore() + " points");
+        }
+    }
 }

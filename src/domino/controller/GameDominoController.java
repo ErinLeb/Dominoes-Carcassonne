@@ -55,6 +55,10 @@ public class GameDominoController {
             System.out.println("Enter a command: ");
             command = sc.nextLine();
         } while (!parseInput(command, model.getCurrentPlayer()));
+
+        if (model.endGame()) {
+            view.endGame();
+        }
     }
 
     /**
@@ -64,12 +68,29 @@ public class GameDominoController {
 
         while (model.isGameOn()) {
             playRound();
+
+            if (!model.isGameOn()) {
+
+                boolean valid = false;
+                while (!valid) {
+
+                    System.out.println("Do you want to play again ? (Yes/No)");
+
+                    String answer = sc.nextLine();
+                    if (answer.equalsIgnoreCase("yes") || answer.equalsIgnoreCase("y")) {
+                        model.setIsGameOn(true);
+                        valid = true;
+                    } else if (answer.equalsIgnoreCase("no") || answer.equalsIgnoreCase("n")) {
+                        valid = true;
+                    } else {
+                        System.out.println("Invalid command");
+                    }
+
+                }
+            }
         }
 
     }
-
-    // TODO: move pov to a specific tile (id)
-    // TODO: implement turn 2 = turn right 2
 
     /**
      * Parses the command given by the player and executes it.
@@ -115,6 +136,7 @@ public class GameDominoController {
                     return false;
                 case "surrender":
                     model.surrender(player);
+                    view.surrender(player);
                     return true;
                 case "mv":
                 case "move":

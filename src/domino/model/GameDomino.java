@@ -1,12 +1,14 @@
 package domino.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import exceptions.TileNotFoundException;
 import exceptions.UnableToTurnException;
 import interfaces.Placeable;
 import interfaces.Placeable.Direction;
+import shared.model.Player;
 import utilities.Expandable2DArray;
 import utilities.Pair;
 
@@ -72,6 +74,12 @@ public class GameDomino {
         board = new Expandable2DArray<>(currentTileDomino);
 
         currentPlayer = 0;
+    }
+
+    // Setters
+
+    public void setIsGameOn(boolean b) {
+        isGameOn = b;
     }
 
     // Getters
@@ -147,6 +155,37 @@ public class GameDomino {
 
     public Pair<Integer, Integer> getCurrentPosition() {
         return currentPosition;
+    }
+
+    /**
+     * @return the player(s) with the highest score.
+     */
+    public List<PlayerDomino> getWinners() {
+        PlayerDomino[] ranking = getRanking();
+        ArrayList<PlayerDomino> winners = new ArrayList<>();
+        winners.add(ranking[0]);
+
+        int scoreMax = ranking[0].getScore();
+        int i = 1;
+
+        while (i < ranking.length && ranking[i].getScore() == scoreMax) {
+            winners.add(ranking[i]);
+            i++;
+        }
+
+        return winners;
+    }
+
+    /**
+     * @return an array of {@code PlayerDomino} sorted by their {@code score}.
+     */
+    public PlayerDomino[] getRanking() {
+        PlayerDomino[] ranking = players.clone();
+
+        // sort ranking by score
+        Arrays.sort(ranking, (a, b) -> b.getScore() - a.getScore());
+
+        return ranking;
     }
 
     // Methods
@@ -362,7 +401,6 @@ public class GameDomino {
      * @param player Player who surrenders
      */
     public void surrender(PlayerDomino player) {
-        System.out.println("Player " + player + " has surrendered");
         isGameOn = false;
     }
 
@@ -450,91 +488,123 @@ public class GameDomino {
 
     }
 
+    /**
+     * If the deck is empty, switches isGameOn to false and return {@code true}.
+     * 
+     * @return {@code true} if the deck is empty.
+     */
+    public boolean endGame() {
+        if (deck.isEmpty() || isGameOn == false) {
+            isGameOn = false;
+            return true;
+        }
+        return false;
+    }
+
     public static void main(String[] args) {
         // Random tests for the moment
-        GameDomino game = new GameDomino(2, 28);
-        // game.printBoard();// game.parseInput("d", null);
+        /*
+         * GameDomino game = new GameDomino(2, 28);
+         * // game.printBoard();// game.parseInput("d", null);
+         * 
+         * int[] tab0 = { 0, 0, 0 };
+         * int[] tab1 = { 1, 1, 1 };
+         * int[] tab2 = { 2, 2, 2 };
+         * int[] tab3 = { 3, 3, 3 };
+         * 
+         * SideDomino side0 = new SideDomino(tab0);
+         * SideDomino side1 = new SideDomino(tab1);
+         * SideDomino side2 = new SideDomino(tab2);
+         * SideDomino side3 = new SideDomino(tab3);
+         * 
+         * TileDomino initialTile = new TileDomino(new SideDomino[] { side0, side1,
+         * side2, side3 });
+         * 
+         * game.currentTileDomino = initialTile;
+         * game.board.set(0, 0, initialTile);
+         * 
+         * // game.printBoard();
+         * 
+         * SideDomino[] sides0 = new SideDomino[] { side0, side0, side0, side0 };
+         * SideDomino[] sides1 = new SideDomino[] { side1, side1, side1, side1 };
+         * SideDomino[] sides2 = new SideDomino[] { side2, side2, side2, side2 };
+         * SideDomino[] sides3 = new SideDomino[] { side3, side3, side3, side3 };
+         * 
+         * TileDomino tile0 = new TileDomino(sides0);
+         * TileDomino tile1 = new TileDomino(sides1);
+         * TileDomino tile2 = new TileDomino(sides2);
+         * TileDomino tile3 = new TileDomino(sides3);
+         * 
+         * game.currentTileDomino.setNeighbors(new TileDomino[] { tile0, tile1, tile2,
+         * tile3 }, Direction.values());
+         * 
+         * System.out.println("-----------------------");
+         * 
+         * System.out.println("Testing place");
+         * System.out.println("-----------------------");
+         * 
+         * game.tileToPlace = tile0;
+         * // game.parseInput("place -1 0", null);
+         * game.tileToPlace = tile3;
+         * // game.parseInput("place 1 -1", null);
+         * game.tileToPlace = tile2;
+         * // game.parseInput("place 2 1", null);
+         * game.tileToPlace = tile1;
+         * // game.parseInput("place 1 2", null);
+         * 
+         * // System.out.println("----------------------------");
+         * // System.out.println(game.board.toString());
+         * // game.board.add(-1, 0, tile0);
+         * // System.out.println("----------------------------");
+         * // System.out.println(game.board.toString());
+         * // game.board.add(1, -1, tile3);
+         * // System.out.println("----------------------------");
+         * // System.out.println(game.board.toString());
+         * // game.board.add(2, 1, tile2);
+         * // System.out.println("----------------------------");
+         * // System.out.println(game.board.toString());
+         * // game.board.add(1, 2, tile1);
+         * 
+         * System.out.println("-----------------------");
+         * 
+         * System.out.println("Current tile: " + game.currentTileDomino);//
+         * game.currentTileDomino.getNeighbor(Direction.UP).printTile();
+         * game.currentPosition.first = 1;
+         * game.currentPosition.second = 1;
+         * 
+         * System.out.println("-----------------------");
+         * 
+         * // game.printBoard();
+         * 
+         * System.out.println(game.currentPosition);
+         * 
+         * // game.parseInput("move u", null);
+         * // game.printBoard();
+         * 
+         * System.out.println("-----------------------");
+         * 
+         * game.board.forEach(System.out::println);
+         * 
+         * System.out.println(game.currentPosition);
+         * 
+         * System.out.println("-----------------------");
+         * 
+         * // game.printBoard();
+         */
 
-        int[] tab0 = { 0, 0, 0 };
-        int[] tab1 = { 1, 1, 1 };
-        int[] tab2 = { 2, 2, 2 };
-        int[] tab3 = { 3, 3, 3 };
+        PlayerDomino p1 = new PlayerDomino();
+        PlayerDomino p2 = new PlayerDomino();
+        PlayerDomino p3 = new PlayerDomino();
+        p1.incrementScore(8);
+        p3.incrementScore(8);
+        // p2.incrementScore(10);
 
-        SideDomino side0 = new SideDomino(tab0);
-        SideDomino side1 = new SideDomino(tab1);
-        SideDomino side2 = new SideDomino(tab2);
-        SideDomino side3 = new SideDomino(tab3);
-
-        TileDomino initialTile = new TileDomino(new SideDomino[] { side0, side1, side2, side3 });
-
-        game.currentTileDomino = initialTile;
-        game.board.set(0, 0, initialTile);
-
-        // game.printBoard();
-
-        SideDomino[] sides0 = new SideDomino[] { side0, side0, side0, side0 };
-        SideDomino[] sides1 = new SideDomino[] { side1, side1, side1, side1 };
-        SideDomino[] sides2 = new SideDomino[] { side2, side2, side2, side2 };
-        SideDomino[] sides3 = new SideDomino[] { side3, side3, side3, side3 };
-
-        TileDomino tile0 = new TileDomino(sides0);
-        TileDomino tile1 = new TileDomino(sides1);
-        TileDomino tile2 = new TileDomino(sides2);
-        TileDomino tile3 = new TileDomino(sides3);
-
-        game.currentTileDomino.setNeighbors(new TileDomino[] { tile0, tile1, tile2, tile3 }, Direction.values());
-
-        System.out.println("-----------------------");
-
-        System.out.println("Testing place");
-        System.out.println("-----------------------");
-
-        game.tileToPlace = tile0;
-        // game.parseInput("place -1 0", null);
-        game.tileToPlace = tile3;
-        // game.parseInput("place 1 -1", null);
-        game.tileToPlace = tile2;
-        // game.parseInput("place 2 1", null);
-        game.tileToPlace = tile1;
-        // game.parseInput("place 1 2", null);
-
-        // System.out.println("----------------------------");
-        // System.out.println(game.board.toString());
-        // game.board.add(-1, 0, tile0);
-        // System.out.println("----------------------------");
-        // System.out.println(game.board.toString());
-        // game.board.add(1, -1, tile3);
-        // System.out.println("----------------------------");
-        // System.out.println(game.board.toString());
-        // game.board.add(2, 1, tile2);
-        // System.out.println("----------------------------");
-        // System.out.println(game.board.toString());
-        // game.board.add(1, 2, tile1);
-
-        System.out.println("-----------------------");
-
-        System.out.println("Current tile: " + game.currentTileDomino);// game.currentTileDomino.getNeighbor(Direction.UP).printTile();
-        game.currentPosition.first = 1;
-        game.currentPosition.second = 1;
-
-        System.out.println("-----------------------");
-
-        // game.printBoard();
-
-        System.out.println(game.currentPosition);
-
-        // game.parseInput("move u", null);
-        // game.printBoard();
-
-        System.out.println("-----------------------");
-
-        game.board.forEach(System.out::println);
-
-        System.out.println(game.currentPosition);
-
-        System.out.println("-----------------------");
-
-        // game.printBoard();
+        PlayerDomino[] players = { p1, p2, p3 };
+        GameDomino game = new GameDomino(players, 4);
+        PlayerDomino[] rk = game.getRanking();
+        for (PlayerDomino p : rk) {
+            System.out.println(p);
+        }
 
     }
 }
