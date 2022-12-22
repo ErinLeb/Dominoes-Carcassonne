@@ -164,13 +164,21 @@ public class Expandable2DArray<T> {
      * {@code x,y} and is a rectangle of size {@code size}. If the size is bigger
      * than the array it will return the maximum possible sub-array.
      * 
+     * <p>
+     * 
+     * This method will not scale the sub-array. If the sub-array is bigger than the
+     * array it will return the maximum possible sub-array. It is used as a helper
+     * method for {@link #getSubArray(int, int, int)}, which will scale the
+     * subArray.
+     * <\p>
+     * 
      * @param x    X coordinate of the center
      * @param y    Y coordinate of the center
      * @param size The size of the sub-array. Must be odd and positive in order to
      *             have a center.
      * @return The sub-array
      */
-    public List<List<T>> getSubArray(int x, int y, int size) {
+    private List<List<T>> getSubArrayWithoutScaling(int x, int y, int size) {
 
         if (x < 0 || y < 0 || x > array.size() || y > array.get(0).size())
             throw new IndexOutOfBoundsException();
@@ -179,38 +187,86 @@ public class Expandable2DArray<T> {
         if (size % 2 == 0)
             throw new IllegalArgumentException("Size must be odd");
 
-        int xStart = x - size / 2;
-        int yStart = y - size / 2;
+        int xStart = Math.max(0, x - size / 2);
+        int yStart = Math.max(0, y - size / 2);
 
-        if (xStart < 0) {
-            xStart = 0;
-        }
-
-        if (yStart < 0) {
-            yStart = 0;
-        }
-
-        int xEnd = x + size / 2;
-        int yEnd = y + size / 2;
-
-        if (xEnd > array.size()) {
-            xEnd = array.size();
-        }
-
-        if (yEnd > array.get(0).size()) {
-            yEnd = array.get(0).size();
-        }
+        int xEnd = Math.min(getWidth() - 1, x + size / 2);
+        int yEnd = Math.min(getHeight() - 1, y + size / 2);
 
         List<List<T>> subArray = new ArrayList<>();
 
-        for (int i = xStart; i < xEnd; i++) {
+        for (int i = xStart; i <= xEnd; i++) {
             subArray.add(new ArrayList<>());
-            for (int j = yStart; j < yEnd; j++) {
+            for (int j = yStart; j <= yEnd; j++) {
                 subArray.get(i - xStart).add(array.get(i).get(j));
             }
         }
 
         return subArray;
+    }
+
+    /**
+     * Returns a sub-array of this array. This sub-array is centered on the point
+     * {@code x,y} and is a rectangle of size {@code size}. If the size is bigger
+     * than the array it will return a sub-array center on the point {@code x,y} and
+     * with the size {@code size} adding {@code null} values to the sides.
+     * 
+     * @param x    X coordinate of the center
+     * @param y    Y coordinate of the center
+     * @param size The size of the sub-array. Must be odd and positive in order to
+     *             have a center.
+     * @return The sub-array
+     */
+    public List<List<T>> getSubArray(int x, int y, int size) {
+
+        // We find the subarray without scaling
+        List<List<T>> subArray = getSubArrayWithoutScaling(x, y, size);
+
+        // This subarray will be returned if its size is the same the input size
+        if (subArray.size() == size && subArray.get(0).size() == size)
+            return subArray;
+
+        // If the subarray is not the same size as the input size, we need to add
+        // null values to the sides. As we want to keep the center of the subarray
+        // the same, we need to add null values to the sides of the subarray in the
+        // correct order. For this we are going to create a new subarray and add
+        // the values of the old subarray to the new one in the correct order
+
+        List<List<T>> newSubArray = new ArrayList<>();
+
+        // Add null values to the new subarray
+        for (int i = 0; i < size; i++) {
+            newSubArray.add(new ArrayList<>());
+            for (int j = 0; j < size; j++) {
+                newSubArray.get(i).add(null);
+            }
+        }
+
+        // The indexes of the the center of the subarray
+        int centerX = x - Math.max(0, x - size / 2);
+        int centerY = y - Math.max(0, y - size / 2);
+
+        // The new indexes of the elements of the old subarray in the new subarray are
+        // as follows:
+        // (i - size/2 + centerX, j - size/2 + centerY)
+
+        // Add the values of the old subarray to the new one
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                // If the indexes do not correspond to the old subarray, we continue
+                if (i - size / 2 + centerX < 0
+                        || j - size / 2 + centerY < 0
+                        || i - size / 2 + centerX >= subArray.size()
+                        || j - size / 2 + centerY >= subArray.get(0).size()) {
+                    continue;
+                }
+
+                // We add the values of the the old subarray to the new one
+                newSubArray.get(i).set(j, subArray.get(i - size / 2 + centerX).get(j - size / 2 + centerY));
+            }
+        }
+
+        return newSubArray;
     }
 
     // Useful for testing purposes (maybe in the future ...)
