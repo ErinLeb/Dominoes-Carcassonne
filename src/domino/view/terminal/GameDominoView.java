@@ -2,6 +2,7 @@ package domino.view.terminal;
 
 import java.util.List;
 
+import domino.model.BotDomino;
 import domino.model.GameDomino;
 import domino.model.TileDomino;
 
@@ -96,7 +97,20 @@ public class GameDominoView {
      */
     public void printUpdateGameRound() {
 
-        System.out.println(model.getCurrentPlayer());
+        System.out.println("===================================== Round " + model.getNbRounds()
+                + " ===========================================");
+        System.out.println();
+
+        if (model.getCurrentPlayer() instanceof BotDomino) {
+            System.out.println("Bot " + model.getCurrentPlayer().getName() + " is playing");
+            System.out.println("Score: " + model.getCurrentPlayer().getScore());
+            System.out.println();
+            return;
+        }
+
+        System.out.println("Player " + model.getCurrentPlayer().getName() + " is playing");
+        System.out.println("Score: " + model.getCurrentPlayer().getScore());
+        System.out.println();
 
         printTileToPlace();
 
