@@ -439,7 +439,7 @@ public class GameDomino {
             throw new IllegalArgumentException("The tile must be placed next to another tile");
 
         if (!tile.canBePlaced(neighbors))
-            return 0;
+            return -1;
 
         int score = 0;
 
