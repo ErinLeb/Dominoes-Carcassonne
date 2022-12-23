@@ -43,6 +43,12 @@ public class PlayerDomino extends Player {
         return score;
     }
 
+    // Setters
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     // Methods
 
     /**

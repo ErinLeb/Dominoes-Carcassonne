@@ -8,11 +8,58 @@ import domino.model.PlayerDomino;
 import domino.model.TileDomino;
 
 public class GameDominoView {
-
+    // Attributes
     GameDomino model;
 
+    // Constructor
     public GameDominoView(GameDomino model) {
         this.model = model;
+        printRules();
+        printCommands();
+    }
+
+    // Methods
+
+    public static void printRules() {
+        String rules = "\n";
+        rules += "########################################################*RULES*#######################################################\n";
+
+        rules += "In this version of Dominoes, the dominoes are squares and have three figures on each of their sides.\n";
+        rules += "\nHow to win ?\n";
+        rules += "The winner is the player who has the highest score when there is no tile to place anymore. Another way to win is to be the only player to last in the game if the others surrendered.\n";
+        rules += "\nHow to score points ?\n";
+        rules += "You score when you place successfully a tile on the board. The amount of points you gain is the sum of the numbers in contact with those of the neighboring tiles.\n";
+        rules += "\nThe rules are easy :\n";
+        rules += "There are between 2 and 6 players. You can also play against AIs by choosing so at the beginning.\n";
+        rules += "At the beginning, you need to choose the number of tiles you want (one placed on the board to start and the others in the deck).\n";
+        rules += "You can stop the game once it has begun using the command 'quit'.\n";
+        rules += "A player can decide to quit the game. If after this decision there is only one player left in the game, this one wins by default, else, the game continues with the players still in the game.\n";
+
+        rules += "########################################################*RULES*#######################################################\n";
+        System.out.println(rules);
+    }
+
+    public static void printCommands() {
+        String commands = "\n";
+        commands += "#####################################################*COMMANDS*##########################################################\n";
+
+        commands += "[ID] = the id of a tile on the board\n";
+        commands += "[Direction] = up/down/right/left\n\n";
+        commands += "pass - if you can't place the tile, it is discarded and the next player plays \n";
+        commands += "p/print/print b/ print board/printboard - print the board \n";
+        commands += "p/print [string]/printtile - print tile to place\n";
+        commands += "surrender - abandon the game\n";
+        commands += "mv/move [Direction] [number of tile]  - move the board according to the direction and number of tiles (1 by default)\n";
+        commands += "tr/turn/turn r [number] - turn the tile to place clockwise [number] times (1 by default)\n";
+        commands += "turnRight [number] - turn the tile to place clockwise [number] times\n";
+        commands += "turnLeft [number] - turn the tile to place anticlockwise [number] times\n";
+        commands += "pl/place [line] [column] - place the tile to place in the position (line, column) if possible\n";
+        commands += "pl/place [ID] [Direction] - place the tile to place in the position [Direction] relative to the tile with the id [ID]. (e.g : place 4 u -> above the tile #4)\n";
+        commands += "q/quit - quit the game\n";
+        commands += "h/help - print the commands\n";
+
+        commands += "#####################################################*COMMANDS*##########################################################\n";
+        System.out.println(commands);
     }
 
     /**
@@ -164,5 +211,10 @@ public class GameDominoView {
         for (PlayerDomino p : ranking) {
             System.out.println(p.getName() + " : " + p.getScore() + " points");
         }
+    }
+
+    public static void main(String[] args) {
+        printRules();
+        printCommands();
     }
 }
