@@ -8,7 +8,6 @@ import exceptions.TileNotFoundException;
 import exceptions.UnableToTurnException;
 import interfaces.Placeable;
 import interfaces.Placeable.Direction;
-import shared.model.Player;
 import utilities.Expandable2DArray;
 import utilities.Pair;
 
@@ -16,8 +15,6 @@ import utilities.Pair;
  * Represents a game of Domino
  */
 public class GameDomino {
-    // TODO: Implement player naming and information.
-
     // Attributes
     // Length of the side of the square of tiles to show
     // It should be an odd number
@@ -61,6 +58,8 @@ public class GameDomino {
         board = new Expandable2DArray<>(currentTileDomino);
 
         currentPlayer = 0;
+
+        deck.shuffle();
     }
 
     public GameDomino(PlayerDomino[] players, int nbTiles) {
@@ -74,6 +73,8 @@ public class GameDomino {
         board = new Expandable2DArray<>(currentTileDomino);
 
         currentPlayer = 0;
+
+        deck.shuffle();
     }
 
     // Setters
@@ -189,13 +190,6 @@ public class GameDomino {
     }
 
     // Methods
-
-    /**
-     * Initialize the game
-     */
-    public void initGame() {
-        // TODO: implement initGame().
-    }
 
     /**
      * Moves the current position of the current tile on the board in the given
