@@ -58,6 +58,7 @@ public class SideDomino extends Side {
 
     // Setters
 
+    // @Override
     public void setLinked(SideDomino linked) {
         if (linked != this.linked) {
             this.linked = linked;
@@ -83,27 +84,22 @@ public class SideDomino extends Side {
         }
     }
 
-    /**
-     * Returns {@code true} if the side is linked to another side.
-     * 
-     * @return {@code true} if the side is linked to another side
-     */
+    @Override
     public boolean isLinked() {
         return linked != null;
     }
 
     /**
-     * Returns {@code true} if the side is linked to {@code side}
-     * 
-     * @param side the side to check
-     */
+    * Returns {@code true} if the side is linked to {@code side}
+    * 
+    * @param side the side to check
+    * @return {@code true} if the side is linked to the side {@code side}
+    */
     public boolean isLinkedTo(SideDomino side) {
         return linked.equals(side);
     }
 
-    /**
-     * Sets the linked side to {@code null}.
-     */
+    @Override
     public void unlink() {
         linked = null;
     }

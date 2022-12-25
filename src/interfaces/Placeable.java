@@ -2,6 +2,7 @@ package interfaces;
 
 import java.util.List;
 
+import exceptions.UnableToTurnException;
 import shared.model.Side;
 import utilities.Pair;
 
@@ -16,6 +17,15 @@ public interface Placeable<T extends Side> {
     enum Direction {
         UP, RIGHT, DOWN, LEFT
     }
+
+    /**
+     * Returns an array of the sides of the tile following this rule :
+     * tab[0] = upper side, tab[1] = right side, tab[2] = lower side, tab[3] = left
+     * side.
+     * 
+     * @return an array of the sides of the tile.
+     */
+    public T[] getSides();
 
     /**
      * Returns the side of the object in the direction {@code direction}.
@@ -201,4 +211,32 @@ public interface Placeable<T extends Side> {
 
         return true;
     }
+
+    /**
+     * Checks if the object can be placed on the board after a certain amount of
+     * rotations.
+     * 
+     * @return {@code true} if the object could be placed on the board after a
+     *         certain
+     *         amount of rotations
+     */
+    public boolean canBePlacedWithRotation(List<Pair<Placeable<T>, Direction>> tiles);
+
+    /**
+     * Turns left the {@code sides} {@code n} times.
+     * 
+     * @param n Number of times to turn
+     * @throws UnableToTurnException If the tile is already linked to at least one
+     *                               tile
+     */
+    public abstract void turnLeft(int n) throws UnableToTurnException;
+
+    /**
+     * Turns right the {@code sides} {@code n} times.
+     * 
+     * @param n Number of times to turn
+     * @throws UnableToTurnException If the tile is already linked to at least one
+     *                               tile
+     */
+    public abstract void turnRight(int n) throws UnableToTurnException;
 }

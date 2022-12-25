@@ -26,6 +26,7 @@ public class Player {
      * Returns {@code true} if the score of the player is equal to p's score
      * 
      * @param p
+     * @return {@code true} if the score of the player is equal to p's score
      */
     public boolean isScoreEqual(Player p) {
         return score == p.score;
