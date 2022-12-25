@@ -176,6 +176,7 @@ public class GameDominoController {
                     String answer = sc.nextLine();
                     if (answer.equalsIgnoreCase("yes") || answer.equalsIgnoreCase("y")) {
                         model.setIsGameOn(true);
+                        // TODO: re-initialize the game
                         valid = true;
                     } else if (answer.equalsIgnoreCase("no") || answer.equalsIgnoreCase("n")) {
                         valid = true;

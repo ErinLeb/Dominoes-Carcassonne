@@ -101,7 +101,12 @@ public class DeckDomino extends Deck {
         }
     }
 
-    @Override
+    /**
+     * Returns the domino at the top of the deck.
+     * 
+     * @return the domino at the top of the deck.
+     */
+    @SuppressWarnings("unchecked")
     public TileDomino draw() {
         return tiles.remove(0);
     }
