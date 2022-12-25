@@ -81,6 +81,7 @@ public class TileDomino extends Tile<SideDomino> {
         return id;
     }
 
+    @Override
     public SideDomino[] getSides() {
         return sides;
     }
@@ -90,11 +91,7 @@ public class TileDomino extends Tile<SideDomino> {
         return sides[directionToInt(direction)];
     }
 
-    /**
-     * Returns the list of sides which are not linked to another tile.
-     * 
-     * @return the list of sides which are not linked to another tile
-     */
+    @Override
     public List<Pair<SideDomino, Direction>> getUnlinkedSides() {
         ArrayList<Pair<SideDomino, Direction>> unlinkedSides = new ArrayList<>();
 
@@ -122,24 +119,14 @@ public class TileDomino extends Tile<SideDomino> {
         this.id = id;
     }
 
-    /**
-     * The sides of the tile are replaced by {@code tab}.
-     * 
-     * @param tab the new sides of the tile
-     */
+    @Override
     public void setAllSides(SideDomino[] tab) {
         validSides(tab);
         this.sides = tab;
     }
 
-    /**
-     * Sets the side of the object in the direction {@code direction} to
-     * {@code side}.
-     * 
-     * @param side      the side to set
-     * @param direction the direction of the side to set
-     */
-    private void setSide(SideDomino side, Direction direction) {
+    @Override
+    public void setSide(SideDomino side, Direction direction) {
         this.sides[directionToInt(direction)] = side;
     }
 
@@ -184,13 +171,7 @@ public class TileDomino extends Tile<SideDomino> {
         return sides[directionToInt(direction)].hasSameFig(side);
     }
 
-    /**
-     * Turns left the {@code sides} {@code n} times.
-     * 
-     * @param n Number of times to turn
-     * @throws UnableToTurnException If the tile is already linked to at least one
-     *                               tile
-     */
+    @Override
     public void turnLeft(int n) throws UnableToTurnException {
         if (isLinked()) {
             throw new UnableToTurnException();
@@ -212,14 +193,7 @@ public class TileDomino extends Tile<SideDomino> {
         }
     }
 
-    /**
-     * Turns right the {@code sides} {@code n} times.
-     * 
-     * @param n Number of times to turn
-     * @throws UnableToTurnException If the tile is already linked to at least one
-     *                               tile
-     */
-
+    @Override
     public void turnRight(int n) throws UnableToTurnException {
         if (isLinked())
             throw new UnableToTurnException();
@@ -241,11 +215,7 @@ public class TileDomino extends Tile<SideDomino> {
         }
     }
 
-    /**
-     * Returns {@code true} if the tile is already linked to another.
-     * 
-     * @return {@code true} if the tile is already linked to another.
-     */
+    @Override
     public boolean isLinked() {
         for (SideDomino side : sides)
             if (side.isLinked())
@@ -258,9 +228,7 @@ public class TileDomino extends Tile<SideDomino> {
         return false;
     }
 
-    /**
-     * Unlinks all the sides of the tile.
-     */
+    @Override
     public void unlink() {
         for (SideDomino side : sides)
             side.unlink();
@@ -300,13 +268,7 @@ public class TileDomino extends Tile<SideDomino> {
             System.out.println(line);
     }
 
-    /**
-     * Checks if the tile can be placed on the board after a certain amount of
-     * rotations.
-     * 
-     * @return {@code true} if the tile could be placed on the board after a certain
-     *         amount of rotations
-     */
+    @Override
     public boolean canBePlacedWithRotation(List<Pair<Placeable<SideDomino>, Direction>> tiles) {
         for (int z = 0; z < 4; z++) {
             if (canBePlaced(tiles))
@@ -321,11 +283,7 @@ public class TileDomino extends Tile<SideDomino> {
         return false;
     }
 
-    /**
-     * Returns a copy of the tile.
-     * 
-     * @return a copy of the tile
-     */
+    @Override
     public TileDomino copy() {
         return new TileDomino(new SideDomino[] { sides[0].copy(), sides[1].copy(), sides[2].copy(), sides[3].copy() });
     }

@@ -12,10 +12,10 @@ import utilities.Pair;
  * A deck of dominoes.
  */
 public class DeckDomino extends Deck {
-    // attributes
+    // Attributes
     private ArrayList<TileDomino> tiles; // Tiles in the deck
 
-    // constructor
+    // Constructor
 
     /**
      * Creates a deck of dominoes of size {@code size}.
@@ -25,9 +25,9 @@ public class DeckDomino extends Deck {
         createDeck(size);
     }
 
-    // getters
+    // Getters
 
-    // methods
+    // Methods
 
     /**
      * Fills the list of tiles with the correct number of tiles. The algorithm also
@@ -78,22 +78,17 @@ public class DeckDomino extends Deck {
         tiles.forEach(TileDomino::unlink);
     }
 
+    @Override
     public boolean isEmpty() {
         return tiles.isEmpty();
     }
 
-    /**
-     * Returns the number of dominoes in the deck.
-     * 
-     * @return
-     */
+    @Override
     public int size() {
         return tiles.size();
     }
 
-    /**
-     * Shuffles the deck.
-     */
+    @Override
     public void shuffle() {
         Random rand = new Random();
 
@@ -106,11 +101,7 @@ public class DeckDomino extends Deck {
         }
     }
 
-    /**
-     * Returns the domino at the top of the deck.
-     * 
-     * @return
-     */
+    @Override
     public TileDomino draw() {
         return tiles.remove(0);
     }
