@@ -79,6 +79,7 @@ public class GameDomino {
 
     // Setters
 
+    // TODO : check if still useful
     public void setIsGameOn(boolean b) {
         isGameOn = b;
     }
@@ -256,8 +257,6 @@ public class GameDomino {
         this.currentTileDomino = board.get(currentPosition);
     }
 
-    // TODO: implement can only place next to a tile
-
     /**
      * Places the tile to place on the board at the given position.
      * 
@@ -387,6 +386,10 @@ public class GameDomino {
         }
 
         tileToPlace = deck.draw();
+
+        if (deck.isEmpty()) {
+            isGameOn = false;
+        }
     }
 
     /**
@@ -395,6 +398,7 @@ public class GameDomino {
      * @param player Player who surrenders
      */
     public void surrender(PlayerDomino player) {
+        // TODO : change surrender
         isGameOn = false;
     }
 
