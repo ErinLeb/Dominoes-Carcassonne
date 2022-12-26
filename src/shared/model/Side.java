@@ -6,7 +6,7 @@ public abstract class Side {
 
     // Methods
 
-    //TODO : check if Carcassonne Sides need isLinked() and unlink()
+    // TODO : check if Carcassonne Sides need isLinked() and unlink()
 
     /**
      * Returns {@code true} if the side is linked to another side.
@@ -14,7 +14,7 @@ public abstract class Side {
      * @return {@code true} if the side is linked to another side
      */
     public abstract boolean isLinked();
-    
+
     /**
      * Sets the linked side to {@code null}.
      */

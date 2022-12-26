@@ -22,6 +22,7 @@ public class GameDomino {
 
     private PlayerDomino[] players; // Players of the game
     private DeckDomino deck; // Deck of the game
+    private int deckSize; // Total number of tiles
 
     private Expandable2DArray<TileDomino> board; // Board of the game
 
@@ -52,6 +53,7 @@ public class GameDomino {
 
         // Creation of the deck
         deck = new DeckDomino(nbTiles);
+        deckSize = nbTiles;
 
         currentTileDomino = deck.draw();
         currentPosition = new Pair<>(0, 0);
@@ -67,6 +69,7 @@ public class GameDomino {
         this.players = players;
         // Creation of the deck
         deck = new DeckDomino(nbTiles);
+        deckSize = nbTiles;
 
         currentTileDomino = deck.draw();
         currentPosition = new Pair<>(0, 0);
@@ -79,7 +82,7 @@ public class GameDomino {
 
     // Setters
 
-    // TODO : check if still useful
+    // TODO : check if we still need this setter
     public void setIsGameOn(boolean b) {
         isGameOn = b;
     }
@@ -160,7 +163,9 @@ public class GameDomino {
     }
 
     /**
-     * @return the player(s) with the highest score.
+     * Returns the player(s) with the highest score.
+     * 
+     * @return a list of the player(s) with the highest score.
      */
     public List<PlayerDomino> getWinners() {
         PlayerDomino[] ranking = getRanking();
@@ -179,6 +184,8 @@ public class GameDomino {
     }
 
     /**
+     * Returns an array of {@code PlayerDomino} sorted by their {@code score}.
+     * 
      * @return an array of {@code PlayerDomino} sorted by their {@code score}.
      */
     public PlayerDomino[] getRanking() {
@@ -191,6 +198,42 @@ public class GameDomino {
     }
 
     // Methods
+
+    /**
+     * Resets the parameters of the game. If {@code initScore} is {@code true},
+     * every score is reset at 0, otherwise, they stay as they are. The deck is
+     * generated again with the same number of tiles in it. The board is reset with
+     * a new tile to begin with. The current player is the first one declared and
+     * the number of rounds is reset too.
+     */
+    public void initGame(boolean resetScore) {
+        // scores
+        if (resetScore) {
+            for (int i = 0; i < players.length; i++) {
+                players[i].resetScore();
+            }
+        }
+
+        // deck
+        deck = new DeckDomino(deckSize);
+        deck.shuffle();
+
+        // currentTile & currentPosition
+        currentTileDomino = deck.draw();
+        currentPosition = new Pair<>(0, 0);
+
+        // board
+        board = new Expandable2DArray<>(currentTileDomino);
+
+        // currentPlayer
+        currentPlayer = 0;
+
+        // nbRounds
+        nbRounds = 0;
+
+        // isGameOn
+        isGameOn = true;
+    }
 
     /**
      * Moves the current position of the current tile on the board in the given
@@ -413,7 +456,7 @@ public class GameDomino {
      * Quits the game.
      */
     public void quit() {
-        // TODO: implement better way of doing it
+        // TODO: implement better way to surrender
         isGameOn = false;
     }
 
@@ -456,6 +499,12 @@ public class GameDomino {
         return possibleLocations;
     }
 
+    /**
+     * Returns the amount of points a player would score if {@code tile} is placed
+     * at ({@code x}, {@code y})
+     * 
+     * @return the amount of points the player would score
+     */
     public int pointsIfPlaced(int x, int y, TileDomino tile) {
 
         if (tile == null)
@@ -487,7 +536,8 @@ public class GameDomino {
     }
 
     /**
-     * If the deck is empty, switches isGameOn to false and return {@code true}.
+     * If {@code isGameOn} is {@code false} or the deck is empty, switches isGameOn
+     * to false and return {@code true}.
      * 
      * @return {@code true} if the deck is empty.
      */
@@ -605,4 +655,5 @@ public class GameDomino {
         }
 
     }
+
 }

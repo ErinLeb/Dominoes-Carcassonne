@@ -8,7 +8,7 @@ import utilities.Pair;
 public abstract class Tile<T extends Side> implements Placeable<T> {
     // Getters
 
-    //TODO : remove functions about links if Carcassonne doesn't use it
+    // TODO : remove functions about links if Carcassonne doesn't use it
 
     /**
      * Returns the list of sides which are not linked to another tile.
@@ -28,8 +28,8 @@ public abstract class Tile<T extends Side> implements Placeable<T> {
      * Returns an array of the tiles linked to each side of the tile. Null if a side
      * is not linked.
      *
-     *@return an array of the tiles linked to each side of the tile. Null if a side
-     * is not linked.
+     * @return an array of the tiles linked to each side of the tile. Null if a side
+     *         is not linked.
      */
     public abstract Tile<T>[] getNeighbors();
 

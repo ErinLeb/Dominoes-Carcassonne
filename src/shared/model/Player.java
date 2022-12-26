@@ -13,6 +13,14 @@ public class Player {
     }
 
     // Methods
+
+    /**
+     * Resets the score to 0.
+     */
+    public void resetScore() {
+        score = 0;
+    }
+
     /**
      * Add {@code points} to the score of the player
      * 
