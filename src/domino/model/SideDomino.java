@@ -84,17 +84,27 @@ public class SideDomino extends Side {
         }
     }
 
+    /**
+     * Reverse the order of the figures on the side. Useful to turn correctly the
+     * side.
+     */
+    public void reverseOrder() {
+        int tmp = fig[0];
+        fig[0] = fig[2];
+        fig[2] = tmp;
+    }
+
     @Override
     public boolean isLinked() {
         return linked != null;
     }
 
     /**
-    * Returns {@code true} if the side is linked to {@code side}
-    * 
-    * @param side the side to check
-    * @return {@code true} if the side is linked to the side {@code side}
-    */
+     * Returns {@code true} if the side is linked to {@code side}
+     * 
+     * @param side the side to check
+     * @return {@code true} if the side is linked to the side {@code side}
+     */
     public boolean isLinkedTo(SideDomino side) {
         return linked.equals(side);
     }

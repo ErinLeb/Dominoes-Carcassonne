@@ -492,7 +492,7 @@ public class GameDomino {
      * @return {@code true} if the deck is empty.
      */
     public boolean endGame() {
-        if (deck.isEmpty() || isGameOn == false) {
+        if (deck.isEmpty() || !isGameOn) {
             isGameOn = false;
             return true;
         }
