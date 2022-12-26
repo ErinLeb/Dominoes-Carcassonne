@@ -42,11 +42,9 @@ public class GameDominoController {
                 System.out.println("Invalid command, you must enter a number");
             }
 
-            if (valid) {
-                if (nbPlayers < 2 || nbPlayers > 6) {
-                    System.out.println("Please choose a number between 2 and 6");
-                    valid = false;
-                }
+            if (valid && nbPlayers < 2 || nbPlayers > 6) {
+                System.out.println("Please choose a number between 2 and 6");
+                valid = false;
             }
         }
 
@@ -55,8 +53,42 @@ public class GameDominoController {
         System.out.println(
                 "You are now going to enter the names of the real players or if the players are virtual, in the order each will play \n");
 
+        getPlayerNames(nbPlayers, players);
+
+        System.out.println("Now please choose the number of tiles you want in the deck (between 15 and 100)");
+        int nbTiles = 28; // default
+        valid = false;
+        while (!valid) {
+            try {
+                valid = true;
+                nbTiles = Integer.parseInt(sc.nextLine());
+            } catch (NumberFormatException e) {
+                valid = false;
+                System.out.println("Invalid command, you must enter a number");
+            }
+
+            if (valid && nbTiles < 15 || nbTiles > 100) {
+                System.out.println("Please choose a number between 15 and 100");
+                valid = false;
+
+            }
+        }
+
+        model = new GameDomino(players, nbTiles);
+        view = new GameDominoView(model);
+    }
+
+    /**
+     * This method is used to get the names of the players. It updates the array of
+     * players.
+     * 
+     * @param nbPlayers the number of players
+     * @param players   the array of players
+     */
+    private void getPlayerNames(int nbPlayers, PlayerDomino[] players) {
         for (int i = 1; i <= nbPlayers; i++) {
-            while (true) {
+            boolean isNameValid = false;
+            while (!isNameValid) {
                 System.out.println("Is the player n°" + i + " is a bot ? (yes/no)");
                 String answer = sc.nextLine();
                 if (answer.equalsIgnoreCase("yes") || answer.equalsIgnoreCase("y")) {
@@ -68,7 +100,7 @@ public class GameDominoController {
 
                     players[i - 1] = bot;
                     System.out.println("Player n°" + i + " will be " + bot.getName() + ".");
-                    break;
+                    isNameValid = true;
                 } else if (answer.equalsIgnoreCase("no") || answer.equalsIgnoreCase("n")) {
                     System.out.println("What's the name of the player n°" + i + " ?");
                     String name = sc.nextLine();
@@ -84,38 +116,18 @@ public class GameDominoController {
 
                         players[i - 1] = p;
                     }
-                    break;
+                    isNameValid = true;
                 }
             }
         }
-
-        System.out.println("Now please choose the number of tiles you want in the deck (between 15 and 100)");
-        int nbTiles = 28; // default
-        valid = false;
-        while (!valid) {
-            try {
-                valid = true;
-                nbTiles = Integer.parseInt(sc.nextLine());
-            } catch (NumberFormatException e) {
-                valid = false;
-                System.out.println("Invalid command, you must enter a number");
-            }
-
-            if (valid) {
-                if (nbTiles < 15 || nbTiles > 100) {
-                    System.out.println("Please choose a number between 15 and 100");
-                    valid = false;
-                }
-            }
-        }
-
-        model = new GameDomino(players, nbTiles);
-        view = new GameDominoView(model);
     }
 
     /**
      * Checks if the name of {@code p} is already used by one of the Player in
      * {@code players}
+     * 
+     * @param players the array of players
+     * @param p       the player to check
      */
     private boolean checkName(PlayerDomino[] players, PlayerDomino p) {
         for (int i = 0; i < players.length; i++) {
@@ -183,11 +195,9 @@ public class GameDominoController {
                     } else {
                         System.out.println("Invalid command");
                     }
-
                 }
             }
         }
-
     }
 
     /**
@@ -199,7 +209,6 @@ public class GameDominoController {
      *         finished, {@code false} otherwise
      */
     public boolean parseInput(String input, PlayerDomino player) {
-
         String[] args = input.split(" ");
 
         try {

@@ -190,6 +190,10 @@ public class TileDomino extends Tile<SideDomino> {
             }
             // First element of array will be put at the end of the array
             sides[j] = first;
+
+            // Reverse the order of the sides
+            sides[1].reverseOrder();
+            sides[3].reverseOrder();
         }
     }
 
@@ -212,6 +216,10 @@ public class TileDomino extends Tile<SideDomino> {
 
             // Last element of array will be put at the start of the array.
             sides[0] = last;
+
+            // Reverse the order of the sides
+            sides[0].reverseOrder();
+            sides[2].reverseOrder();
         }
     }
 
