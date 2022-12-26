@@ -14,8 +14,6 @@ public class GameDominoView {
     // Constructor
     public GameDominoView(GameDomino model) {
         this.model = model;
-        printRules();
-        printCommands();
     }
 
     // Methods
