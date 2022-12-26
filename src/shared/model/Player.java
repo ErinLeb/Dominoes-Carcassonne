@@ -2,14 +2,26 @@ package shared.model;
 
 public class Player {
     protected int score = 0;
+    protected boolean isInGame = true;
 
     // Constructor
     public Player() {
     }
 
     // Getters
+
     public int getScore() {
         return score;
+    }
+
+    public boolean isInGame() {
+        return isInGame;
+    }
+
+    // Setters
+
+    public void setInGame(boolean isInGame) {
+        this.isInGame = isInGame;
     }
 
     // Methods
@@ -39,4 +51,5 @@ public class Player {
     public boolean isScoreEqual(Player p) {
         return score == p.score;
     }
+
 }

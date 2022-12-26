@@ -290,10 +290,11 @@ public class GameDominoController {
                 case "pass":
                     List<Pair<Integer, Integer>> p = model.findPossiblePlacements();
 
-                    if (p.isEmpty())
+                    if (p.isEmpty()) {
                         return true;
-
-                    throw new TileCanBePlacedException();
+                    } else {
+                        throw new TileCanBePlacedException();
+                    }
                 case "p":
                 case "print":
                     if (args.length == 1) {
@@ -316,8 +317,6 @@ public class GameDominoController {
                     view.printBoard();
                     return false;
                 case "surrender":
-                    // TODO : if there are still players left, continue the game (attribute boolean
-                    // ?)
                     model.surrender(player);
                     view.surrender(player);
                     return true;
@@ -400,6 +399,20 @@ public class GameDominoController {
                 default:
                     System.out.println("Invalid command");
                     return false;
+            }
+        } catch (TileCanBePlacedException e) {
+            System.out.print(e.getMessage());
+
+            while (true) {
+                System.out.println(" Are you sure you still want to pass ? (Yes/No)");
+                String pass = sc.nextLine();
+
+                if (pass.equalsIgnoreCase("yes") || pass.equalsIgnoreCase("y")) {
+                    return true;
+                }
+                if (pass.equalsIgnoreCase("no") || pass.equalsIgnoreCase("n")) {
+                    return false;
+                }
             }
         } catch (Exception e) {
             System.out.println("Invalid command");

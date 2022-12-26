@@ -207,12 +207,34 @@ public class GameDominoView {
         PlayerDomino[] ranking = model.getRanking();
         System.out.println("This is the ranking : ");
         for (PlayerDomino p : ranking) {
-            System.out.println(p.getName() + " : " + p.getScore() + " points");
+            System.out.print(p.getName() + " : " + p.getScore() + " points");
+
+            // print which player surrendered
+            if (p.isInGame()) {
+                System.out.println();
+            } else {
+                System.out.println(" (surrendered)");
+            }
         }
     }
 
     public static void main(String[] args) {
-        printRules();
-        printCommands();
+        // printRules();
+        // printCommands();
+
+        PlayerDomino p1 = new PlayerDomino("Erin");
+        PlayerDomino p2 = new PlayerDomino("Yago");
+        PlayerDomino p3 = new PlayerDomino("Surrendered");
+
+        PlayerDomino[] players = { p1, p2, p3 };
+        GameDomino game = new GameDomino(players, 4);
+        GameDominoView view = new GameDominoView(game);
+
+        p1.incrementScore(10);
+        p2.incrementScore(10);
+        p3.incrementScore(12);
+        game.surrender(p3);
+
+        view.endGame();
     }
 }
