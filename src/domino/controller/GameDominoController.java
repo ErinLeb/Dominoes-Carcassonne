@@ -272,16 +272,16 @@ public class GameDominoController {
                         if (args.length == 2) {
                             model.turn(true, Integer.parseInt(args[1]));
                             view.printTileToPlace();
+                            return false;
                         }
                         if (args.length > 3)
                             throw new IllegalArgumentException("Invalid number of arguments");
 
-                        model.turn(args[1].toUpperCase().charAt(0) == 'R', Integer.parseInt(args[2]));
+                        model.turn(args[1].toLowerCase().charAt(0) == 'r', Integer.parseInt(args[2]));
                         view.printTileToPlace();
-
                     }
                     return false;
-                case "turnLeft":
+                case "turnleft":
                     if (args.length == 1) {
                         model.turn(false, 1);
                         view.printTileToPlace();
@@ -295,7 +295,7 @@ public class GameDominoController {
 
                     }
                     return false;
-                case "turnRight":
+                case "turnright":
                     if (args.length == 1) {
                         model.turn(true, 1);
                         view.printTileToPlace();
