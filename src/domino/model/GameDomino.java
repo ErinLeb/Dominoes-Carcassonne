@@ -1,9 +1,7 @@
 package domino.model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
 import exceptions.TileNotFoundException;
 import exceptions.UnableToTurnException;
 import interfaces.Placeable;
@@ -165,7 +163,7 @@ public class GameDomino {
     /**
      * Returns the player(s) with the highest score.
      * 
-     * @return a list of the player(s) with the highest score.
+     * @return a list of the player(s) still in the game with the highest score.
      */
     public List<PlayerDomino> getWinners() {
         PlayerDomino[] ranking = getRanking();
@@ -175,7 +173,7 @@ public class GameDomino {
         int scoreMax = ranking[0].getScore();
         int i = 1;
 
-        while (i < ranking.length && ranking[i].getScore() == scoreMax) {
+        while (i < ranking.length && ranking[i].isInGame() && ranking[i].getScore() == scoreMax) {
             winners.add(ranking[i]);
             i++;
         }
@@ -191,8 +189,32 @@ public class GameDomino {
     public PlayerDomino[] getRanking() {
         PlayerDomino[] ranking = players.clone();
 
-        // sort ranking by score
-        Arrays.sort(ranking, (a, b) -> b.getScore() - a.getScore());
+        // Differentiate players who surrendered
+        ArrayList<PlayerDomino> surrendered = new ArrayList<>();
+        ArrayList<PlayerDomino> stillInGame = new ArrayList<>();
+
+        for (int i = 0; i < ranking.length; i++) {
+
+            if (ranking[i].isInGame()) {
+                stillInGame.add(ranking[i]);
+
+            } else {
+                surrendered.add(ranking[i]);
+            }
+        }
+
+        // Sort by score
+        surrendered.sort((a, b) -> b.getScore() - a.getScore());
+        stillInGame.sort((a, b) -> b.getScore() - a.getScore());
+
+        // Add players still in the game, then those who surrendered
+        for (int i = 0; i < ranking.length; i++) {
+            if (i < stillInGame.size()) {
+                ranking[i] = stillInGame.get(i);
+            } else {
+                ranking[i] = surrendered.get(i - stillInGame.size());
+            }
+        }
 
         return ranking;
     }
@@ -207,6 +229,11 @@ public class GameDomino {
      * the number of rounds is reset too.
      */
     public void initGame(boolean resetScore) {
+        // isInGame
+        for (int i = 0; i < players.length; i++) {
+            players[i].setInGame(true);
+        }
+
         // scores
         if (resetScore) {
             for (int i = 0; i < players.length; i++) {
@@ -425,7 +452,10 @@ public class GameDomino {
         nbRounds++;
 
         if (nbRounds != 1) {
-            currentPlayer = (currentPlayer + 1) % players.length;
+            // The next player is the next still in the game
+            do {
+                currentPlayer = (currentPlayer + 1) % players.length;
+            } while (!players[currentPlayer].isInGame());
         }
 
         tileToPlace = deck.draw();
@@ -436,27 +466,29 @@ public class GameDomino {
     }
 
     /**
-     * {@code player} surrenders the game.
+     * {@code player} surrenders.
      * 
      * @param player Player who surrenders
      */
     public void surrender(PlayerDomino player) {
-        // TODO : change surrender
-        isGameOn = false;
-    }
+        player.setInGame(false);
 
-    /**
-     * The current player surrenders.
-     */
-    public void surrender() {
-        surrender(players[currentPlayer]);
+        // We check if isGameOn is still true
+        int nbPlayersLeft = 0;
+        for (int i = 0; i < players.length; i++) {
+            if (players[i].isInGame()) {
+                nbPlayersLeft++;
+            }
+        }
+        if (nbPlayersLeft <= 1) {
+            isGameOn = false;
+        }
     }
 
     /**
      * Quits the game.
      */
     public void quit() {
-        // TODO: implement better way to surrender
         isGameOn = false;
     }
 
@@ -640,15 +672,18 @@ public class GameDomino {
          * // game.printBoard();
          */
 
-        PlayerDomino p1 = new PlayerDomino();
-        PlayerDomino p2 = new PlayerDomino();
-        PlayerDomino p3 = new PlayerDomino();
-        p1.incrementScore(8);
-        p3.incrementScore(8);
-        // p2.incrementScore(10);
+        PlayerDomino p1 = new PlayerDomino("Erin");
+        PlayerDomino p2 = new PlayerDomino("Yago");
+        PlayerDomino p3 = new PlayerDomino("Surrendered");
 
         PlayerDomino[] players = { p1, p2, p3 };
         GameDomino game = new GameDomino(players, 4);
+
+        p1.incrementScore(8);
+        p2.incrementScore(10);
+        p3.incrementScore(12);
+        game.surrender(p3);
+
         PlayerDomino[] rk = game.getRanking();
         for (PlayerDomino p : rk) {
             System.out.println(p);
