@@ -27,6 +27,10 @@ public abstract class Tile<T extends Side> implements Placeable<T> {
         return sides;
     }
 
+    public boolean isPlaced() {
+        return isPlaced;
+    }
+
     // Setters
 
     /**
@@ -49,6 +53,11 @@ public abstract class Tile<T extends Side> implements Placeable<T> {
         validSides(tab);
         this.sides = tab;
     }
+
+    public void setPlaced(boolean isPlaced) {
+        this.isPlaced = isPlaced;
+    }
+
     // Methods
 
     public abstract boolean validSides(T[] tab);
@@ -59,8 +68,6 @@ public abstract class Tile<T extends Side> implements Placeable<T> {
      * @return a copy of the tile
      */
     public abstract Tile<T> copy();
-
-    // TODO : decide if turn methods must be in Placeable or here
 
     /**
      * Turns left the {@code sides} {@code n} times.
@@ -141,14 +148,6 @@ public abstract class Tile<T extends Side> implements Placeable<T> {
             }
         }
         return false;
-    }
-
-    public boolean isPlaced() {
-        return isPlaced;
-    }
-
-    public void setPlaced(boolean isPlaced) {
-        this.isPlaced = isPlaced;
     }
 
 }

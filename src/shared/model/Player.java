@@ -2,16 +2,25 @@ package shared.model;
 
 public class Player {
     protected int score = 0;
+    protected String name;
     protected boolean isInGame = true;
 
     // Constructor
     public Player() {
     }
 
+    public Player(String name) {
+        this.name = name;
+    }
+
     // Getters
 
     public int getScore() {
         return score;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public boolean isInGame() {
@@ -22,6 +31,10 @@ public class Player {
 
     public void setInGame(boolean isInGame) {
         this.isInGame = isInGame;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     // Methods
