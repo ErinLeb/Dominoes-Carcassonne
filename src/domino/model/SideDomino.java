@@ -15,12 +15,13 @@ public class SideDomino extends Side {
     public static final int MAX_VALUE = 3; // Max value of a side
 
     private final int[] fig; // The figures on the side
-    private SideDomino linked = null; // The linked side
 
     // Constructors
     public SideDomino(int[] tab) {
-        validFig(tab);
-        fig = tab;
+        if (isValidFig(tab)) {
+            fig = tab;
+        } else
+            throw new IllegalArgumentException("The array is not valid");
     }
 
     /**
@@ -40,10 +41,6 @@ public class SideDomino extends Side {
         return fig;
     }
 
-    public SideDomino getLinked() {
-        return linked;
-    }
-
     /**
      * Returns the sum of the figures on the side.
      * 
@@ -56,32 +53,27 @@ public class SideDomino extends Side {
         return sum;
     }
 
-    // Setters
-
-    // @Override
-    public void setLinked(SideDomino linked) {
-        if (linked != this.linked) {
-            this.linked = linked;
-            // The link is also set on the other side
-            linked.setLinked(this);
-        }
-    }
-
     // Methods
 
     /**
      * Verifies if {@code tab} is an array of 3 integers between 0 and
      * {@code MAX_VALUE}
+     * 
+     * @param tab the array to check
+     * @return {@code true} if {@code tab} is an array of 3 integers between 0 and
+     *         {@code MAX_VALUE}
      */
-    public static void validFig(int[] tab) {
-        if (tab.length != 3) {
-            throw new IllegalArgumentException("Length of the array is illegal");
-        }
+    public static boolean isValidFig(int[] tab) {
+        if (tab.length != 3)
+            return false;
+
         for (int i = 0; i < 3; i++) {
             if (tab[i] < 0 || tab[i] > MAX_VALUE) {
-                throw new IllegalArgumentException("Figures in the array are not correct");
+                return false;
             }
         }
+
+        return true;
     }
 
     /**
@@ -92,26 +84,6 @@ public class SideDomino extends Side {
         int tmp = fig[0];
         fig[0] = fig[2];
         fig[2] = tmp;
-    }
-
-    @Override
-    public boolean isLinked() {
-        return linked != null;
-    }
-
-    /**
-     * Returns {@code true} if the side is linked to {@code side}
-     * 
-     * @param side the side to check
-     * @return {@code true} if the side is linked to the side {@code side}
-     */
-    public boolean isLinkedTo(SideDomino side) {
-        return linked.equals(side);
-    }
-
-    @Override
-    public void unlink() {
-        linked = null;
     }
 
     /**

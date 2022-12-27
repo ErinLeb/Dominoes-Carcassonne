@@ -135,20 +135,20 @@ public interface Placeable<T extends Side> {
      */
     public static Direction stringToDirection(String s) {
         switch (s.toUpperCase()) {
-            case "UP":
             case "U":
+            case "UP":
                 return Direction.UP;
 
-            case "RIGHT":
             case "R":
+            case "RIGHT":
                 return Direction.RIGHT;
 
-            case "DOWN":
             case "D":
+            case "DOWN":
                 return Direction.DOWN;
 
-            case "LEFT":
             case "L":
+            case "LEFT":
                 return Direction.LEFT;
 
             default:
@@ -222,21 +222,4 @@ public interface Placeable<T extends Side> {
      */
     public boolean canBePlacedWithRotation(List<Pair<Placeable<T>, Direction>> tiles);
 
-    /**
-     * Turns left the {@code sides} {@code n} times.
-     * 
-     * @param n Number of times to turn
-     * @throws UnableToTurnException If the tile is already linked to at least one
-     *                               tile
-     */
-    public abstract void turnLeft(int n) throws UnableToTurnException;
-
-    /**
-     * Turns right the {@code sides} {@code n} times.
-     * 
-     * @param n Number of times to turn
-     * @throws UnableToTurnException If the tile is already linked to at least one
-     *                               tile
-     */
-    public abstract void turnRight(int n) throws UnableToTurnException;
 }

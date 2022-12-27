@@ -360,6 +360,8 @@ public class GameDomino {
 
         board.add(x, y, tileToPlace);
 
+        tileToPlace.setPlaced(true);
+
         // Takes care of the coordinates of the current tile if the board has been
         // expanded
         if (x == -1)

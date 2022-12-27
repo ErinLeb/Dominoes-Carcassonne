@@ -1,17 +1,9 @@
 package domino.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import shared.model.Tile;
 import exceptions.UnableToTurnException;
 
 import interfaces.Placeable;
-
-import utilities.Pair;
-
-//TODO: decide what to do with the methods that are not used
-//TODO: decide what to do with the link between the tiles
 
 /**
  * This class represents a domino tile.
@@ -25,12 +17,6 @@ public class TileDomino extends Tile<SideDomino> {
 
     private int id; // id of the tile
 
-    private SideDomino[] sides; // Sides of the tile
-    // tab[0] = upperSide, tab[1] = right side, tab[2] = lower side, tab[3] = left
-    // side
-
-    private TileDomino[] neighbors = new TileDomino[4]; // Neighbors of the tile
-
     // Constructors
 
     // TODO: add linking of sides
@@ -38,8 +24,11 @@ public class TileDomino extends Tile<SideDomino> {
     public TileDomino(SideDomino[] tab) {
         this.id = nbTile++;
 
-        validSides(tab);
-        this.sides = tab;
+        if (validSides(tab)) {
+            this.sides = tab;
+        } else {
+            throw new IllegalArgumentException("The sides of the tile are not valid");
+        }
     }
 
     /**
@@ -63,7 +52,6 @@ public class TileDomino extends Tile<SideDomino> {
     public TileDomino(SideDomino side, Direction direction) {
         this();
         this.setSide(side, Placeable.getOpposite(direction));
-        getSide(Placeable.getOpposite(direction)).setLinked(side);
     }
 
     /**
@@ -91,28 +79,6 @@ public class TileDomino extends Tile<SideDomino> {
         return sides[directionToInt(direction)];
     }
 
-    @Override
-    public List<Pair<SideDomino, Direction>> getUnlinkedSides() {
-        ArrayList<Pair<SideDomino, Direction>> unlinkedSides = new ArrayList<>();
-
-        for (int i = 0; i < sides.length; i++) {
-            if (!sides[i].isLinked())
-                unlinkedSides.add(new Pair<>(sides[i], intToDirection(i)));
-        }
-
-        return unlinkedSides;
-    }
-
-    @Override
-    public TileDomino getNeighbor(Direction direction) {
-        return neighbors[directionToInt(direction)];
-    }
-
-    @Override
-    public TileDomino[] getNeighbors() {
-        return neighbors;
-    }
-
     // Setters
 
     public void setId(int id) {
@@ -130,116 +96,24 @@ public class TileDomino extends Tile<SideDomino> {
         this.sides[directionToInt(direction)] = side;
     }
 
-    public void setNeighbor(TileDomino tile, Direction direction) {
-        if (this.neighbors[directionToInt(direction)] != tile) { // test needed to avoid a loop
-            this.neighbors[directionToInt(direction)] = tile;
-
-            // The neighbor is also set on the other side
-            tile.setNeighbor(this, Placeable.getOpposite(direction));
-        }
-
-    }
-
-    /**
-     * Sets the liked tiles of this object to the tiles given by {@code tiles} in
-     * the directions given by {@code directions}.
-     * 
-     * @param tiles      the tiles to link
-     * @param directions the directions of the sides to link
-     */
-    public void setNeighbors(TileDomino[] tiles, Direction[] directions) {
-        for (int i = 0; i < tiles.length; i++)
-            setNeighbor(tiles[i], directions[i]);
-    }
-
     // Methods
 
     @Override
-    public void validSides(SideDomino[] tab) {
+    public boolean validSides(SideDomino[] tab) {
         if (tab.length != 4) {
-            throw new IllegalArgumentException("The length of the array must be 4");
+            return false;
         }
         for (int i = 0; i < 4; i++) {
-            if (tab[i] == null) {
-                throw new IllegalArgumentException("No side should be null");
+            if (tab[i] == null || !SideDomino.isValidFig(tab[i].getFig())) {
+                return false;
             }
         }
+        return true;
     }
 
     @Override
     public boolean doesSideMatch(SideDomino side, Direction direction) {
         return sides[directionToInt(direction)].hasSameFig(side);
-    }
-
-    @Override
-    public void turnLeft(int n) throws UnableToTurnException {
-        if (isLinked()) {
-            throw new UnableToTurnException();
-        }
-        n = n % sides.length;
-
-        // Rotate the sides array by n times toward left
-        for (int i = 0; i < n; i++) {
-            int j;
-            SideDomino first = sides[0];
-            // Stores the first element of the array
-
-            for (j = 0; j < sides.length - 1; j++) {
-                // Shift element of array by one
-                sides[j] = sides[j + 1];
-            }
-            // First element of array will be put at the end of the array
-            sides[j] = first;
-
-            // Reverse the order of the sides
-            sides[1].reverseOrder();
-            sides[3].reverseOrder();
-        }
-    }
-
-    @Override
-    public void turnRight(int n) throws UnableToTurnException {
-        if (isLinked())
-            throw new UnableToTurnException();
-
-        n = n % sides.length;
-
-        // Rotate the sides array by n times toward right
-        for (int i = 0; i < n; i++) {
-            int j;
-            SideDomino last = sides[sides.length - 1];
-            // Stores the last element of array
-
-            for (j = sides.length - 1; j > 0; j--)
-                // Shift element of array by one
-                sides[j] = sides[j - 1];
-
-            // Last element of array will be put at the start of the array.
-            sides[0] = last;
-
-            // Reverse the order of the sides
-            sides[0].reverseOrder();
-            sides[2].reverseOrder();
-        }
-    }
-
-    @Override
-    public boolean isLinked() {
-        for (SideDomino side : sides)
-            if (side.isLinked())
-                return true;
-
-        for (TileDomino neighbor : neighbors)
-            if (neighbor != null)
-                return true;
-
-        return false;
-    }
-
-    @Override
-    public void unlink() {
-        for (SideDomino side : sides)
-            side.unlink();
     }
 
     /**
@@ -274,21 +148,6 @@ public class TileDomino extends Tile<SideDomino> {
         String[] tileInfo = getStringRepresentation();
         for (String line : tileInfo)
             System.out.println(line);
-    }
-
-    @Override
-    public boolean canBePlacedWithRotation(List<Pair<Placeable<SideDomino>, Direction>> tiles) {
-        for (int z = 0; z < 4; z++) {
-            if (canBePlaced(tiles))
-                return true;
-
-            try {
-                turnRight(1);
-            } catch (UnableToTurnException e) {
-                //
-            }
-        }
-        return false;
     }
 
     @Override
