@@ -6,22 +6,21 @@ import shared.model.Player;
  * Represents a player of the domino game.
  */
 public class PlayerDomino extends Player {
+    // Attributes
     private static int nbPlayers;
-
     private int id;
-    protected String name;
 
     // Constructors
+
     public PlayerDomino() {
+        super();
         id = nbPlayers++;
-        score = 0;
         name = "Player " + id;
     }
 
     public PlayerDomino(String name) {
+        super(name);
         id = nbPlayers++;
-        score = 0;
-        this.name = name;
     }
 
     // Getters
@@ -32,21 +31,6 @@ public class PlayerDomino extends Player {
 
     public int getId() {
         return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public int getScore() {
-        return score;
-    }
-
-    // Setters
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     // Methods
