@@ -2,7 +2,7 @@ package carcassonne.model;
 
 import shared.model.Side;
 
-public class SideCarcassonne /* extends Side */ {
+public class SideCarcassonne extends Side {
     /**
      * Represents the type of the side
      */
@@ -28,4 +28,13 @@ public class SideCarcassonne /* extends Side */ {
         this.type = type;
     }
     // Methods
+
+    public SideCarcassonne copy() {
+        return new SideCarcassonne(type);
+    }
+
+    public boolean hasSameType(SideCarcassonne side) {
+        return type == side.getType();
+    }
+
 }

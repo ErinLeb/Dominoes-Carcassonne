@@ -2,7 +2,6 @@ package interfaces;
 
 import java.util.List;
 
-import exceptions.UnableToTurnException;
 import shared.model.Side;
 import utilities.Pair;
 
