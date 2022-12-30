@@ -7,7 +7,7 @@ import shared.model.Deck;
 /**
  * A deck of the 72 tiles of Carcassonne.
  */
-public class DeckCarcassonne extends Deck<TileCarcassonne> {
+public class DeckCarcassonne extends Deck<SideCarcassonne, TileCarcassonne> {
     // Constructor
 
     /**

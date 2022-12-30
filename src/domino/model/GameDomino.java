@@ -3,6 +3,7 @@ package domino.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import exceptions.TileNotFoundException;
 import interfaces.Placeable;
 import interfaces.Placeable.Direction;
 import shared.model.Game;
@@ -27,16 +28,16 @@ public class GameDomino extends Game<SideDomino, TileDomino> {
     public GameDomino(int nbPlayers, int nbTiles) {
         // Creation of the players
         players = new PlayerDomino[nbPlayers];
-        for (int i = 0; i < nbPlayers; i++)
+        for (int i = 0; i < nbPlayers; i++) {
             players[i] = new PlayerDomino();
-
+        }
         // Creation of the deck
         deck = new DeckDomino(nbTiles);
         deckSize = nbTiles;
 
-        currentTileDomino = deck.draw();
+        currentTile = deck.draw();
         currentPosition = new Pair<>(0, 0);
-        board = new Expandable2DArray<>(currentTileDomino);
+        board = new Expandable2DArray<>(currentTile);
 
         currentPlayer = 0;
 
@@ -50,9 +51,9 @@ public class GameDomino extends Game<SideDomino, TileDomino> {
         deck = new DeckDomino(nbTiles);
         deckSize = nbTiles;
 
-        currentTileDomino = deck.draw();
+        currentTile = deck.draw();
         currentPosition = new Pair<>(0, 0);
-        board = new Expandable2DArray<>(currentTileDomino);
+        board = new Expandable2DArray<>(currentTile);
 
         currentPlayer = 0;
 
@@ -87,11 +88,11 @@ public class GameDomino extends Game<SideDomino, TileDomino> {
         deck.shuffle();
 
         // currentTile & currentPosition
-        currentTileDomino = deck.draw();
+        currentTile = deck.draw();
         currentPosition = new Pair<>(0, 0);
 
         // board
-        board = new Expandable2DArray<>(currentTileDomino);
+        board = new Expandable2DArray<>(currentTile);
 
         // currentPlayer
         currentPlayer = 0;
@@ -103,7 +104,29 @@ public class GameDomino extends Game<SideDomino, TileDomino> {
         isGameOn = true;
     }
 
+    /**
+     * Places the tile to place on the board at the given position and updates the
+     * score of {@code player}
+     * 
+     * @param x X position of the tile
+     * @param y Y position of the tile
+     * @throws TileNotFoundException If the tile is null
+     */
     @Override
+    public void place(int x, int y, Player player) throws TileNotFoundException {
+        super.place(x, y, player);
+
+        List<Pair<Placeable<SideDomino>, Direction>> neighbors = getNeighborsFromPosition(x, y);
+        // Increment the score of the player
+        incrementPlayerScore(neighbors, player);
+    }
+
+    /**
+     * Increments the score of the player who placed the tile.
+     * 
+     * @param neighbors Neighbors of the tile
+     * @param player    Player who placed the tile
+     */
     protected void incrementPlayerScore(List<Pair<Placeable<SideDomino>, Direction>> neighbors, Player player) {
 
         // increments score according to what's just been played
@@ -170,7 +193,7 @@ public class GameDomino extends Game<SideDomino, TileDomino> {
          * TileDomino initialTile = new TileDomino(new SideDomino[] { side0, side1,
          * side2, side3 });
          * 
-         * game.currentTileDomino = initialTile;
+         * game.currentTile = initialTile;
          * game.board.set(0, 0, initialTile);
          * 
          * // game.printBoard();
@@ -185,7 +208,7 @@ public class GameDomino extends Game<SideDomino, TileDomino> {
          * TileDomino tile2 = new TileDomino(sides2);
          * TileDomino tile3 = new TileDomino(sides3);
          * 
-         * game.currentTileDomino.setNeighbors(new TileDomino[] { tile0, tile1, tile2,
+         * game.currentTile.setNeighbors(new TileDomino[] { tile0, tile1, tile2,
          * tile3 }, Direction.values());
          * 
          * System.out.println("-----------------------");
@@ -217,8 +240,8 @@ public class GameDomino extends Game<SideDomino, TileDomino> {
          * 
          * System.out.println("-----------------------");
          * 
-         * System.out.println("Current tile: " + game.currentTileDomino);//
-         * game.currentTileDomino.getNeighbor(Direction.UP).printTile();
+         * System.out.println("Current tile: " + game.currentTile);//
+         * game.currentTile.getNeighbor(Direction.UP).printTile();
          * game.currentPosition.first = 1;
          * game.currentPosition.second = 1;
          * 

@@ -3,7 +3,7 @@ package shared.model;
 import java.util.ArrayList;
 import java.util.Random;
 
-public abstract class Deck<T extends Tile> {
+public abstract class Deck<S extends Side, T extends Tile<S>> {
      // Attributes
      protected ArrayList<T> tiles; // Tiles in the deck
 
