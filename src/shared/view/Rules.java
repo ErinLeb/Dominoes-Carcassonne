@@ -1,21 +1,20 @@
 package shared.view;
 
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.border.TitledBorder;
-import javax.swing.border.EtchedBorder;
-import javax.swing.event.MouseInputAdapter;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.GridBagConstraints;
-
 import java.awt.event.MouseEvent;
 import java.util.function.Consumer;
+
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.MouseInputAdapter;
 
 /**
  * The Rules class is the panel from which we can access the different rules of

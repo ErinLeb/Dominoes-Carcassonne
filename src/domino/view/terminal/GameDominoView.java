@@ -6,6 +6,7 @@ import domino.model.BotDomino;
 import domino.model.GameDomino;
 import domino.model.PlayerDomino;
 import domino.model.TileDomino;
+import shared.model.Player;
 
 public class GameDominoView {
     // Attributes
@@ -163,7 +164,7 @@ public class GameDominoView {
         printBoard();
     }
 
-    public void surrender(PlayerDomino p) {
+    public void surrender(Player p) {
         System.out.println("Player " + p.getName() + " has surrendered");
     }
 
@@ -171,7 +172,7 @@ public class GameDominoView {
      * Print the winner(s).
      */
     private void printWinners() {
-        List<PlayerDomino> winners = model.getWinners();
+        List<Player> winners = model.getWinners();
 
         if (winners == null || winners.size() == 0 || winners.get(0) == null) {
             System.out.println("There is no winner !");
@@ -204,9 +205,9 @@ public class GameDominoView {
         printWinners();
 
         // print the ranking
-        PlayerDomino[] ranking = model.getRanking();
+        Player[] ranking = model.getRanking();
         System.out.println("This is the ranking : ");
-        for (PlayerDomino p : ranking) {
+        for (Player p : ranking) {
             System.out.print(p.getName() + " : " + p.getScore() + " points");
 
             // print which player surrendered

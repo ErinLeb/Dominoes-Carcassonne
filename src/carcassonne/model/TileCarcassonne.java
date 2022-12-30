@@ -12,8 +12,6 @@ public class TileCarcassonne extends Tile<SideCarcassonne> {
         NORTH, EAST, SOUTH, WEST, CENTER
     }
 
-    private int tileId;
-
     private boolean hasAbbey;
 
     // This list contains the possible positions of the pawns on the tile. If the
