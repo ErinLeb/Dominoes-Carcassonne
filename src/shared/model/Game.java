@@ -9,6 +9,7 @@ import interfaces.Placeable;
 import interfaces.Placeable.Direction;
 import utilities.Expandable2DArray;
 import utilities.Pair;
+import utilities.TriConsumer;
 
 public abstract class Game<S extends Side, T extends Tile<S>> {
 
@@ -476,6 +477,20 @@ public abstract class Game<S extends Side, T extends Tile<S>> {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Apply a function to the minimap. The function takes as argument the x
+     * position of the tile, the y position of the tile and the tile itself.
+     * 
+     * @param func The function to apply
+     */
+    public void applyFunctionMinimap(TriConsumer<Integer, Integer, T> func) {
+        board.iteriSubArray(currentPosition.first, currentPosition.second, NB_TILES_TO_SHOW, func);
+    }
+
+    public int getNbRemainingTiles() {
+        return deck.size();
     }
 
 }

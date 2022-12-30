@@ -1,6 +1,7 @@
 package domino.view.gui;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
@@ -9,19 +10,30 @@ import javax.swing.JPanel;
 
 import domino.model.SideDomino;
 import domino.model.TileDomino;
+import shared.view.TilePanel;
 
-public class TileDominoGui extends JPanel {
+public class TileDominoPanel extends TilePanel<TileDomino> {
 
-    private TileDomino model;
+    private TileDomino tileModel;
 
-    public TileDominoGui(TileDomino model) {
-        this.model = model;
+    public TileDominoPanel(TileDomino model) {
+        this.tileModel = model;
 
         if (model == null) {
             initNull();
         } else {
             init();
         }
+    }
+
+    /**
+     * Updates the model of the panel.
+     * 
+     * @param model the new model
+     */
+    public void updateModel(TileDomino model) {
+        this.tileModel = model;
+        update();
     }
 
     /**
@@ -55,7 +67,7 @@ public class TileDominoGui extends JPanel {
     private JPanel generateNumberSquare(int number) {
         JPanel square = new JPanel();
         square.setBackground(Color.WHITE);
-        square.setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
+        square.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         square.add(new JLabel(Integer.toString(number)));
         return square;
     }
@@ -75,7 +87,9 @@ public class TileDominoGui extends JPanel {
     private void init() {
         setLayout(new GridLayout(5, 5));
 
-        SideDomino[] sides = model.getSides();
+        setPreferredSize(new Dimension(125, 125));
+
+        SideDomino[] sides = tileModel.getSides();
 
         // First row
 
@@ -106,12 +120,12 @@ public class TileDominoGui extends JPanel {
      */
 
     private void initNull() {
-        setLayout(new GridLayout(5, 5));
+        setLayout(new GridLayout(1, 0));
 
-        for (int i = 0; i < 25; i++) {
-            add(generateWhiteSquare());
-        }
-
+        JPanel square = new JPanel();
+        square.setBackground(Color.WHITE);
+        square.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        add(square);
     }
 
     /**
@@ -119,27 +133,13 @@ public class TileDominoGui extends JPanel {
      */
     public void update() {
         removeAll();
-        init();
+        if (tileModel == null) {
+            initNull();
+        } else {
+            init();
+        }
         revalidate();
         repaint();
-    }
-
-    public static void main(String[] args) {
-
-        // Test with a non-null tile
-        TileDominoGui tile = new TileDominoGui(new TileDomino());
-        javax.swing.JFrame frame = new javax.swing.JFrame();
-        frame.add(tile);
-        frame.pack();
-        frame.setVisible(true);
-
-        // Test with a null tile
-        TileDominoGui tile2 = new TileDominoGui(null);
-        javax.swing.JFrame frame2 = new javax.swing.JFrame();
-        frame2.add(tile2);
-        frame2.pack();
-        frame2.setVisible(true);
-
     }
 
 }

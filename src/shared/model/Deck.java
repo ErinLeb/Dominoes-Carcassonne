@@ -17,7 +17,7 @@ public abstract class Deck<S extends Side, T extends Tile<S>> {
      /**
       * Returns the number of dominoes in the deck
       *
-      * @return the number of dominoes in the deck
+      * @return the number of dominoes left in the deck
       */
      public int size() {
           return tiles.size();
