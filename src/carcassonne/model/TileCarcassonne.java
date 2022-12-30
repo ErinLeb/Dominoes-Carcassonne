@@ -1,5 +1,6 @@
 package carcassonne.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import carcassonne.model.SideCarcassonne.Type;
@@ -38,6 +39,7 @@ public class TileCarcassonne extends Tile<SideCarcassonne> {
     }
 
     private void initPossiblePawnPositions() {
+        possiblePawnPositions = new ArrayList<>();
         for (SideCarcassonne side : sides) {
             if (side.getType() == SideCarcassonne.Type.PATH) {
                 possiblePawnPositions.add(new boolean[] { false, false, false });
@@ -265,5 +267,13 @@ public class TileCarcassonne extends Tile<SideCarcassonne> {
                 break;
             default:
         }
+    }
+
+    public String toString() {
+        String s = "";
+        for (int i = 0; i < 4; i++) {
+            s += ((SideCarcassonne) sides[i]).toString();
+        }
+        return s;
     }
 }

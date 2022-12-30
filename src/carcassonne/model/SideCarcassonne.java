@@ -37,4 +37,17 @@ public class SideCarcassonne extends Side {
         return type == side.getType();
     }
 
+    public String toString() {
+        switch (type) {
+            case CITY:
+                return "city";
+            case MEADOW:
+                return "meadow";
+            case PATH:
+                return "path";
+            default:
+                return "";
+        }
+    }
+
 }
