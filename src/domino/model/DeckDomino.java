@@ -12,7 +12,7 @@ import shared.model.Deck;
 /**
  * A deck of dominoes.
  */
-public class DeckDomino extends Deck<TileDomino> {
+public class DeckDomino extends Deck<SideDomino, TileDomino> {
     // Attributes
     private final int nbTiles; // initial number of tiles
 

@@ -13,7 +13,7 @@ import utilities.Pair;
 public abstract class Game<S extends Side, T extends Tile<S>> {
 
     protected Player[] players; // Players of the game
-    protected Deck<T> deck; // Deck of the game
+    protected Deck<S, T> deck; // Deck of the game
 
     // Attributes
     // Length of the side of the square of tiles to show
@@ -24,7 +24,7 @@ public abstract class Game<S extends Side, T extends Tile<S>> {
 
     protected Expandable2DArray<T> board; // Board of the game
 
-    protected T currentTileDomino; // Current tile on the board
+    protected T currentTile; // Current tile on the board
     protected Pair<Integer, Integer> currentPosition; // Current position of the current tile on the board
     protected T tileToPlace; // Tile to place
 
@@ -34,13 +34,6 @@ public abstract class Game<S extends Side, T extends Tile<S>> {
 
     protected boolean isGameOn = true; // Whether the game is on or not
 
-    // Setters
-
-    // TODO : check if we still need this setter
-    public void setIsGameOn(boolean b) {
-        isGameOn = b;
-    }
-
     // Getters
 
     /**
@@ -48,8 +41,8 @@ public abstract class Game<S extends Side, T extends Tile<S>> {
      * 
      * @return The current tile on the board
      */
-    public T getCurrentTileDomino() {
-        return currentTileDomino;
+    public T getCurrentTile() {
+        return currentTile;
     }
 
     /**
@@ -175,6 +168,13 @@ public abstract class Game<S extends Side, T extends Tile<S>> {
         return ranking;
     }
 
+    // Setters
+
+    // TODO : check if we still need this setter
+    public void setIsGameOn(boolean b) {
+        isGameOn = b;
+    }
+
     // Methods
 
     /**
@@ -209,7 +209,7 @@ public abstract class Game<S extends Side, T extends Tile<S>> {
             throw new TileNotFoundException();
 
         this.currentPosition = position;
-        this.currentTileDomino = board.get(currentPosition);
+        this.currentTile = board.get(currentPosition);
     }
 
     /**
@@ -247,7 +247,7 @@ public abstract class Game<S extends Side, T extends Tile<S>> {
             throw new IllegalArgumentException("The next position is out of bounds.");
 
         this.currentPosition = nextPosition;
-        this.currentTileDomino = board.get(currentPosition);
+        this.currentTile = board.get(currentPosition);
     }
 
     /**
@@ -281,11 +281,7 @@ public abstract class Game<S extends Side, T extends Tile<S>> {
             y = 0;
 
         currentPosition = new Pair<>(x, y);
-        currentTileDomino = tileToPlace;
-
-        // Increment the score of the player
-        incrementPlayerScore(neighbors, player);
-
+        currentTile = tileToPlace;
     }
 
     /**
@@ -316,19 +312,11 @@ public abstract class Game<S extends Side, T extends Tile<S>> {
      * @param y Y position of the tile
      * @return The neighbors of the tile at the given position *
      */
-    private List<Pair<Placeable<S>, Direction>> getNeighborsFromPosition(int x, int y) {
+    protected List<Pair<Placeable<S>, Direction>> getNeighborsFromPosition(int x, int y) {
         List<Pair<Placeable<S>, Direction>> neighbors = new ArrayList<>();
         board.getNeighbors(x, y).forEach(p -> neighbors.add(new Pair<>(p.first, p.second)));
         return neighbors;
     }
-
-    /**
-     * Increments the score of the player who placed the tile.
-     * 
-     * @param neighbors Neighbors of the tile
-     * @param player    Player who placed the tile
-     */
-    protected abstract void incrementPlayerScore(List<Pair<Placeable<S>, Direction>> neighbors, Player player);
 
     /**
      * Places the tile on the board in the given direction.
