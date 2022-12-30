@@ -1,45 +1,40 @@
 package domino.model;
 
-import java.nio.file.DirectoryIteratorException;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
 import interfaces.Placeable.Direction;
 import interfaces.Placeable;
 import shared.model.Deck;
-import utilities.Pair;
 
 /**
  * A deck of dominoes.
  */
-public class DeckDomino extends Deck {
+public class DeckDomino extends Deck<TileDomino> {
     // Attributes
-    private ArrayList<TileDomino> tiles; // Tiles in the deck
+    private final int nbTiles; // initial number of tiles
 
     // Constructor
-
     /**
      * Creates a deck of dominoes of size {@code size}.
      */
     public DeckDomino(int size) {
-        tiles = new ArrayList<>(size);
-        createDeck(size);
-    }
+        nbTiles = size;
 
-    // Getters
+        tiles = new ArrayList<>(size);
+        createDeck();
+    }
 
     // Methods
 
     /**
      * Fills the list of tiles with the correct number of tiles. The algorithm also
      * creates a game which has a solution.
-     * 
-     * @param nbTiles The number of tiles to generate.
      */
-    private void createDeck(int nbTiles) {
+    @Override
+    public void createDeck() {
         Random rand = new Random();
 
         // Creates the first tile of the game (completely random)
@@ -96,36 +91,4 @@ public class DeckDomino extends Deck {
         }
     }
 
-    @Override
-    public boolean isEmpty() {
-        return tiles.isEmpty();
-    }
-
-    @Override
-    public int size() {
-        return tiles.size();
-    }
-
-    @Override
-    public void shuffle() {
-        Random rand = new Random();
-
-        for (int i = 0; i < tiles.size(); i++) {
-            int j = rand.nextInt(tiles.size());
-
-            TileDomino temp = tiles.get(i);
-            tiles.set(i, tiles.get(j));
-            tiles.set(j, temp);
-        }
-    }
-
-    /**
-     * Returns the domino at the top of the deck.
-     * 
-     * @return the domino at the top of the deck.
-     */
-    @SuppressWarnings("unchecked")
-    public TileDomino draw() {
-        return tiles.remove(0);
-    }
 }
