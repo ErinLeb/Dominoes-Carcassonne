@@ -90,5 +90,4 @@ public class DeckDomino extends Deck<SideDomino, TileDomino> {
             occupied = Placeable.getOpposite(directionToGenerate);
         }
     }
-
 }

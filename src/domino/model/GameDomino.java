@@ -142,7 +142,16 @@ public class GameDomino extends Game<SideDomino, TileDomino> {
      * Returns the amount of points a player would score if {@code tile} is placed
      * at ({@code x}, {@code y})
      * 
-     * @return the amount of points the player would score
+     * @param x    X position of the tile
+     * @param y    Y position of the tile
+     * @param tile Tile to place
+     * @return amount of points that the player would get if he placed the tile at
+     *         the given position
+     * @throws IllegalArgumentException  If the tile is null or if there is already
+     *                                   a
+     *                                   tile at the given position
+     * @throws IndexOutOfBoundsException If the position is out of bounds
+     *
      */
     public int pointsIfPlaced(int x, int y, TileDomino tile) {
 
@@ -150,7 +159,7 @@ public class GameDomino extends Game<SideDomino, TileDomino> {
             throw new IllegalArgumentException("Tile is null");
 
         if (!board.isInsideExpandableBounds(x, y))
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("Position is out of bounds");
 
         if (!board.isOutOfBounds(x, y) && board.get(x, y) != null)
             throw new IllegalArgumentException("There is already a tile at this position");

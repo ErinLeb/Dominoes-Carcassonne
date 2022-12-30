@@ -269,21 +269,6 @@ public class Expandable2DArray<T> {
         return newSubArray;
     }
 
-    // Useful for testing purposes (maybe in the future ...)
-
-    /**
-     * Applies a function to a sub-array, centered on the point {@code x,y} and is a
-     * rectangle of size {@code size} {@link #getSubArray(int, int, int)}.
-     * 
-     * @param x    X coordinate of the center
-     * @param y    Y coordinate of the center
-     * @param size The size of the sub-array
-     * @param func The function to apply
-     */
-    public void applyFunctionSubArray(int x, int y, int size, Consumer<T> func) {
-        getSubArray(x, y, size).forEach(l -> l.forEach(func));
-    }
-
     /**
      * Applies {@code func} to all the elements of the array.
      * 
@@ -374,14 +359,32 @@ public class Expandable2DArray<T> {
     }
 
     /**
-     * Iterates over the array and applies the action to each index.
+     * Iterates over the array and applies the action to each index and element.
      * 
      * @param action The action to apply
      */
-    public void iteri(Consumer<Pair<Integer, Integer>> action) {
+    public void iteri(TriConsumer<Integer, Integer, T> action) {
         for (int i = 0; i < array.size(); i++) {
             for (int j = 0; j < array.get(i).size(); j++) {
-                action.accept(new Pair<>(i, j));
+                action.accept(i, j, get(i, j));
+            }
+        }
+    }
+
+    /**
+     * Applies a function to a sub-array, centered on the point {@code x,y} and is a
+     * rectangle of size {@code size} {@link #getSubArray(int, int, int)}.
+     * 
+     * @param x    X coordinate of the center
+     * @param y    Y coordinate of the center
+     * @param size The size of the sub-array
+     * @param func The function to apply
+     */
+    public void iteriSubArray(int x, int y, int size, TriConsumer<Integer, Integer, T> func) {
+        List<List<T>> subArray = getSubArray(x, y, size);
+        for (int i = 0; i < subArray.size(); i++) {
+            for (int j = 0; j < subArray.get(i).size(); j++) {
+                func.accept(i, j, subArray.get(i).get(j));
             }
         }
     }
