@@ -11,6 +11,7 @@ import exceptions.NoPossibleMovementsException;
 import exceptions.TileCanBePlacedException;
 import interfaces.Placeable;
 import interfaces.Placeable.Direction;
+import shared.model.Player;
 import utilities.Pair;
 
 /**
@@ -282,7 +283,7 @@ public class GameDominoController {
      * @return {@code true} if the command was executed and the turn should be
      *         finished, {@code false} otherwise
      */
-    public boolean parseInput(String input, PlayerDomino player) {
+    public boolean parseInput(String input, Player player) {
         String[] args = input.split(" ");
 
         try {

@@ -15,8 +15,6 @@ public class TileDomino extends Tile<SideDomino> {
 
     private static int nbTile = 0; // Total number of tiles generated
 
-    private int id; // id of the tile
-
     // Constructors
 
     // TODO: add linking of sides
@@ -64,10 +62,6 @@ public class TileDomino extends Tile<SideDomino> {
     }
 
     // Getters
-
-    public int getId() {
-        return id;
-    }
 
     @Override
     public SideDomino[] getSides() {

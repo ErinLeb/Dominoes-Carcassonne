@@ -3,9 +3,7 @@ package shared.model;
 import java.util.ArrayList;
 import java.util.Random;
 
-import interfaces.InterfaceDeck;
-
-public abstract class Deck<T extends Tile> implements InterfaceDeck {
+public abstract class Deck<T extends Tile> {
      // Attributes
      protected ArrayList<T> tiles; // Tiles in the deck
 

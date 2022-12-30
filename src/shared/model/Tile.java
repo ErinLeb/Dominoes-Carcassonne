@@ -14,6 +14,7 @@ public abstract class Tile<T extends Side> implements Placeable<T> {
     // side
 
     protected boolean isPlaced = false; // True if the tile is placed on the board
+    protected int id;
 
     // Getters
 
@@ -29,6 +30,10 @@ public abstract class Tile<T extends Side> implements Placeable<T> {
 
     public boolean isPlaced() {
         return isPlaced;
+    }
+
+    public int getId() {
+        return id;
     }
 
     // Setters
