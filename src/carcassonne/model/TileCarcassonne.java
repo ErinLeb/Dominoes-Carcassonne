@@ -5,10 +5,11 @@ import java.util.List;
 
 import carcassonne.model.SideCarcassonne.Type;
 import shared.model.Tile;
+import utilities.Pair;
 
 public class TileCarcassonne extends Tile<SideCarcassonne> {
 
-    enum SideSelector {
+    public enum SideSelector {
         NORTH, EAST, SOUTH, WEST, CENTER
     }
 
@@ -23,6 +24,7 @@ public class TileCarcassonne extends Tile<SideCarcassonne> {
     private List<boolean[]> possiblePawnPositions;
 
     public TileCarcassonne(int tileId) {
+        id = tileId;
         initSidesWithIntegerId(tileId);
         initPossiblePawnPositions();
     }
@@ -51,7 +53,7 @@ public class TileCarcassonne extends Tile<SideCarcassonne> {
         }
     }
 
-    private boolean isPawnPlaced() {
+    public boolean isPawnPlaced() {
         for (boolean[] tab : possiblePawnPositions) {
             for (boolean b : tab) {
                 if (b) {
@@ -67,18 +69,24 @@ public class TileCarcassonne extends Tile<SideCarcassonne> {
     }
 
     public void placePawn(SideSelector side, int position) {
-        // TODO: refactor this method
         if (isPawnPlaced())
             throw new IllegalStateException("A pawn is already placed on this tile");
 
         if (side == SideSelector.CENTER) {
-            if (!hasAbbey)
-                throw new IllegalStateException("The tile does not have an abbey");
-
-            possiblePawnPositions.get(sideSelectorToInt(side))[4] = true;
-            return;
+            handleAbbeyPlacement(side);
+        } else {
+            handleSidePlacement(side, position);
         }
+    }
 
+    private void handleAbbeyPlacement(SideSelector side) {
+        if (!hasAbbey)
+            throw new IllegalStateException("The tile does not have an abbey");
+
+        possiblePawnPositions.get(sideSelectorToInt(side))[0] = true;
+    }
+
+    private void handleSidePlacement(SideSelector side, int position) {
         if (position != 0 && getSide(sideSelectorToDirection(side)).getType() != Type.PATH) {
             position = 0;
         }
@@ -113,7 +121,7 @@ public class TileCarcassonne extends Tile<SideCarcassonne> {
                 new SideCarcassonne[] { sides[0].copy(), sides[1].copy(), sides[2].copy(), sides[3].copy() });
     }
 
-    public int sideSelectorToInt(SideSelector side) {
+    public static int sideSelectorToInt(SideSelector side) {
         switch (side) {
             case NORTH:
                 return 0;
@@ -130,7 +138,7 @@ public class TileCarcassonne extends Tile<SideCarcassonne> {
         }
     }
 
-    public SideSelector intToSideSelector(int side) {
+    public static SideSelector intToSideSelector(int side) {
         switch (side) {
             case 0:
                 return SideSelector.NORTH;
@@ -147,7 +155,7 @@ public class TileCarcassonne extends Tile<SideCarcassonne> {
         }
     }
 
-    public Direction sideSelectorToDirection(SideSelector side) {
+    public static Direction sideSelectorToDirection(SideSelector side) {
         switch (side) {
             case NORTH:
                 return Direction.UP;
@@ -159,6 +167,21 @@ public class TileCarcassonne extends Tile<SideCarcassonne> {
                 return Direction.LEFT;
             default:
                 throw new IllegalArgumentException("SideSelector must be NORTH, EAST, SOUTH or WEST");
+        }
+    }
+
+    public static SideSelector directionToSideSelector(Direction direction) {
+        switch (direction) {
+            case UP:
+                return SideSelector.NORTH;
+            case RIGHT:
+                return SideSelector.EAST;
+            case DOWN:
+                return SideSelector.SOUTH;
+            case LEFT:
+                return SideSelector.WEST;
+            default:
+                throw new IllegalArgumentException("Direction must be UP, RIGHT, DOWN or LEFT");
         }
     }
 
@@ -267,10 +290,28 @@ public class TileCarcassonne extends Tile<SideCarcassonne> {
         }
     }
 
+    public boolean hasAbbey() {
+        return hasAbbey;
+    }
+
+    public Pair<SideSelector, Integer> getPawnPosition() {
+        for (int i = 0; i < 4; i++) {
+            boolean[] side = possiblePawnPositions.get(i);
+            for (int j = 0; j < side.length; j++) {
+                if (side[j])
+                    return new Pair<>(SideSelector.values()[i], j);
+            }
+        }
+        if (possiblePawnPositions.size() == 5 && possiblePawnPositions.get(4)[0])
+            return new Pair<>(SideSelector.CENTER, 0);
+
+        return null;
+    }
+
     public String toString() {
         String s = "";
         for (int i = 0; i < 4; i++) {
-            s += ((SideCarcassonne) sides[i]).toString();
+            s += (sides[i]).toString();
         }
         return s;
     }

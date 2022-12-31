@@ -121,7 +121,7 @@ public class GameDominoPanel extends GamePanel<SideDomino, TileDomino> {
         repaint();
     }
 
-    protected class BoardDomino extends Board<TileDominoPanel> {
+    protected class BoardDomino extends Board {
 
         @Override
         protected void initTile(int x, int y, TileDomino tile) {

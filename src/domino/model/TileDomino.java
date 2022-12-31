@@ -13,15 +13,8 @@ public class TileDomino extends Tile<SideDomino> {
     public static final int LENGTH_OF_LINE = 10; // The length of the line in the getStringRepresentation method.
     public static final int COLUMNS_LENGTH = 7; // The length of the columns in the getStringRepresentation method.
 
-    private static int nbTile = 0; // Total number of tiles generated
-
     // Constructors
-
-    // TODO: add linking of sides
-
     public TileDomino(SideDomino[] tab) {
-        this.id = nbTile++;
-
         if (validSides(tab)) {
             this.sides = tab;
         } else {
@@ -33,12 +26,6 @@ public class TileDomino extends Tile<SideDomino> {
      * Creates a random tile with random figures on each side
      */
     public TileDomino() {
-        // TODO : initialize id when the tile is placed on the board rather than at its
-        // construction
-        // The id represents the order in which tiles are placed, not the order in which
-        // they are built
-        this.id = nbTile++;
-
         this.sides = new SideDomino[4];
         for (int i = 0; i < 4; i++)
             this.sides[i] = new SideDomino();

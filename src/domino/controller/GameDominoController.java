@@ -418,7 +418,6 @@ public class GameDominoController {
         } catch (Exception e) {
             System.out.println("Invalid command");
             System.out.println(e.getMessage());
-            e.printStackTrace(); // TODO: remove this line in the final version
         }
 
         return false;
