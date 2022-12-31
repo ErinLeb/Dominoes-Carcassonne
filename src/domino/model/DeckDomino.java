@@ -15,6 +15,7 @@ import shared.model.Deck;
 public class DeckDomino extends Deck<SideDomino, TileDomino> {
     // Attributes
     private final int nbTiles; // initial number of tiles
+    private int numberOfTilesDrawn = 0;
 
     // Constructor
     /**
@@ -89,5 +90,12 @@ public class DeckDomino extends Deck<SideDomino, TileDomino> {
 
             occupied = Placeable.getOpposite(directionToGenerate);
         }
+    }
+
+    @Override
+    public TileDomino draw() {
+        TileDomino tile = super.draw();
+        tile.setId(numberOfTilesDrawn++);
+        return tile;
     }
 }

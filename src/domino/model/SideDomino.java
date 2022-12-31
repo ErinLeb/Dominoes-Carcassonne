@@ -5,8 +5,6 @@ import java.util.Random;
 
 import shared.model.Side;
 
-//TODO: decide what to do with the link between the sides.
-
 /**
  * This class represents the side of a domino tile.
  */

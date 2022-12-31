@@ -6,7 +6,7 @@ public class SideCarcassonne extends Side {
     /**
      * Represents the type of the side
      */
-    enum Type {
+    public enum Type {
         CITY, MEADOW, PATH
     }
 
