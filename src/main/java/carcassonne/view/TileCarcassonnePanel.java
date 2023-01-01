@@ -229,7 +229,7 @@ public class TileCarcassonnePanel extends TilePanel<TileCarcassonne> {
     protected void paintComponent(java.awt.Graphics g) {
         super.paintComponent(g);
 
-        String pathToImage = "src/resources/tiles_carcassonne/" + tileModel.getId() + ".png";
+        String pathToImage = "src/main/resources/tiles_carcassonne/" + tileModel.getId() + ".png";
         ImageIcon icon = new ImageIcon(pathToImage);
         Image image = icon.getImage();
 
