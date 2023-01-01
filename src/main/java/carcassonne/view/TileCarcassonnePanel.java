@@ -28,11 +28,6 @@ public class TileCarcassonnePanel extends TilePanel<TileCarcassonne> {
 
     private boolean canPawnBePlaced;
 
-    public TileCarcassonnePanel(TileCarcassonne tileModel) {
-        this.tileModel = tileModel;
-        init();
-    }
-
     public TileCarcassonnePanel(TileCarcassonne tileModel, Color pawnColor) {
         this.tileModel = tileModel;
         this.pawnColor = pawnColor;

@@ -11,7 +11,7 @@ public class SideCarcassonne extends Side {
     }
 
     // Attributes
-    private Type type;
+    private final Type type;
 
     // Constructor
     public SideCarcassonne(Type type) {
@@ -23,10 +23,6 @@ public class SideCarcassonne extends Side {
         return type;
     }
 
-    // Setters
-    public void setType(Type type) {
-        this.type = type;
-    }
     // Methods
 
     public SideCarcassonne copy() {
