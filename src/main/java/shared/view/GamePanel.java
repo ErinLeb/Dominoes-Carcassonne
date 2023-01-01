@@ -88,7 +88,7 @@ public abstract class GamePanel<S extends Side, T extends Tile<S>> extends JPane
         // Remaining tiles
         constraints.gridx = 0;
         constraints.gridy = 8;
-        nbTiles.setIcon(GraphicalImageSetter.initImageAsImageIcon("src/resources/bag.png"));
+        nbTiles.setIcon(GraphicalImageSetter.initImageAsImageIcon("src/main/resources/bag.png"));
         add(nbTiles, constraints);
     }
 
@@ -170,7 +170,7 @@ public abstract class GamePanel<S extends Side, T extends Tile<S>> extends JPane
         constraints.gridy = 8;
         constraints.insets = new Insets(0, 200, 0, 0);
         JButton turnLeftButton = new JButton();
-        turnLeftButton.setIcon(GraphicalImageSetter.initImageAsImageIcon("src/resources/turn_left.png"));
+        turnLeftButton.setIcon(GraphicalImageSetter.initImageAsImageIcon("src/main/resources/turn_left.png"));
         turnLeftButton.setPreferredSize(new Dimension(50, 50));
         turnLeftButton.addActionListener(e -> turn(false));
         add(turnLeftButton, constraints);
@@ -180,7 +180,7 @@ public abstract class GamePanel<S extends Side, T extends Tile<S>> extends JPane
         constraints.gridx = 5;
         constraints.gridy = 8;
         JButton turnRightButton = new JButton();
-        turnRightButton.setIcon(GraphicalImageSetter.initImageAsImageIcon("src/resources/turn_right.png"));
+        turnRightButton.setIcon(GraphicalImageSetter.initImageAsImageIcon("src/main/resources/turn_right.png"));
         turnRightButton.setPreferredSize(new Dimension(50, 50));
         turnRightButton.addActionListener(e -> turn(true));
         add(turnRightButton, constraints);
