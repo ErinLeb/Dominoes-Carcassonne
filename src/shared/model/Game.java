@@ -37,6 +37,10 @@ public abstract class Game<S extends Side, T extends Tile<S>> {
 
     // Getters
 
+    public int getNbPlayers() {
+        return players.length;
+    }
+
     /**
      * Returns the current tile on the board.
      * 
