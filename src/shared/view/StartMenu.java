@@ -7,4 +7,8 @@ import javax.swing.JPanel;
  */
 public class StartMenu extends JPanel {
 
+    // TODO : implement init (used in EndMenu)
+    public void init() {
+    }
+
 }
