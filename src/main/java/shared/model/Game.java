@@ -317,7 +317,7 @@ public abstract class Game<S extends Side, T extends Tile<S>> {
      * @param y Y position of the tile
      * @return The neighbors of the tile at the given position *
      */
-    protected List<Pair<Placeable<S>, Direction>> getNeighborsFromPosition(int x, int y) {
+    public List<Pair<Placeable<S>, Direction>> getNeighborsFromPosition(int x, int y) {
         List<Pair<Placeable<S>, Direction>> neighbors = new ArrayList<>();
         board.getNeighbors(x, y).forEach(p -> neighbors.add(new Pair<>(p.first, p.second)));
         return neighbors;

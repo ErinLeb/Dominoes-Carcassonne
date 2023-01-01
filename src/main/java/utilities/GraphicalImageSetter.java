@@ -11,8 +11,7 @@ public class GraphicalImageSetter {
 
     /**
      * Generates an {@code ImageIcon} from the given path with a size of 50. An
-     * {@code ImageIcon} is
-     * used to display an image.
+     * {@code ImageIcon} is used to display an image.
      * 
      * @param path the path of the image
      * @return the {@code ImageIcon}
@@ -23,8 +22,7 @@ public class GraphicalImageSetter {
 
     /**
      * Generates an {@code ImageIcon} from the given path with the given size. An
-     * {@code ImageIcon} is
-     * used to display an image.
+     * {@code ImageIcon} is used to display an image.
      * 
      * @param path   the path of the image
      * @param width  the width of the image

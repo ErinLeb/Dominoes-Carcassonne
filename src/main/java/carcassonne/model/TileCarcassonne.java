@@ -116,7 +116,7 @@ public class TileCarcassonne extends Tile<SideCarcassonne> {
     }
 
     @Override
-    public Tile<SideCarcassonne> copy() {
+    public TileCarcassonne copy() {
         return new TileCarcassonne(
                 new SideCarcassonne[] { sides[0].copy(), sides[1].copy(), sides[2].copy(), sides[3].copy() });
     }
@@ -306,6 +306,24 @@ public class TileCarcassonne extends Tile<SideCarcassonne> {
             return new Pair<>(SideSelector.CENTER, 0);
 
         return null;
+    }
+
+    public Pair<SideSelector, Integer> getRandomPlacingPosition() {
+        if (isPawnPlaced()) {
+            throw new IllegalStateException("Pawn is already placed");
+        }
+
+        int side = (int) (Math.random() * possiblePawnPositions.size());
+
+        int position;
+
+        if (possiblePawnPositions.get(side).length == 0) {
+            position = 0;
+        } else {
+            position = (int) (Math.random() * possiblePawnPositions.get(side).length);
+        }
+
+        return new Pair<>(SideSelector.values()[side], position);
     }
 
     public String toString() {

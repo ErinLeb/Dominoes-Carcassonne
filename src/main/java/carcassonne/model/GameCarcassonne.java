@@ -1,5 +1,7 @@
 package carcassonne.model;
 
+import java.awt.Color;
+
 import shared.model.Game;
 import utilities.Expandable2DArray;
 import utilities.Pair;
@@ -12,10 +14,13 @@ public class GameCarcassonne extends Game<SideCarcassonne, TileCarcassonne> {
      * Creates a game of Carcassonne with {@code nbPlayers} players
      */
     public GameCarcassonne(int nbPlayers) {
+        // Colors for pawns
+        Color[] colorPawns = initColors(nbPlayers);
+
         // Players
         players = new PlayerCarcassonne[nbPlayers];
         for (int i = 0; i < nbPlayers; i++) {
-            players[i] = new PlayerCarcassonne();
+            players[i] = new PlayerCarcassonne(colorPawns[i]);
         }
         currentPlayer = 0;
 
@@ -45,6 +50,29 @@ public class GameCarcassonne extends Game<SideCarcassonne, TileCarcassonne> {
     }
 
     // Methods
+
+    private Color[] initColors(int nbPlayers) {
+        Color[] pawns = new Color[nbPlayers];
+        for (int i = 0; i < nbPlayers; i++) {
+            switch (i) {
+                case 0:
+                    pawns[i] = Color.RED;
+                    break;
+                case 1:
+                    pawns[i] = Color.BLUE;
+                    break;
+                case 2:
+                    pawns[i] = Color.GREEN;
+                    break;
+                case 3:
+                    pawns[i] = Color.YELLOW;
+                    break;
+                default:
+                    break;
+            }
+        }
+        return pawns;
+    }
 
     @Override
     public void initGame(boolean resetScore) {
