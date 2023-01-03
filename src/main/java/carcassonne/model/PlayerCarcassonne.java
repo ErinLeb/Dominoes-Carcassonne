@@ -11,20 +11,20 @@ public class PlayerCarcassonne extends Player {
     private int id;
     protected int remainingPawns = 10;
 
-    private final Color colorPawn;
+    private final Color pawnColor;
 
     // Constructor
     public PlayerCarcassonne(Color colorPawn) {
         super();
         id = nbPlayers++;
         name = "Player " + id;
-        this.colorPawn = colorPawn;
+        this.pawnColor = colorPawn;
     }
 
     public PlayerCarcassonne(String name, Color colorPawn) {
         super(name);
         id = nbPlayers++;
-        this.colorPawn = colorPawn;
+        this.pawnColor = colorPawn;
     }
 
     // Getters
@@ -37,8 +37,8 @@ public class PlayerCarcassonne extends Player {
         return id;
     }
 
-    public Color getColorPawn() {
-        return colorPawn;
+    public Color getPawnColor() {
+        return pawnColor;
     }
 
     public int getRemainingPawns() {

@@ -1,9 +1,8 @@
 package domino.model;
 
-import shared.model.Tile;
 import exceptions.UnableToTurnException;
-
 import interfaces.Placeable;
+import shared.model.Tile;
 
 /**
  * This class represents a domino tile.

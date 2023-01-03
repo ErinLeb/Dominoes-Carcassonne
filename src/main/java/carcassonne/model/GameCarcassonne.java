@@ -3,6 +3,7 @@ package carcassonne.model;
 import java.awt.Color;
 
 import shared.model.Game;
+import shared.model.Player;
 import utilities.Expandable2DArray;
 import utilities.Pair;
 
@@ -101,6 +102,12 @@ public class GameCarcassonne extends Game<SideCarcassonne, TileCarcassonne> {
 
         // isGameOn
         isGameOn = true;
+    }
+
+    @Override
+    public void updateGameRound() {
+        super.updateGameRound();
+        tileToPlace.setPlayer(((PlayerCarcassonne) getCurrentPlayer()));
     }
 
 }

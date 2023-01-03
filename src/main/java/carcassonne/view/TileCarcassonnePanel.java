@@ -2,18 +2,31 @@ package carcassonne.view;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 
-import javax.swing.ImageIcon;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
+import carcassonne.model.PlayerCarcassonne;
 import carcassonne.model.SideCarcassonne.Type;
 import carcassonne.model.TileCarcassonne;
 import carcassonne.model.TileCarcassonne.SideSelector;
+import exceptions.UnableToTurnException;
 import interfaces.Placeable.Direction;
 import shared.view.TilePanel;
+import utilities.Pair;
 import utilities.geometry.Point;
 import utilities.geometry.Square;
 import utilities.geometry.Triangle;
@@ -22,17 +35,24 @@ public class TileCarcassonnePanel extends TilePanel<TileCarcassonne> {
 
     private TileCarcassonne tileModel;
 
-    private Color pawnColor;
+    private PlayerCarcassonne player;
 
     private int pathLength;
 
     private boolean canPawnBePlaced;
 
-    public TileCarcassonnePanel(TileCarcassonne tileModel, Color pawnColor) {
+    public TileCarcassonnePanel(TileCarcassonne tileModel) {
         this.tileModel = tileModel;
-        this.pawnColor = pawnColor;
 
-        init();
+        if (tileModel != null) {
+            this.player = tileModel.getPlayer();
+        }
+
+        if (tileModel == null) {
+            initNull();
+        } else {
+            init();
+        }
     }
 
     public void setCanPawnBePlaced(boolean canPawnBePlaced) {
@@ -40,7 +60,6 @@ public class TileCarcassonnePanel extends TilePanel<TileCarcassonne> {
     }
 
     private void init() {
-        setPreferredSize(new Dimension(125, 125));
         setLayout(null);
 
         addMouseListener(
@@ -50,6 +69,17 @@ public class TileCarcassonnePanel extends TilePanel<TileCarcassonne> {
                         placePawn(e.getX(), e.getY());
                     }
                 });
+
+        drawPawn();
+    }
+
+    private void initNull() {
+        setLayout(new GridLayout(1, 0));
+
+        JPanel square = new JPanel();
+        square.setBackground(Color.WHITE);
+        square.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        add(square);
     }
 
     private void placePawn(int x, int y) {
@@ -61,14 +91,18 @@ public class TileCarcassonnePanel extends TilePanel<TileCarcassonne> {
 
         if (tileModel.hasAbbey()) {
             handleAbbey(click);
-            if (tileModel.isPawnPlaced())
+            if (tileModel.isPawnPlaced()) {
                 return;
+            }
         }
         for (Direction direction : Direction.values()) {
             handleSide(direction, click);
-            if (tileModel.isPawnPlaced())
+            if (tileModel.isPawnPlaced()) {
                 return;
+
+            }
         }
+
     }
 
     private boolean isOutOfBounds(Point click) {
@@ -83,7 +117,7 @@ public class TileCarcassonnePanel extends TilePanel<TileCarcassonne> {
 
         if (abbeyBoundingBox.isInside(click)) {
             tileModel.placePawn(SideSelector.CENTER, 0);
-            drawPawn(click);
+            drawPawn();
         }
     }
 
@@ -98,119 +132,68 @@ public class TileCarcassonnePanel extends TilePanel<TileCarcassonne> {
         // to check if the click is inside the bounding box. If it is, then we can place
         // a pawn on that zone.
 
+        BoundingBoxHandler boundingBoxHandler = new BoundingBoxHandler(getWidth(), getHeight(), pathLength, direction);
+
         // Generates the bounding box of the side
-        Triangle sideBoundingBox = sideBoundingBoxFromDirection(direction);
+        Triangle sideBoundingBox = boundingBoxHandler.sideBoundingBoxFromDirection();
 
         if (!sideBoundingBox.isInside(click))
             return;
 
         // Generates the bounding box of the left part of the path (left of the path
         // looking from the center of the tile)
-        Triangle lefBoundingBox = leftBoundingBoxFromDirection(direction);
+        Triangle lefBoundingBox = boundingBoxHandler.leftBoundingBoxFromDirection();
 
         if (tileModel.getSide(direction).getType() != Type.PATH || lefBoundingBox.isInside(click)) {
             tileModel.placePawn(selectedSide, 0);
-            drawPawn(click);
+            drawPawn();
             return;
         }
 
         // Generates the bounding box of the right part of the path (right of the path
         // looking from the center of the tile)
-        Triangle rightBoundingBox = rightBoundingBoxFromDirection(direction);
+        Triangle rightBoundingBox = boundingBoxHandler.rightBoundingBoxFromDirection();
 
         if (rightBoundingBox.isInside(click)) {
             tileModel.placePawn(selectedSide, 2);
-            drawPawn(click);
+            drawPawn();
             return;
         }
 
         // The tile is then in the path
         tileModel.placePawn(selectedSide, 1);
-        drawPawn(click);
+        drawPawn();
     }
 
-    private void drawPawn(Point center) {
+    public void drawPawn() {
+
+        if (tileModel == null || player == null || !tileModel.isPawnPlaced())
+            return;
+
+        removeAll();
+
         JPanel pawn = new JPanel();
-        pawn.setBackground(pawnColor);
-        pawn.setBounds(center.x - 5, center.y - 5, 10, 10);
+        pawn.setBackground(player.getPawnColor());
+
+        Pair<SideSelector, Integer> pawnLocation = tileModel.getPawnPosition();
+        boolean isPath;
+
+        if (pawnLocation.first == SideSelector.CENTER) {
+            isPath = false;
+        } else {
+            isPath = tileModel.getSide(TileCarcassonne.sideSelectorToDirection(pawnLocation.first))
+                    .getType() == Type.PATH;
+        }
+
+        PawnTilePositionHandler pawnTilePositionHandler = new PawnTilePositionHandler(getWidth(), getHeight(),
+                pawnLocation, isPath);
+
+        Point centerPawn = pawnTilePositionHandler.pawnPositionToPoint();
+        pawn.setBounds(centerPawn.x - 5, centerPawn.y - 5, 10, 10);
+
         add(pawn);
         revalidate();
         repaint();
-    }
-
-    /**
-     * Generates the bounding box of the side.
-     * 
-     * @param direction The direction of the side
-     * @return The bounding box of the side
-     */
-    private Triangle sideBoundingBoxFromDirection(Direction direction) {
-        switch (direction) {
-            case UP:
-                return new Triangle(new Point(0, 0), new Point(getWidth() / 2, getHeight() / 2),
-                        new Point(getWidth(), 0));
-            case RIGHT:
-                return new Triangle(new Point(getWidth(), 0), new Point(getWidth() / 2, getHeight() / 2),
-                        new Point(getWidth(), getHeight()));
-            case DOWN:
-                return new Triangle(new Point(0, getHeight()), new Point(getWidth() / 2, getHeight() / 2),
-                        new Point(getWidth(), getHeight()));
-            case LEFT:
-                return new Triangle(new Point(0, 0), new Point(getWidth() / 2, getHeight() / 2),
-                        new Point(0, getHeight()));
-            default:
-                return new Triangle(new Point(0, 0), new Point(0, 0), new Point(0, 0));
-        }
-    }
-
-    /**
-     * Generates the bounding box of the left part of the path (LEFT of the path
-     * looking from the center of the tile)
-     * 
-     * @param direction The direction of the side
-     * @return The bounding box of the right part of the path
-     */
-    private Triangle leftBoundingBoxFromDirection(Direction direction) {
-        switch (direction) {
-            case UP:
-                return new Triangle(new Point(0, 0), new Point(pathLength, 0), new Point(pathLength, pathLength));
-            case RIGHT:
-                return new Triangle(new Point(getWidth(), 0), new Point(getWidth(), pathLength),
-                        new Point(2 * pathLength, pathLength));
-            case DOWN:
-                return new Triangle(new Point(getWidth(), getHeight()), new Point(2 * pathLength, 2 * pathLength),
-                        new Point(2 * pathLength, getHeight()));
-            case LEFT:
-                return new Triangle(new Point(0, getHeight()), new Point(0, 2 * pathLength),
-                        new Point(pathLength, 2 * pathLength));
-            default:
-                return new Triangle(new Point(0, 0), new Point(0, 0), new Point(0, 0));
-        }
-    }
-
-    /**
-     * Generates the bounding box of the right part of the path (right of the path
-     * looking from the center of the tile)
-     * 
-     * @param direction The direction of the side
-     * @return The bounding box of the right part of the path
-     */
-    private Triangle rightBoundingBoxFromDirection(Direction direction) {
-        switch (direction) {
-            case UP:
-                return new Triangle(new Point(2 * pathLength, 0), new Point(getWidth(), 0),
-                        new Point(2 * pathLength, pathLength));
-            case RIGHT:
-                return new Triangle(new Point(getWidth(), 2 * pathLength), new Point(getWidth(), getHeight()),
-                        new Point(2 * pathLength, 2 * pathLength));
-            case DOWN:
-                return new Triangle(new Point(pathLength, 2 * pathLength), new Point(2 * pathLength, getHeight()),
-                        new Point(0, getHeight()));
-            case LEFT:
-                return new Triangle(new Point(0, 0), new Point(0, pathLength), new Point(pathLength, pathLength));
-            default:
-                return new Triangle(new Point(0, 0), new Point(0, 0), new Point(0, 0));
-        }
     }
 
     @Override
@@ -224,18 +207,55 @@ public class TileCarcassonnePanel extends TilePanel<TileCarcassonne> {
     protected void paintComponent(java.awt.Graphics g) {
         super.paintComponent(g);
 
-        String pathToImage = "src/main/resources/tiles_carcassonne/" + tileModel.getId() + ".png";
-        ImageIcon icon = new ImageIcon(pathToImage);
-        Image image = icon.getImage();
+        if (tileModel == null)
+            return;
 
-        g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+        String pathToImage = "src/main/resources/tiles_carcassonne/" + tileModel.getId() + ".png";
+        Image scaledImage;
+
+        try {
+            BufferedImage image = ImageIO.read(new File(pathToImage));
+            scaledImage = image.getScaledInstance(getWidth(), getHeight(), Image.SCALE_SMOOTH);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        Graphics2D g2d = (Graphics2D) g;
+
+        // Rotates the image
+        AffineTransform rotationTransformation = AffineTransform.getRotateInstance(rotationsToAngle(),
+                getWidth() / 2., getHeight() / 2.);
+
+        Rectangle2D bounds = rotationTransformation
+                .createTransformedShape(new Rectangle2D.Double(0, 0, getWidth(), getHeight()))
+                .getBounds2D();
+
+        g2d.transform(
+                AffineTransform.getScaleInstance(getWidth() / bounds.getWidth(), getHeight() / bounds.getHeight()));
+
+        g2d.drawImage(scaledImage, rotationTransformation, null);
     }
 
-    public static void main(String[] args) {
+    private double rotationsToAngle() {
+        return tileModel.getNbOfRotations() * Math.PI / 2.;
+    }
+
+    @Override
+    public Dimension getPreferredSize() {
+        return new Dimension(125, 125);
+    }
+
+    public static void main(String[] args) throws UnableToTurnException, InterruptedException {
         javax.swing.JFrame frame = new javax.swing.JFrame();
+        frame.setSize(new Dimension(205, 205));
         frame.setBackground(Color.BLACK);
         frame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        TileCarcassonnePanel tile = new TileCarcassonnePanel(new TileCarcassonne(12), Color.RED);
+        TileCarcassonne tileModel = new TileCarcassonne(0);
+        tileModel.turnRight(3);
+        tileModel.setPlayer(new PlayerCarcassonne("Grep", Color.GREEN));
+        TileCarcassonnePanel tile = new TileCarcassonnePanel(tileModel);
         tile.setCanPawnBePlaced(true);
         frame.add(tile);
         frame.pack();
