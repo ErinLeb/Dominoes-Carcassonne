@@ -5,8 +5,8 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-import interfaces.Placeable.Direction;
 import interfaces.Placeable;
+import interfaces.Placeable.Direction;
 import shared.model.Deck;
 
 /**

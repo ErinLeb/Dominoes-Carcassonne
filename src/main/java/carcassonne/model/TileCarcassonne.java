@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import carcassonne.model.SideCarcassonne.Type;
+import exceptions.UnableToTurnException;
 import shared.model.Tile;
 import utilities.Pair;
 
@@ -13,7 +14,11 @@ public class TileCarcassonne extends Tile<SideCarcassonne> {
         NORTH, EAST, SOUTH, WEST, CENTER
     }
 
+    private int nbOfRotations = 0;
+
     private boolean hasAbbey;
+
+    private PlayerCarcassonne player;
 
     // This list contains the possible positions of the pawns on the tile. If the
     // tile has an abbey, the last element of the list is the abbey. The rest of the
@@ -29,7 +34,9 @@ public class TileCarcassonne extends Tile<SideCarcassonne> {
         initPossiblePawnPositions();
     }
 
-    private TileCarcassonne(SideCarcassonne[] tab) {
+    private TileCarcassonne(SideCarcassonne[] tab, PlayerCarcassonne player) {
+        this.player = player;
+
         if (validSides(tab)) {
             sides = tab;
         } else {
@@ -84,6 +91,7 @@ public class TileCarcassonne extends Tile<SideCarcassonne> {
             throw new IllegalStateException("The tile does not have an abbey");
 
         possiblePawnPositions.get(sideSelectorToInt(side))[0] = true;
+        player.decreaseRemainingPawns();
     }
 
     private void handleSidePlacement(SideSelector side, int position) {
@@ -95,6 +103,8 @@ public class TileCarcassonne extends Tile<SideCarcassonne> {
             throw new IllegalArgumentException("Position must be between 0 and 2");
 
         possiblePawnPositions.get(sideSelectorToInt(side))[position] = true;
+        player.decreaseRemainingPawns();
+
     }
 
     @Override
@@ -118,7 +128,57 @@ public class TileCarcassonne extends Tile<SideCarcassonne> {
     @Override
     public TileCarcassonne copy() {
         return new TileCarcassonne(
-                new SideCarcassonne[] { sides[0].copy(), sides[1].copy(), sides[2].copy(), sides[3].copy() });
+                new SideCarcassonne[] { sides[0].copy(), sides[1].copy(), sides[2].copy(), sides[3].copy() },
+                player);
+    }
+
+    @Override
+    public void turnRight(int n) throws UnableToTurnException {
+        if (isPlaced)
+            throw new UnableToTurnException();
+
+        n = n % sides.length;
+
+        for (int i = 0; i < n; i++) {
+            SideCarcassonne last = sides[sides.length - 1];
+            boolean[] lastPawnPosition = possiblePawnPositions.get(sides.length - 1);
+
+            for (int j = sides.length - 1; j > 0; j--) {
+                sides[j] = sides[j - 1];
+                possiblePawnPositions.set(j, possiblePawnPositions.get(j - 1));
+            }
+
+            sides[0] = last;
+            possiblePawnPositions.set(0, lastPawnPosition);
+        }
+
+        nbOfRotations += n;
+        nbOfRotations = (nbOfRotations + sides.length) % sides.length;
+    }
+
+    @Override
+    public void turnLeft(int n) throws UnableToTurnException {
+        if (isPlaced) {
+            throw new UnableToTurnException();
+        }
+
+        n = n % sides.length;
+
+        for (int i = 0; i < n; i++) {
+            int j;
+            SideCarcassonne first = sides[0];
+            boolean[] firstPawnPosition = possiblePawnPositions.get(0);
+
+            for (j = 0; j < sides.length - 1; j++) {
+                sides[j] = sides[j + 1];
+                possiblePawnPositions.set(j, possiblePawnPositions.get(j + 1));
+            }
+
+            sides[j] = first;
+            possiblePawnPositions.set(j, firstPawnPosition);
+        }
+        nbOfRotations -= n;
+        nbOfRotations = (nbOfRotations + sides.length) % sides.length;
     }
 
     public static int sideSelectorToInt(SideSelector side) {
@@ -324,6 +384,18 @@ public class TileCarcassonne extends Tile<SideCarcassonne> {
         }
 
         return new Pair<>(SideSelector.values()[side], position);
+    }
+
+    public int getNbOfRotations() {
+        return nbOfRotations;
+    }
+
+    public PlayerCarcassonne getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(PlayerCarcassonne player) {
+        this.player = player;
     }
 
     public String toString() {

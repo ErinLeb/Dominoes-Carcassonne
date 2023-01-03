@@ -72,6 +72,9 @@ public abstract class GamePanel<S extends Side, T extends Tile<S>> extends JPane
         // Player
         constraints.gridx = 0;
         constraints.gridy = 0;
+        playerLabel.setPreferredSize(new Dimension(150, 50));
+        playerLabel.setHorizontalAlignment(JLabel.CENTER);
+
         add(playerLabel, constraints);
 
         initScore();
@@ -208,7 +211,8 @@ public abstract class GamePanel<S extends Side, T extends Tile<S>> extends JPane
             updateGameRound();
         } else {
             wantedToPass = true;
-            infoScreenLabel.setText("You have at least one possible placement. Click on pass again to pass.");
+            JOptionPane.showMessageDialog(this, "You have at least on possible placement. Click again to pass", "",
+                    JOptionPane.INFORMATION_MESSAGE);
             updateView();
         }
     }
@@ -271,7 +275,6 @@ public abstract class GamePanel<S extends Side, T extends Tile<S>> extends JPane
             setLayout(new GridLayout(5, 5));
 
             gameModel.applyFunctionMinimap((x, y, tile) -> {
-
                 initTile(x, y, tile);
 
                 tiles[x + y * 5].addMouseListener(new MouseAdapter() {
@@ -292,11 +295,10 @@ public abstract class GamePanel<S extends Side, T extends Tile<S>> extends JPane
         /**
          * Updates the board.
          */
-        public void update() {
-            gameModel.applyFunctionMinimap((x, y, tile) -> tiles[x + y * 5].updateModel(tile));
-        }
+        public abstract void update();
 
         protected abstract void initTile(int x, int y, T tile);
+
     }
 
 }

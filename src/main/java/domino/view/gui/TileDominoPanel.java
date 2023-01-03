@@ -27,58 +27,16 @@ public class TileDominoPanel extends TilePanel<TileDomino> {
     }
 
     /**
-     * Updates the model of the panel.
-     * 
-     * @param model the new model
+     * Initializes the panel with a null model.
      */
-    public void updateModel(TileDomino model) {
-        this.tileModel = model;
-        update();
-    }
 
-    /**
-     * Generates a black square.
-     * 
-     * @return a black square
-     */
-    private JPanel generateBlackSquare() {
-        JPanel square = new JPanel();
-        square.setBackground(Color.BLACK);
-        return square;
-    }
+    private void initNull() {
+        setLayout(new GridLayout(1, 0));
 
-    /**
-     * Generates a white square.
-     * 
-     * @return a white square
-     */
-    private JPanel generateWhiteSquare() {
-        JPanel square = new JPanel();
-        square.setBackground(Color.WHITE);
-        return square;
-    }
-
-    /**
-     * Generates a square with a number and a black border.
-     * 
-     * @param number the number to display
-     * @return a square with a number and a black border
-     */
-    private JPanel generateNumberSquare(int number) {
         JPanel square = new JPanel();
         square.setBackground(Color.WHITE);
         square.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
-        square.add(new JLabel(Integer.toString(number)));
-        return square;
-    }
-
-    /**
-     * Adds three white squares to the panel.
-     */
-    private void addWhiteSquares() {
-        add(generateWhiteSquare());
-        add(generateWhiteSquare());
-        add(generateWhiteSquare());
+        add(square);
     }
 
     /**
@@ -116,16 +74,58 @@ public class TileDominoPanel extends TilePanel<TileDomino> {
     }
 
     /**
-     * Initializes the panel with a null model.
+     * Generates a black square.
+     * 
+     * @return a black square
      */
+    private JPanel generateBlackSquare() {
+        JPanel square = new JPanel();
+        square.setBackground(Color.BLACK);
+        return square;
+    }
 
-    private void initNull() {
-        setLayout(new GridLayout(1, 0));
-
+    /**
+     * Generates a square with a number and a black border.
+     * 
+     * @param number the number to display
+     * @return a square with a number and a black border
+     */
+    private JPanel generateNumberSquare(int number) {
         JPanel square = new JPanel();
         square.setBackground(Color.WHITE);
         square.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
-        add(square);
+        square.add(new JLabel(Integer.toString(number)));
+        return square;
+    }
+
+    /**
+     * Adds three white squares to the panel.
+     */
+    private void addWhiteSquares() {
+        add(generateWhiteSquare());
+        add(generateWhiteSquare());
+        add(generateWhiteSquare());
+    }
+
+    /**
+     * Generates a white square.
+     * 
+     * @return a white square
+     */
+    private JPanel generateWhiteSquare() {
+        JPanel square = new JPanel();
+        square.setBackground(Color.WHITE);
+        return square;
+    }
+
+    /**
+     * Updates the model of the panel.
+     * 
+     * @param model the new model
+     */
+    public void updateModel(TileDomino model) {
+        this.tileModel = model;
+        update();
     }
 
     /**

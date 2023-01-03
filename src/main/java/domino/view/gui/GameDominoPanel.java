@@ -1,5 +1,7 @@
 package domino.view.gui;
 
+import java.awt.EventQueue;
+
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -20,18 +22,31 @@ public class GameDominoPanel extends GamePanel<SideDomino, TileDomino> {
 
     private BoardDomino board;
 
-    public GameDominoPanel(GameDomino model, JFrame frame) {
-        this.gameModel = model;
+    public GameDominoPanel(GameDomino gameModel, JFrame frame) {
+        this.gameModel = gameModel;
         this.frame = frame;
 
-        playerLabel = new JLabel("Player: " + model.getCurrentPlayer().getName());
-        scoreLabel = new JLabel("Score: " + model.getCurrentPlayer().getScore());
-        nbTiles = new JLabel(String.valueOf(model.getNbRemainingTiles()));
-        infoScreenLabel = new JLabel("Click on a tile to place it on the board.");
-
-        tileToPlace = new TileDominoPanel(model.getTileToPlace());
+        gameModel.updateGameRound();
 
         init();
+
+        if (gameModel.getCurrentPlayer() instanceof BotDomino) {
+            EventQueue.invokeLater(this::updateBot);
+        }
+
+    }
+
+    @Override
+    protected void init() {
+        playerLabel = new JLabel("Player: " + gameModel.getCurrentPlayer().getName());
+        scoreLabel = new JLabel("Score: " + gameModel.getCurrentPlayer().getScore());
+        nbTiles = new JLabel(String.valueOf(gameModel.getNbRemainingTiles()));
+        infoScreenLabel = new JLabel("Click on a tile to place it on the board.");
+
+        tileToPlace = new TileDominoPanel(gameModel.getTileToPlace());
+
+        super.init();
+
     }
 
     @Override
@@ -124,6 +139,11 @@ public class GameDominoPanel extends GamePanel<SideDomino, TileDomino> {
     protected class BoardDomino extends Board {
 
         @Override
+        public void update() {
+            gameModel.applyFunctionMinimap((x, y, tile) -> tiles[x + y * 5].updateModel(tile));
+        }
+
+        @Override
         protected void initTile(int x, int y, TileDomino tile) {
             tiles[x + y * 5] = new TileDominoPanel(tile);
         }
@@ -133,12 +153,11 @@ public class GameDominoPanel extends GamePanel<SideDomino, TileDomino> {
     public static void main(String[] args) {
         javax.swing.JFrame frame = new javax.swing.JFrame();
         frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
-        frame.setResizable(false);
 
         GameDomino model = new GameDomino(
-                new PlayerDomino[] { new PlayerDomino("Erin"), new BotDomino(), new BotDomino(), new BotDomino() },
+                new PlayerDomino[] { new BotDomino(), new BotDomino(), new BotDomino() },
                 28);
-        model.updateGameRound();
+
         GameDominoPanel game = new GameDominoPanel(
                 model, frame);
 

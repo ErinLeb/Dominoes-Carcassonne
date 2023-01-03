@@ -125,9 +125,10 @@ public abstract class Tile<T extends Side> implements Placeable<T> {
             T last = sides[sides.length - 1];
             // Stores the last element of array
 
-            for (j = sides.length - 1; j > 0; j--)
+            for (j = sides.length - 1; j > 0; j--) {
                 // Shift element of array by one
                 sides[j] = sides[j - 1];
+            }
 
             // Last element of array will be put at the start of the array.
             sides[0] = last;

@@ -50,10 +50,13 @@ public class Rules extends JPanel {
         // Panel Domino
         String dominoText = "<html>";
         dominoText += "In this version of Dominoes, the dominoes are squares and have three figures on each of their sides.<br/>";
-        dominoText += "<br/> <b>How to win ?</b> <br/>";
+
+        dominoText += "<br/> <u>How to win ?</u> <br/>";
         dominoText += "The winner is the player who has the highest score when there is no tile to place anymore. Another way to win is to be the only player to last in the game if the others surrendered.<br/>";
+
         dominoText += "<br/><u>How to score points ?</u><br/>";
         dominoText += "You score when you place successfully a tile on the board. The amount of points you gain is the sum of the numbers in contact with those of the neighboring tiles.<br/>";
+
         dominoText += "<br/><u>The rules are easy :</u> <br/>";
         dominoText += "There are between 2 and 6 players. You can also play against AIs by choosing so at the beginning.<br/>";
         dominoText += "At the beginning, you need to choose the number of tiles you want (one placed on the board to start and the others in the deck).<br/>";
@@ -66,15 +69,19 @@ public class Rules extends JPanel {
 
         // Panel Carcassonne
         String carcassonneText = "<html>";
+
         carcassonneText += "Carcassonne follows the same concept than Dominoes but instead, the tiles represent landscapes. <br>";
-        carcassonneText += "<br/> <u>How to win ?</u> <br/>";
-        carcassonneText += "The winner is the player who has the highest score when there is no tile to place anymore. Another way to win is to be the only player to last in the game if the others surrendered.<br/>";
-        carcassonneText += "<br/><u>How to score points ?</u><br/>";
-        carcassonneText += "You score when you complete a landscape during the game. At the end of the game, you score is incremented according to where you pawns are placed on the board.</br>";
+
+        carcassonneText += "<br/><u>How to win ?</u> <br/>";
+        carcassonneText += "<p>The winner is the player who has the highest score when there is no tile to place anymore. Another way to win is to be the only player to last in the game if the others surrendered.</p><br>";
+
+        carcassonneText += "<br/><u>How to score points ?</u><br>";
+        carcassonneText += "<p>You score when you complete a landscape during the game. At the end of the game, you score is incremented according to where you pawns are placed on the board.</p></br>";
+
         carcassonneText += "<br><u> How to place tiles ?</u></br>";
         carcassonneText += "The tile you draw must be placed in contact with at least one tile already on the board. The type of every side that touches another tile must correspond. If you can not place the tile given the conditions, you draw another card to place instead.<br>";
         carcassonneText += "<br><u>How to place a pawn ?</u></br>";
-        carcassonneText += "After you place the tile, you can place one of the pawns you still haven't place on the tile you placed. You can place it on one of the zones represented in the tile as shown in the exemples.</br>";
+        carcassonneText += "Before you place the tile, you can place one of the pawns you still haven't place on the tile you placed. You can place it on one of the zones represented in the tile as shown in the exemples.</html>";
 
         carcassonne = new RulesGame(carcassonneText, "Domino");
 
