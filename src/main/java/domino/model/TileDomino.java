@@ -3,7 +3,7 @@ package domino.model;
 import exceptions.UnableToTurnException;
 import interfaces.Placeable;
 import shared.model.Tile;
-import utilities.StringOperations;
+import utils.StringOperations;
 
 /**
  * This class represents a domino tile.

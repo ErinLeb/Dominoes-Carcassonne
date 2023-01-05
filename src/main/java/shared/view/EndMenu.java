@@ -41,7 +41,8 @@ public class EndMenu extends JPanel {
         home.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // homeMenu.init();
+                frame.setContentPane(homeMenu);
+                frame.revalidate();
             }
         });
         c.gridx = 0;

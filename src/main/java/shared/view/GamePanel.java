@@ -29,6 +29,8 @@ public abstract class GamePanel<S extends Side, T extends Tile<S>> extends JPane
 
     protected JFrame frame;
 
+    protected StartMenu homeMenu;
+
     protected Game<S, T> gameModel;
 
     protected JLabel playerLabel;
@@ -195,10 +197,7 @@ public abstract class GamePanel<S extends Side, T extends Tile<S>> extends JPane
      * called)
      * 
      */
-    protected void endGame() {
-        // TODO: replace this with an actual end game screen
-        infoScreenLabel.setText("Game over");
-    }
+    protected abstract void endGame();
 
     /**
      * Passes the turn if the player has no possible placement. Otherwise, the

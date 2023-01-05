@@ -33,7 +33,9 @@ public class EndMenuCarcassonne extends EndMenu {
         frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
 
-        EndMenuCarcassonne menu = new EndMenuCarcassonne(null, frame);
+        StartMenu homeMenu = new StartMenu(frame);
+
+        EndMenuCarcassonne menu = new EndMenuCarcassonne(homeMenu, frame);
         frame.add(menu);
         frame.setVisible(true);
     }

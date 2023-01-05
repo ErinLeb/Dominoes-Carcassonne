@@ -17,8 +17,6 @@ public class GameCarcassonne extends Game<SideCarcassonne, TileCarcassonne> {
         // Colors for pawns
         Color[] colorPawns = initColors(nbPlayers);
 
-        // Players
-        players = new PlayerCarcassonne[nbPlayers];
         for (int i = 0; i < nbPlayers; i++) {
             players[i] = new PlayerCarcassonne(colorPawns[i]);
         }
@@ -35,6 +33,12 @@ public class GameCarcassonne extends Game<SideCarcassonne, TileCarcassonne> {
     }
 
     public GameCarcassonne(PlayerCarcassonne[] players) {
+        // Colors for pawns
+        Color[] colorPawns = initColors(players.length);
+
+        for (int i = 0; i < players.length; i++) {
+            players[i].setColor(colorPawns[i]);
+        }
         // Players
         this.players = players;
         currentPlayer = 0;
