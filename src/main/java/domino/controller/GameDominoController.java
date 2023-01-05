@@ -1,6 +1,5 @@
 package domino.controller;
 
-import java.util.List;
 import java.util.Scanner;
 
 import domino.model.BotDomino;
@@ -8,11 +7,6 @@ import domino.model.GameDomino;
 import domino.model.PlayerDomino;
 import domino.view.terminal.GameDominoView;
 import exceptions.NoPossibleMovementsException;
-import exceptions.TileCanBePlacedException;
-import interfaces.Placeable;
-import interfaces.Placeable.Direction;
-import shared.model.Player;
-import utilities.Pair;
 
 /**
  * This class represents the controller of the Domino game, following an MVC
@@ -25,11 +19,9 @@ public class GameDominoController {
 
     Scanner sc = new Scanner(System.in);
 
+    GameDominoCommandParser parser;
+
     // Constructor
-    public GameDominoController(GameDomino game, GameDominoView view) {
-        this.model = game;
-        this.view = view;
-    }
 
     public GameDominoController() {
         GameDominoView.printRules();
@@ -99,6 +91,9 @@ public class GameDominoController {
 
         model = new GameDomino(players, nbTiles);
         view = new GameDominoView(model);
+        parser = new GameDominoCommandParser(sc, model, view);
+
+        gameLoop();
     }
 
     /**
@@ -174,6 +169,26 @@ public class GameDominoController {
     }
 
     /**
+     * The main loop of the game
+     */
+    public void gameLoop() {
+
+        while (model.isGameOn()) {
+            playRound();
+
+            // if its the end of the game, we print the winners and the ranking
+            if (model.endGame()) {
+                view.endGame();
+            }
+
+            if (!model.isGameOn()) {
+
+                handleEndGame();
+            }
+        }
+    }
+
+    /**
      * Plays a single round of the game (just a player's turn)
      */
     public void playRound() {
@@ -199,227 +214,72 @@ public class GameDominoController {
             do {
                 System.out.println("Enter a command: ");
                 command = sc.nextLine();
-            } while (!parseInput(command, model.getCurrentPlayer()));
+            } while (!parser.parseInput(command, model.getCurrentPlayer()));
         }
 
     }
 
-    /**
-     * The main loop of the game
-     */
-    public void gameLoop() {
+    private void handleEndGame() {
+        boolean valid = false;
+        // We ask if the players want to play again until the playAgain is yes/y or no/n
+        while (!valid) {
 
-        while (model.isGameOn()) {
-            playRound();
+            System.out.println("Do you want to play again ? (Yes/No)");
+            String playAgain = sc.nextLine();
 
-            // if its the end of the game, we print the winners and the ranking
-            if (model.endGame()) {
-                view.endGame();
-            }
+            if (playAgain.equalsIgnoreCase("yes") || playAgain.equalsIgnoreCase("y")) {
+                // The game is going to start again
 
-            if (!model.isGameOn()) {
+                handlePlayAgain();
+                valid = true;
 
-                boolean valid = false;
-                // We ask if the players want to play again until the playAgain is yes/y or no/n
-                while (!valid) {
+            } else if (playAgain.equalsIgnoreCase("no") || playAgain.equalsIgnoreCase("n")) {
+                // Real end of the game
+                valid = true;
 
-                    System.out.println("Do you want to play again ? (Yes/No)");
-                    String playAgain = sc.nextLine();
-
-                    if (playAgain.equalsIgnoreCase("yes") || playAgain.equalsIgnoreCase("y")) {
-                        // The game is going to start again
-
-                        while (true) {
-                            System.out.println("Do you want to keep the same parameters ? (Yes/No)");
-                            String keepParameters = sc.nextLine();
-
-                            // We keep the same parameters
-                            if (keepParameters.equalsIgnoreCase("yes") || keepParameters.equalsIgnoreCase("y")) {
-
-                                while (true) {
-                                    System.out.println("Do you want to reset your current score to 0 ? (Yes/No)");
-                                    String resetScore = sc.nextLine();
-
-                                    // We restart the game
-                                    if (resetScore.equalsIgnoreCase("yes") || resetScore.equalsIgnoreCase("y")) {
-                                        model.initGame(true);
-                                        break;
-                                    }
-
-                                    // We keep the same scores and restart the game
-                                    if (resetScore.equalsIgnoreCase("no") || resetScore.equalsIgnoreCase("n")) {
-                                        model.initGame(false);
-                                        break;
-                                    }
-                                }
-                                break;
-                            }
-
-                            // We initialize the game with new parameters
-                            if (keepParameters.equalsIgnoreCase("no") || keepParameters.equalsIgnoreCase("n")) {
-                                initGame();
-                                break;
-                            }
-                        }
-                        valid = true;
-
-                    } else if (playAgain.equalsIgnoreCase("no") || playAgain.equalsIgnoreCase("n")) {
-                        // Real end of the game
-                        valid = true;
-
-                    } else {
-                        System.out.println("Invalid command");
-                    }
-                }
+            } else {
+                System.out.println("Invalid command");
             }
         }
     }
 
-    /**
-     * Parses the command given by the player and executes it.
-     * 
-     * @param input  The command given by the player
-     * @param player The player who gave the command
-     * @return {@code true} if the command was executed and the turn should be
-     *         finished, {@code false} otherwise
-     */
-    public boolean parseInput(String input, Player player) {
-        String[] args = input.split(" ");
+    private void handlePlayAgain() {
+        while (true) {
+            System.out.println("Do you want to keep the same parameters ? (Yes/No)");
+            String keepParameters = sc.nextLine();
 
-        try {
-            switch (args[0].toLowerCase()) {
-                case "pass":
-                    List<Pair<Integer, Integer>> p = model.findPossiblePlacements();
+            // We keep the same parameters
+            if (keepParameters.equalsIgnoreCase("yes") || keepParameters.equalsIgnoreCase("y")) {
 
-                    if (p.isEmpty()) {
-                        return true;
-                    } else {
-                        throw new TileCanBePlacedException();
-                    }
-                case "p":
-                case "print":
-                    if (args.length == 1) {
-                        view.printBoard();
-                    } else if (args.length == 2) {
-                        if (args[1].equalsIgnoreCase("b") || args[1].equalsIgnoreCase("board")) {
-
-                            view.printBoard();
-                        } else {
-                            view.printTileToPlace();
-                        }
-                    } else {
-                        throw new IllegalArgumentException("Invalid number of arguments");
-                    }
-                    return false;
-                case "printtile":
-                    view.printTileToPlace();
-                    return false;
-                case "printboard":
-                    view.printBoard();
-                    return false;
-                case "surrender":
-                    model.surrender(player);
-                    view.surrender(player);
-                    return true;
-                case "mv":
-                case "move":
-                    if (args.length < 2 || args.length > 3)
-                        throw new IllegalArgumentException("Invalid number of arguments");
-
-                    if (args[1].matches("^\\d+")) {
-                        model.move(Integer.parseInt(args[1]));
-                    } else {
-                        Direction direction = Placeable.stringToDirection(args[1].toUpperCase());
-                        model.move(direction, args.length == 3 ? Integer.parseInt(args[2]) : 1);
-                    }
-
-                    view.printBoard();
-
-                    return false;
-                case "tr":
-                case "turn":
-                    if (args.length == 1) {
-                        model.turn(true, 1);
-                        view.printTileToPlace();
-
-                    } else {
-                        if (args.length == 2) {
-                            model.turn(true, Integer.parseInt(args[1]));
-                            view.printTileToPlace();
-                            return false;
-                        }
-                        if (args.length > 3)
-                            throw new IllegalArgumentException("Invalid number of arguments");
-
-                        model.turn(args[1].toLowerCase().charAt(0) == 'r', Integer.parseInt(args[2]));
-                        view.printTileToPlace();
-                    }
-                    return false;
-                case "turnleft":
-                    if (args.length == 1) {
-                        model.turn(false, 1);
-                        view.printTileToPlace();
-
-                    } else {
-                        if (args.length != 2)
-                            throw new IllegalArgumentException("Invalid number of arguments");
-
-                        model.turn(false, Integer.parseInt(args[1]));
-                        view.printTileToPlace();
-
-                    }
-                    return false;
-                case "turnright":
-                    if (args.length == 1) {
-                        model.turn(true, 1);
-                        view.printTileToPlace();
-
-                    } else {
-                        if (args.length != 2)
-                            throw new IllegalArgumentException("Invalid number of arguments");
-
-                        model.turn(true, Integer.parseInt(args[1]));
-                        view.printTileToPlace();
-
-                    }
-                    return false;
-                case "pl":
-                case "place":
-                    if (args.length != 3)
-                        throw new IllegalArgumentException("Invalid number of arguments");
-                    model.place(args[1], args[2], player);
-                    return true;
-                case "q":
-                case "quit":
-                    model.quit();
-                    return true;
-                case "h":
-                case "help":
-                    GameDominoView.printCommands();
-                    return false;
-                default:
-                    System.out.println("Invalid command");
-                    return false;
+                handleResetScore();
+                break;
             }
-        } catch (TileCanBePlacedException e) {
-            System.out.print(e.getMessage());
 
-            while (true) {
-                System.out.println(" Are you sure you still want to pass ? (Yes/No)");
-                String pass = sc.nextLine();
-
-                if (pass.equalsIgnoreCase("yes") || pass.equalsIgnoreCase("y")) {
-                    return true;
-                }
-                if (pass.equalsIgnoreCase("no") || pass.equalsIgnoreCase("n")) {
-                    return false;
-                }
+            // We initialize the game with new parameters
+            if (keepParameters.equalsIgnoreCase("no") || keepParameters.equalsIgnoreCase("n")) {
+                initGame();
+                break;
             }
-        } catch (Exception e) {
-            System.out.println("Invalid command");
-            System.out.println(e.getMessage());
         }
-
-        return false;
     }
+
+    private void handleResetScore() {
+        while (true) {
+            System.out.println("Do you want to reset your current score to 0 ? (Yes/No)");
+            String resetScore = sc.nextLine();
+
+            // We restart the game
+            if (resetScore.equalsIgnoreCase("yes") || resetScore.equalsIgnoreCase("y")) {
+                model.initGame(true);
+                break;
+            }
+
+            // We keep the same scores and restart the game
+            if (resetScore.equalsIgnoreCase("no") || resetScore.equalsIgnoreCase("n")) {
+                model.initGame(false);
+                break;
+            }
+        }
+    }
+
 }

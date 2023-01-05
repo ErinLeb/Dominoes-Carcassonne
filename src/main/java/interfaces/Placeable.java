@@ -3,7 +3,7 @@ package interfaces;
 import java.util.List;
 
 import shared.model.Side;
-import utilities.Pair;
+import utils.Pair;
 
 /**
  * This interface represents a placeable object. The object has a side of the
@@ -33,6 +33,44 @@ public interface Placeable<T extends Side> {
      * @return the side of the object in the direction {@code direction}
      */
     public T getSide(Direction direction);
+
+    /**
+     * Returns true if the side in the direction {@code direction} has the same
+     * figures as {@code side}.
+     * 
+     * @param direction The direction of the comparison
+     * @param side      Side to compare
+     * @return
+     */
+    public boolean doesSideMatch(T side, Direction direction);
+
+    /**
+     * Returns true if the tile can be placed next to each tile of {@code tiles}.
+     * 
+     * @param tiles The tiles to check, with their respective directions
+     * @return True if the tile can be placed
+     */
+    public default boolean canBePlaced(List<Pair<Placeable<T>, Direction>> tiles) {
+        if (tiles == null || tiles.isEmpty())
+            return false;
+
+        for (Pair<Placeable<T>, Direction> tile : tiles) {
+            if (!doesSideMatch(tile.first.getSide(getOpposite(tile.second)), tile.second))
+                return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks if the object can be placed on the board after a certain amount of
+     * rotations.
+     * 
+     * @return {@code true} if the object could be placed on the board after a
+     *         certain
+     *         amount of rotations
+     */
+    public boolean canBePlacedWithRotation(List<Pair<Placeable<T>, Direction>> tiles);
 
     /**
      * Returns the opposite direction of the direction {@code direction}.
@@ -182,43 +220,5 @@ public interface Placeable<T extends Side> {
                 break;
         }
     }
-
-    /**
-     * Returns true if the side in the direction {@code direction} has the same
-     * figures as {@code side}.
-     * 
-     * @param direction The direction of the comparison
-     * @param side      Side to compare
-     * @return
-     */
-    public boolean doesSideMatch(T side, Direction direction);
-
-    /**
-     * Returns true if the tile can be placed next to each tile of {@code tiles}.
-     * 
-     * @param tiles The tiles to check, with their respective directions
-     * @return True if the tile can be placed
-     */
-    public default boolean canBePlaced(List<Pair<Placeable<T>, Direction>> tiles) {
-        if (tiles == null || tiles.isEmpty())
-            return false;
-
-        for (Pair<Placeable<T>, Direction> tile : tiles) {
-            if (!doesSideMatch(tile.first.getSide(getOpposite(tile.second)), tile.second))
-                return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Checks if the object can be placed on the board after a certain amount of
-     * rotations.
-     * 
-     * @return {@code true} if the object could be placed on the board after a
-     *         certain
-     *         amount of rotations
-     */
-    public boolean canBePlacedWithRotation(List<Pair<Placeable<T>, Direction>> tiles);
 
 }

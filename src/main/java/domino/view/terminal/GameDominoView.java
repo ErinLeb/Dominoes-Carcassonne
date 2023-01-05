@@ -7,7 +7,7 @@ import domino.model.GameDomino;
 import domino.model.PlayerDomino;
 import domino.model.TileDomino;
 import shared.model.Player;
-import utilities.StringOperations;
+import utils.StringOperations;
 
 public class GameDominoView {
     // Attributes
@@ -63,41 +63,6 @@ public class GameDominoView {
     }
 
     /**
-     * Helper function for {@link #printBoard()}. Returns an array of {@code String}
-     * which represents a line of the relative board.
-     * 
-     * @param relativeBoard The relative board
-     * @param y             Y coordinate of the line
-     * @return An array of {@code String} which represents a line of the relative
-     *         board
-     */
-    private String[] getStringLine(List<List<TileDomino>> relativeBoard, int y) {
-        String[] lines = new String[TileDomino.COLUMNS_LENGTH];
-
-        String voidLine = StringOperations.repeat(" ", TileDomino.LENGTH_OF_LINE);
-
-        // Get the line number
-        for (int j = 0; j < lines.length; j++)
-            lines[j] = j == TileDomino.COLUMNS_LENGTH / 2 ? Integer.toString(y + 1) + " " : "  ";
-
-        // Get the information of the lines
-        for (int i = 0; i < relativeBoard.get(y).size(); i++) {
-            // If the tile is null we add the corresponding spaces
-            if (relativeBoard.get(y).get(i) == null) {
-                for (int j = 0; j < lines.length; j++)
-                    lines[j] += voidLine;
-
-            } else {
-                String[] stringRepresentation = relativeBoard.get(y).get(i).getStringRepresentation();
-                for (int j = 0; j < lines.length; j++)
-                    lines[j] += stringRepresentation[j];
-            }
-        }
-
-        return lines;
-    }
-
-    /**
      * Prints on the screen the tile to be placed
      */
     public void printTileToPlace() {
@@ -141,6 +106,41 @@ public class GameDominoView {
     }
 
     /**
+     * Helper function for {@link #printBoard()}. Returns an array of {@code String}
+     * which represents a line of the relative board.
+     * 
+     * @param relativeBoard The relative board
+     * @param y             Y coordinate of the line
+     * @return An array of {@code String} which represents a line of the relative
+     *         board
+     */
+    private String[] getStringLine(List<List<TileDomino>> relativeBoard, int y) {
+        String[] lines = new String[TileDomino.COLUMNS_LENGTH];
+
+        String voidLine = StringOperations.repeat(" ", TileDomino.LENGTH_OF_LINE);
+
+        // Get the line number
+        for (int j = 0; j < lines.length; j++)
+            lines[j] = j == TileDomino.COLUMNS_LENGTH / 2 ? Integer.toString(y + 1) + " " : "  ";
+
+        // Get the information of the lines
+        for (int i = 0; i < relativeBoard.get(y).size(); i++) {
+            // If the tile is null we add the corresponding spaces
+            if (relativeBoard.get(y).get(i) == null) {
+                for (int j = 0; j < lines.length; j++)
+                    lines[j] += voidLine;
+
+            } else {
+                String[] stringRepresentation = relativeBoard.get(y).get(i).getStringRepresentation();
+                for (int j = 0; j < lines.length; j++)
+                    lines[j] += stringRepresentation[j];
+            }
+        }
+
+        return lines;
+    }
+
+    /**
      * Prints the updated information of the round.
      */
     public void printUpdateGameRound() {
@@ -175,7 +175,7 @@ public class GameDominoView {
     private void printWinners() {
         List<Player> winners = model.getWinners();
 
-        if (winners == null || winners.size() == 0 || winners.get(0) == null) {
+        if (winners == null || winners.isEmpty() || winners.get(0) == null) {
             System.out.println("There is no winner !");
         }
 

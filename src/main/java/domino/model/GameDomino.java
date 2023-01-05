@@ -8,8 +8,8 @@ import interfaces.Placeable;
 import interfaces.Placeable.Direction;
 import shared.model.Game;
 import shared.model.Player;
-import utilities.Expandable2DArray;
-import utilities.Pair;
+import utils.Expandable2DArray;
+import utils.Pair;
 
 /**
  * Represents a game of Domino
@@ -155,14 +155,7 @@ public class GameDomino extends Game<SideDomino, TileDomino> {
      */
     public int pointsIfPlaced(int x, int y, TileDomino tile) {
 
-        if (tile == null)
-            throw new IllegalArgumentException("Tile is null");
-
-        if (!board.isInsideExpandableBounds(x, y))
-            throw new IndexOutOfBoundsException("Position is out of bounds");
-
-        if (!board.isOutOfBounds(x, y) && board.get(x, y) != null)
-            throw new IllegalArgumentException("There is already a tile at this position");
+        handleInputPointsIfPlaced(x, y, tile);
 
         List<Pair<Placeable<SideDomino>, Direction>> neighbors = new ArrayList<>();
 
@@ -181,6 +174,15 @@ public class GameDomino extends Game<SideDomino, TileDomino> {
 
         return score;
 
+    }
+
+    private void handleInputPointsIfPlaced(int x, int y, TileDomino tile) {
+        if (tile == null)
+            throw new IllegalArgumentException("Tile is null");
+        if (!board.isInsideExpandableBounds(x, y))
+            throw new IndexOutOfBoundsException("Position is out of bounds");
+        if (!board.isOutOfBounds(x, y) && board.get(x, y) != null)
+            throw new IllegalArgumentException("There is already a tile at this position");
     }
 
     public static void main(String[] args) {

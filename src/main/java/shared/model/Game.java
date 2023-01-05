@@ -7,9 +7,9 @@ import exceptions.TileNotFoundException;
 import exceptions.UnableToTurnException;
 import interfaces.Placeable;
 import interfaces.Placeable.Direction;
-import utilities.Expandable2DArray;
-import utilities.Pair;
-import utilities.TriConsumer;
+import utils.Expandable2DArray;
+import utils.Pair;
+import utils.TriConsumer;
 
 public abstract class Game<S extends Side, T extends Tile<S>> {
 
@@ -57,6 +57,10 @@ public abstract class Game<S extends Side, T extends Tile<S>> {
      */
     public int getNbRounds() {
         return nbRounds;
+    }
+
+    public int getNbRemainingTiles() {
+        return deck.size();
     }
 
     /**
@@ -173,13 +177,6 @@ public abstract class Game<S extends Side, T extends Tile<S>> {
         return ranking;
     }
 
-    // Setters
-
-    // TODO : check if we still need this setter
-    public void setIsGameOn(boolean b) {
-        isGameOn = b;
-    }
-
     // Methods
 
     /**
@@ -290,40 +287,6 @@ public abstract class Game<S extends Side, T extends Tile<S>> {
     }
 
     /**
-     * Throws an exception if the tile to place is null, if the position is out of
-     * bounds or if there is already a tile at this position.
-     * 
-     * @param x X position of the tile
-     * @param y Y position of the tile
-     * @throws TileNotFoundException If the tile to place is null
-     */
-    private void handlePlaceInputErrors(int x, int y) throws TileNotFoundException {
-        if (tileToPlace == null)
-            throw new TileNotFoundException();
-
-        if (!board.isInsideExpandableBounds(x, y))
-            throw new IndexOutOfBoundsException();
-
-        if (!board.isOutOfBounds(x, y) && board.get(x, y) != null)
-            throw new IllegalArgumentException("There is already a tile at this position");
-    }
-
-    /**
-     * Gets the neighbors of the tile at the given position and upcasts them to
-     * {@code Placeable<S>}.
-     * 
-     * 
-     * @param x X position of the tile
-     * @param y Y position of the tile
-     * @return The neighbors of the tile at the given position *
-     */
-    public List<Pair<Placeable<S>, Direction>> getNeighborsFromPosition(int x, int y) {
-        List<Pair<Placeable<S>, Direction>> neighbors = new ArrayList<>();
-        board.getNeighbors(x, y).forEach(p -> neighbors.add(new Pair<>(p.first, p.second)));
-        return neighbors;
-    }
-
-    /**
      * Places the tile on the board in the given direction.
      * 
      * @param id        Id of the tile next to which we want to place out tile
@@ -365,6 +328,40 @@ public abstract class Game<S extends Side, T extends Tile<S>> {
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Invalid position");
         }
+    }
+
+    /**
+     * Throws an exception if the tile to place is null, if the position is out of
+     * bounds or if there is already a tile at this position.
+     * 
+     * @param x X position of the tile
+     * @param y Y position of the tile
+     * @throws TileNotFoundException If the tile to place is null
+     */
+    private void handlePlaceInputErrors(int x, int y) throws TileNotFoundException {
+        if (tileToPlace == null)
+            throw new TileNotFoundException();
+
+        if (!board.isInsideExpandableBounds(x, y))
+            throw new IndexOutOfBoundsException();
+
+        if (!board.isOutOfBounds(x, y) && board.get(x, y) != null)
+            throw new IllegalArgumentException("There is already a tile at this position");
+    }
+
+    /**
+     * Gets the neighbors of the tile at the given position and upcasts them to
+     * {@code Placeable<S>}.
+     * 
+     * 
+     * @param x X position of the tile
+     * @param y Y position of the tile
+     * @return The neighbors of the tile at the given position *
+     */
+    public List<Pair<Placeable<S>, Direction>> getNeighborsFromPosition(int x, int y) {
+        List<Pair<Placeable<S>, Direction>> neighbors = new ArrayList<>();
+        board.getNeighbors(x, y).forEach(p -> neighbors.add(new Pair<>(p.first, p.second)));
+        return neighbors;
     }
 
     /**
@@ -437,6 +434,20 @@ public abstract class Game<S extends Side, T extends Tile<S>> {
     }
 
     /**
+     * If {@code isGameOn} is {@code false} or the deck is empty, switches isGameOn
+     * to false and return {@code true}.
+     * 
+     * @return {@code true} if the deck is empty.
+     */
+    public boolean endGame() {
+        if (deck.isEmpty() || !isGameOn) {
+            isGameOn = false;
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Returns the list of possible locations where the tile can be placed.
      * 
      * @return List of possible locations
@@ -470,31 +481,13 @@ public abstract class Game<S extends Side, T extends Tile<S>> {
     }
 
     /**
-     * If {@code isGameOn} is {@code false} or the deck is empty, switches isGameOn
-     * to false and return {@code true}.
-     * 
-     * @return {@code true} if the deck is empty.
-     */
-    public boolean endGame() {
-        if (deck.isEmpty() || !isGameOn) {
-            isGameOn = false;
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * Apply a function to the minimap. The function takes as argument the x
      * position of the tile, the y position of the tile and the tile itself.
      * 
      * @param func The function to apply
      */
-    public void applyFunctionMinimap(TriConsumer<Integer, Integer, T> func) {
+    public void iteriMinimap(TriConsumer<Integer, Integer, T> func) {
         board.iteriSubArray(currentPosition.first, currentPosition.second, NB_TILES_TO_SHOW, func);
-    }
-
-    public int getNbRemainingTiles() {
-        return deck.size();
     }
 
 }

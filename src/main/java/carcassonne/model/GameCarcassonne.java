@@ -3,9 +3,8 @@ package carcassonne.model;
 import java.awt.Color;
 
 import shared.model.Game;
-import shared.model.Player;
-import utilities.Expandable2DArray;
-import utilities.Pair;
+import utils.Expandable2DArray;
+import utils.Pair;
 
 public class GameCarcassonne extends Game<SideCarcassonne, TileCarcassonne> {
 

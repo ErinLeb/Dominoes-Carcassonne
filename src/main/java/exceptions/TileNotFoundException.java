@@ -6,10 +6,10 @@ package exceptions;
 public class TileNotFoundException extends Exception {
     // Constructors
     public TileNotFoundException(int id) {
-        System.out.println("Tile with id: " + id + "not found.");
+        super("Tile with id: " + id + "not found.");
     }
 
     public TileNotFoundException() {
-        System.out.println("Tile not found.");
+        super("Tile not found.");
     }
 }

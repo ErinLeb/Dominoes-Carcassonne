@@ -1,8 +1,8 @@
 package carcassonne.view;
 
 import interfaces.Placeable.Direction;
-import utilities.geometry.Point;
-import utilities.geometry.Triangle;
+import utils.geometry.Point;
+import utils.geometry.Triangle;
 
 /**
  * The BoundingBoxHandler class is used to generate the bounding boxes of the

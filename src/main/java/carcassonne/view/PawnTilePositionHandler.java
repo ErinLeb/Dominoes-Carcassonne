@@ -1,8 +1,8 @@
 package carcassonne.view;
 
 import carcassonne.model.TileCarcassonne.SideSelector;
-import utilities.Pair;
-import utilities.geometry.Point;
+import utils.Pair;
+import utils.geometry.Point;
 
 /**
  * This class is used to compute the position of the pawn on the tile.

@@ -1,4 +1,4 @@
-package utilities.geometry;
+package utils.geometry;
 
 /**
  * Interface for closed shapes (shapes that can be closed by a line).

@@ -26,10 +26,10 @@ import carcassonne.model.TileCarcassonne.SideSelector;
 import exceptions.UnableToTurnException;
 import interfaces.Placeable.Direction;
 import shared.view.TilePanel;
-import utilities.Pair;
-import utilities.geometry.Point;
-import utilities.geometry.Square;
-import utilities.geometry.Triangle;
+import utils.Pair;
+import utils.geometry.Point;
+import utils.geometry.Square;
+import utils.geometry.Triangle;
 
 public class TileCarcassonnePanel extends TilePanel<TileCarcassonne> {
 
@@ -53,6 +53,11 @@ public class TileCarcassonnePanel extends TilePanel<TileCarcassonne> {
         } else {
             init();
         }
+    }
+
+    @Override
+    public Dimension getPreferredSize() {
+        return new Dimension(125, 125);
     }
 
     public void setCanPawnBePlaced(boolean canPawnBePlaced) {
@@ -225,6 +230,10 @@ public class TileCarcassonnePanel extends TilePanel<TileCarcassonne> {
         Graphics2D g2d = (Graphics2D) g;
 
         // Rotates the image
+        drawRotatedImage(scaledImage, g2d);
+    }
+
+    private void drawRotatedImage(Image scaledImage, Graphics2D g2d) {
         AffineTransform rotationTransformation = AffineTransform.getRotateInstance(rotationsToAngle(),
                 getWidth() / 2., getHeight() / 2.);
 
@@ -240,11 +249,6 @@ public class TileCarcassonnePanel extends TilePanel<TileCarcassonne> {
 
     private double rotationsToAngle() {
         return tileModel.getNbOfRotations() * Math.PI / 2.;
-    }
-
-    @Override
-    public Dimension getPreferredSize() {
-        return new Dimension(125, 125);
     }
 
     public static void main(String[] args) throws UnableToTurnException, InterruptedException {

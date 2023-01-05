@@ -1,4 +1,4 @@
-package utilities;
+package utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,34 +88,6 @@ public class Expandable2DArray<T> {
     }
 
     // Methods
-    /**
-     * Expands the size of the array in the given direction.
-     * 
-     * @param direction The direction in which the array should be expanded.
-     */
-    private void expand(Direction direction) {
-        switch (direction) {
-            case UP:
-                ArrayList<T> newLine = new ArrayList<>();
-                array.get(0).forEach(l -> newLine.add(null));
-                array.add(0, newLine);
-                break;
-
-            case DOWN:
-                newLine = new ArrayList<>();
-                array.get(0).forEach(l -> newLine.add(null));
-                array.add(newLine);
-                break;
-
-            case LEFT:
-                array.forEach(l -> l.add(0, null));
-                break;
-
-            case RIGHT:
-                array.forEach(l -> l.add(null));
-                break;
-        }
-    }
 
     /**
      * Adds a new element to the array.
@@ -160,49 +132,32 @@ public class Expandable2DArray<T> {
     }
 
     /**
-     * Returns a sub-array of this array. This sub-array is centered on the point
-     * {@code x,y} and is a rectangle of size {@code size}. If the size is bigger
-     * than the array it will return the maximum possible sub-array.
+     * Expands the size of the array in the given direction.
      * 
-     * <p>
-     * 
-     * This method will not scale the sub-array. If the sub-array is bigger than the
-     * array it will return the maximum possible sub-array. It is used as a helper
-     * method for {@link #getSubArray(int, int, int)}, which will scale the
-     * subArray.
-     * <\p>
-     * 
-     * @param x    X coordinate of the center
-     * @param y    Y coordinate of the center
-     * @param size The size of the sub-array. Must be odd and positive in order to
-     *             have a center.
-     * @return The sub-array
+     * @param direction The direction in which the array should be expanded.
      */
-    private List<List<T>> getSubArrayWithoutScaling(int x, int y, int size) {
+    private void expand(Direction direction) {
+        switch (direction) {
+            case UP:
+                ArrayList<T> newLine = new ArrayList<>();
+                array.get(0).forEach(l -> newLine.add(null));
+                array.add(0, newLine);
+                break;
 
-        if (x < 0 || y < 0 || x > array.size() || y > array.get(0).size())
-            throw new IndexOutOfBoundsException();
-        if (size < 0)
-            throw new IllegalArgumentException("Size must be positive");
-        if (size % 2 == 0)
-            throw new IllegalArgumentException("Size must be odd");
+            case DOWN:
+                newLine = new ArrayList<>();
+                array.get(0).forEach(l -> newLine.add(null));
+                array.add(newLine);
+                break;
 
-        int xStart = Math.max(0, x - size / 2);
-        int yStart = Math.max(0, y - size / 2);
+            case LEFT:
+                array.forEach(l -> l.add(0, null));
+                break;
 
-        int xEnd = Math.min(getWidth() - 1, x + size / 2);
-        int yEnd = Math.min(getHeight() - 1, y + size / 2);
-
-        List<List<T>> subArray = new ArrayList<>();
-
-        for (int i = xStart; i <= xEnd; i++) {
-            subArray.add(new ArrayList<>());
-            for (int j = yStart; j <= yEnd; j++) {
-                subArray.get(i - xStart).add(array.get(i).get(j));
-            }
+            case RIGHT:
+                array.forEach(l -> l.add(null));
+                break;
         }
-
-        return subArray;
     }
 
     /**
@@ -270,46 +225,49 @@ public class Expandable2DArray<T> {
     }
 
     /**
-     * Applies {@code func} to all the elements of the array.
+     * Returns a sub-array of this array. This sub-array is centered on the point
+     * {@code x,y} and is a rectangle of size {@code size}. If the size is bigger
+     * than the array it will return the maximum possible sub-array.
      * 
-     * @param func The function to apply
+     * <p>
+     * 
+     * This method will not scale the sub-array. If the sub-array is bigger than the
+     * array it will return the maximum possible sub-array. It is used as a helper
+     * method for {@link #getSubArray(int, int, int)}, which will scale the
+     * subArray.
+     * <\p>
+     * 
+     * @param x    X coordinate of the center
+     * @param y    Y coordinate of the center
+     * @param size The size of the sub-array. Must be odd and positive in order to
+     *             have a center.
+     * @return The sub-array
      */
-    public void forEach(Consumer<T> func) {
-        array.forEach(l -> l.forEach(func));
-    }
+    private List<List<T>> getSubArrayWithoutScaling(int x, int y, int size) {
 
-    /**
-     * Finds the first element of the array that satisfies the predicate
-     * {@code pred}.
-     * 
-     * @param predicate The predicate to test
-     * @return The first element that satisfies the predicate
-     */
-    public T find(Predicate<T> predicate) {
-        for (List<T> l : array) {
-            for (T t : l) {
-                if (predicate.test(t))
-                    return t;
+        if (x < 0 || y < 0 || x > array.size() || y > array.get(0).size())
+            throw new IndexOutOfBoundsException();
+        if (size < 0)
+            throw new IllegalArgumentException("Size must be positive");
+        if (size % 2 == 0)
+            throw new IllegalArgumentException("Size must be odd");
+
+        int xStart = Math.max(0, x - size / 2);
+        int yStart = Math.max(0, y - size / 2);
+
+        int xEnd = Math.min(getWidth() - 1, x + size / 2);
+        int yEnd = Math.min(getHeight() - 1, y + size / 2);
+
+        List<List<T>> subArray = new ArrayList<>();
+
+        for (int i = xStart; i <= xEnd; i++) {
+            subArray.add(new ArrayList<>());
+            for (int j = yStart; j <= yEnd; j++) {
+                subArray.get(i - xStart).add(array.get(i).get(j));
             }
         }
-        return null;
-    }
 
-    /**
-     * Finds the first element of the array that satisfies the predicate. It returns
-     * its index.
-     * 
-     * @param predicate The predicate to test
-     * @return The index of the first element that satisfies the predicate
-     */
-    public Pair<Integer, Integer> findIndex(Predicate<T> predicate) {
-        for (int i = 0; i < array.size(); i++) {
-            for (int j = 0; j < array.get(0).size(); j++) {
-                if (predicate.test(array.get(i).get(j)))
-                    return new Pair<>(i, j);
-            }
-        }
-        return null;
+        return subArray;
     }
 
     /**
@@ -356,6 +314,49 @@ public class Expandable2DArray<T> {
      */
     public boolean isInsideExpandableBounds(Pair<Integer, Integer> index) {
         return isInsideExpandableBounds(index.first, index.second);
+    }
+
+    /**
+     * Applies {@code func} to all the elements of the array.
+     * 
+     * @param func The function to apply
+     */
+    public void forEach(Consumer<T> func) {
+        array.forEach(l -> l.forEach(func));
+    }
+
+    /**
+     * Finds the first element of the array that satisfies the predicate
+     * {@code pred}.
+     * 
+     * @param predicate The predicate to test
+     * @return The first element that satisfies the predicate
+     */
+    public T find(Predicate<T> predicate) {
+        for (List<T> l : array) {
+            for (T t : l) {
+                if (predicate.test(t))
+                    return t;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Finds the first element of the array that satisfies the predicate. It returns
+     * its index.
+     * 
+     * @param predicate The predicate to test
+     * @return The index of the first element that satisfies the predicate
+     */
+    public Pair<Integer, Integer> findIndex(Predicate<T> predicate) {
+        for (int i = 0; i < array.size(); i++) {
+            for (int j = 0; j < array.get(0).size(); j++) {
+                if (predicate.test(array.get(i).get(j)))
+                    return new Pair<>(i, j);
+            }
+        }
+        return null;
     }
 
     /**
