@@ -12,6 +12,7 @@ import carcassonne.model.PlayerCarcassonne;
 import carcassonne.model.SideCarcassonne;
 import carcassonne.model.TileCarcassonne;
 import shared.view.GamePanel;
+import shared.view.StartMenu;
 
 /**
  * This class is the panel that contains the game board and the game information
@@ -25,9 +26,10 @@ public class GameCarcassonnePanel extends GamePanel<SideCarcassonne, TileCarcass
 
     private BoardCarcassonne board;
 
-    public GameCarcassonnePanel(GameCarcassonne gameModel, JFrame frame) {
+    public GameCarcassonnePanel(GameCarcassonne gameModel, JFrame frame, StartMenu homeMenu) {
         this.gameModel = gameModel;
         this.frame = frame;
+        this.homeMenu = homeMenu;
 
         gameModel.updateGameRound();
 
@@ -48,9 +50,7 @@ public class GameCarcassonnePanel extends GamePanel<SideCarcassonne, TileCarcass
         nbTiles = new JLabel(String.valueOf(gameModel.getNbRemainingTiles()));
 
         String infoMessage = "<html> Click on a tile to place it on the board.<br>";
-        if (((PlayerCarcassonne) gameModel.getCurrentPlayer()).getRemainingPawns() > 0) {
-            infoMessage += "<br/>Click on the current tile to place a pawn on it.</html>";
-        }
+
         infoScreenLabel = new JLabel(infoMessage);
 
         tileToPlace = new TileCarcassonnePanel(gameModel.getTileToPlace());
@@ -152,6 +152,13 @@ public class GameCarcassonnePanel extends GamePanel<SideCarcassonne, TileCarcass
         }
     }
 
+    @Override
+    protected void endGame() {
+        EndMenuCarcassonne endMenu = new EndMenuCarcassonne(homeMenu, frame);
+        frame.setContentPane(endMenu);
+        frame.revalidate();
+    }
+
     protected class BoardCarcassonne extends Board {
         @Override
         protected void initTile(int x, int y, TileCarcassonne tile) {
@@ -174,10 +181,13 @@ public class GameCarcassonnePanel extends GamePanel<SideCarcassonne, TileCarcass
         frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
 
-        GameCarcassonne model = new GameCarcassonne(new PlayerCarcassonne[] { new PlayerCarcassonne("Grep", LIGHT_RED),
-                new BotCarcassonne(LIGHT_RED), new BotCarcassonne(LIGHT_RED) });
+        GameCarcassonne model = new GameCarcassonne(
+                new PlayerCarcassonne[] { new PlayerCarcassonne(LIGHT_RED), new PlayerCarcassonne(LIGHT_RED) });
 
-        GameCarcassonnePanel game = new GameCarcassonnePanel(model, frame);
+        StartMenu home = new StartMenu(frame);
+
+        model.updateGameRound();
+        GameCarcassonnePanel game = new GameCarcassonnePanel(model, frame, home);
 
         frame.setBackground(java.awt.Color.WHITE);
         frame.add(game);

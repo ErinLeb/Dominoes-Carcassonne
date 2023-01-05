@@ -1,5 +1,6 @@
 package shared.view;
 
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.HashSet;
@@ -8,6 +9,7 @@ import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -17,15 +19,18 @@ import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
 
 import carcassonne.model.BotCarcassonne;
 import domino.model.BotDomino;
-import domino.model.PlayerDomino;
 import shared.model.Player;
 import utils.Pair;
 import utils.StringOperations;
 
 public abstract class Settings extends JPanel {
+    protected JFrame frame;
+    protected StartMenu home;
 
     protected JTextField numberOfPlayersText = new JTextField(1);
     protected JTextField numberOfBotsText = new JTextField(1);
@@ -37,6 +42,15 @@ public abstract class Settings extends JPanel {
     protected GridBagConstraints c = new GridBagConstraints();
 
     protected int maxPlayers;
+
+    {
+        // Border
+        setBorder(new TitledBorder(new EtchedBorder(), "Settings"));
+        ((TitledBorder) getBorder()).setTitleJustification(TitledBorder.CENTER);
+
+        // Background
+        setBackground(new Color(0xAFEEEE));
+    }
 
     /**
      * Initializes the panel that contains the settings for the number of players,
@@ -280,7 +294,7 @@ public abstract class Settings extends JPanel {
         c.gridx = 0;
         c.gridy = counter + 1;
         JButton startGameButton = new JButton("Start game");
-        startGameButton.addActionListener(e -> startGame());
+        startGameButton.addActionListener(e -> checkNames());
         setButtonFontSize(startGameButton);
         add(startGameButton, c);
     }
@@ -288,7 +302,7 @@ public abstract class Settings extends JPanel {
     /**
      * Starts the game.
      */
-    protected void startGame() {
+    protected void checkNames() {
 
         Set<String> names = new HashSet<>();
 
@@ -308,22 +322,22 @@ public abstract class Settings extends JPanel {
             getSettingsModel().players[pair.second - 1].setName(name);
         }
 
-        System.out.println("Start game");// TODO remove this
-
-        // TODO: start game
+        startGame();
     }
 
-    protected class SettingsModel {
+    protected abstract void startGame();
+
+    protected abstract class SettingsModel<T extends Player> {
 
         public int totalNumberOfPlayers;
         public int numberOfBots;
 
-        public Player[] players;
+        public T[] players;
 
         /**
          * Creates a new settings model.
          */
-        public SettingsModel() {
+        protected SettingsModel() {
             totalNumberOfPlayers = -1;
             numberOfBots = -1;
         }
@@ -361,24 +375,7 @@ public abstract class Settings extends JPanel {
         /**
          * Generates the players.
          */
-        public void generatePlayers() {
-            players = new Player[totalNumberOfPlayers];
-
-            Set<String> botNames = new HashSet<>();
-
-            for (int i = 0; i < totalNumberOfPlayers; i++) {
-                if (i < numberOfBots) {
-                    // Takes care of bot naming an duplicates
-                    players[i] = new BotDomino();
-                    while (botNames.contains(players[i].getName())) {
-                        ((BotDomino) players[i]).changeName();
-                    }
-                    botNames.add(players[i].getName());
-                } else {
-                    players[i] = new PlayerDomino();
-                }
-            }
-        }
+        public abstract void generatePlayers();
 
         /**
          * Shuffles the players.
@@ -389,7 +386,7 @@ public abstract class Settings extends JPanel {
             for (int i = 0; i < totalNumberOfPlayers; i++) {
                 int j = rand.nextInt(totalNumberOfPlayers);
 
-                Player temp = players[i];
+                T temp = players[i];
                 players[i] = players[j];
                 players[j] = temp;
             }

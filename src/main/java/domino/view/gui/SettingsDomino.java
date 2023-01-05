@@ -1,7 +1,10 @@
 package domino.view.gui;
 
 import java.awt.GridBagLayout;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -11,7 +14,11 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 
+import domino.model.BotDomino;
+import domino.model.GameDomino;
+import domino.model.PlayerDomino;
 import shared.view.Settings;
+import shared.view.StartMenu;
 
 /**
  * This settings class is the panel that contains the settings for the game
@@ -26,7 +33,10 @@ public class SettingsDomino extends Settings {
     /**
      * Creates a new settings panel.
      */
-    public SettingsDomino() {
+    public SettingsDomino(JFrame frame, StartMenu home) {
+        this.frame = frame;
+        this.home = home;
+
         maxPlayers = 6;
         initNumberSettingsSelector();
     }
@@ -112,7 +122,18 @@ public class SettingsDomino extends Settings {
         }
     }
 
-    private class SettingsDominoModel extends SettingsModel {
+    @Override
+    protected void startGame() {
+        GameDomino gameModel = new GameDomino(settingsModel.players, settingsModel.numberOfDominoes);
+        GameDominoPanel gameView = new GameDominoPanel(gameModel, frame, home);
+
+        frame.setTitle("Domino");
+        frame.setContentPane(gameView);
+        frame.revalidate();
+        frame.repaint();
+    }
+
+    private class SettingsDominoModel extends SettingsModel<PlayerDomino> {
         private int numberOfDominoes;
 
         private SettingsDominoModel() {
@@ -134,6 +155,30 @@ public class SettingsDomino extends Settings {
         public boolean isCorrectNumberOfDominoes() {
             return numberOfDominoes >= 15 && numberOfDominoes <= 100;
         }
+
+        public int getNumberOfDominoes() {
+            return numberOfDominoes;
+        }
+
+        @Override
+        public void generatePlayers() {
+            players = new PlayerDomino[totalNumberOfPlayers];
+
+            Set<String> botNames = new HashSet<>();
+
+            for (int i = 0; i < totalNumberOfPlayers; i++) {
+                if (i < numberOfBots) {
+                    // Takes care of bot naming an duplicates
+                    players[i] = new BotDomino();
+                    while (botNames.contains(players[i].getName())) {
+                        ((BotDomino) players[i]).changeName();
+                    }
+                    botNames.add(players[i].getName());
+                } else {
+                    players[i] = new PlayerDomino();
+                }
+            }
+        }
     }
 
     @Override
@@ -142,9 +187,13 @@ public class SettingsDomino extends Settings {
     }
 
     public static void main(String[] args) {
-        SettingsDomino settings = new SettingsDomino();
         javax.swing.JFrame frame = new javax.swing.JFrame();
-        frame.setPreferredSize(new java.awt.Dimension(900, 900));
+
+        StartMenu home = new StartMenu(frame);
+
+        SettingsDomino settings = new SettingsDomino(frame, home);
+
+        frame.setPreferredSize(new java.awt.Dimension(950, 950));
         frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
         frame.add(settings);
         frame.pack();

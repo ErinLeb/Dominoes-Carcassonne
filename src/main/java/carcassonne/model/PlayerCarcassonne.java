@@ -11,7 +11,7 @@ public class PlayerCarcassonne extends Player {
     private int id;
     protected int remainingPawns = 10;
 
-    private final Color pawnColor;
+    private Color pawnColor;
 
     // Constructor
     public PlayerCarcassonne(Color colorPawn) {
@@ -43,6 +43,10 @@ public class PlayerCarcassonne extends Player {
 
     public int getRemainingPawns() {
         return remainingPawns;
+    }
+
+    public void setColor(Color color) {
+        pawnColor = color;
     }
 
     public void decreaseRemainingPawns() {

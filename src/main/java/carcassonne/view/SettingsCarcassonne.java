@@ -1,6 +1,15 @@
 package carcassonne.view;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.swing.JFrame;
+
+import carcassonne.model.BotCarcassonne;
+import carcassonne.model.GameCarcassonne;
+import carcassonne.model.PlayerCarcassonne;
 import shared.view.Settings;
+import shared.view.StartMenu;
 
 /**
  * This settings class is the panel that contains the settings for the game
@@ -8,29 +17,68 @@ import shared.view.Settings;
  */
 public class SettingsCarcassonne extends Settings {
 
-    SettingsModel settingsModel = new SettingsModel();
+    SettingsCarcassonneModel settingsModel = new SettingsCarcassonneModel();
 
     /**
      * Creates a new settings panel.
      */
-    public SettingsCarcassonne() {
+    public SettingsCarcassonne(JFrame frame, StartMenu home) {
+        this.frame = frame;
+        this.home = home;
+
         maxPlayers = 4;
         initNumberSettingsSelector();
     }
 
     @Override
-    public SettingsModel getSettingsModel() {
+    protected void startGame() {
+        GameCarcassonne gameModel = new GameCarcassonne(settingsModel.players);
+        frame.setContentPane((new GameCarcassonnePanel(gameModel, frame, home)));
+        frame.revalidate();
+    }
+
+    @Override
+    public SettingsCarcassonneModel getSettingsModel() {
         return settingsModel;
     }
 
+    private class SettingsCarcassonneModel extends SettingsModel<PlayerCarcassonne> {
+        public SettingsCarcassonneModel() {
+            super();
+        }
+
+        @Override
+        public void generatePlayers() {
+            players = new PlayerCarcassonne[totalNumberOfPlayers];
+
+            Set<String> botNames = new HashSet<>();
+
+            for (int i = 0; i < totalNumberOfPlayers; i++) {
+                if (i < numberOfBots) {
+                    // Takes care of bot naming an duplicates
+                    players[i] = new BotCarcassonne(null);
+                    while (botNames.contains(players[i].getName())) {
+                        ((BotCarcassonne) players[i]).changeName();
+                    }
+                    botNames.add(players[i].getName());
+                } else {
+                    players[i] = new PlayerCarcassonne(null);
+                }
+            }
+        }
+    }
+
     public static void main(String[] args) {
-        SettingsCarcassonne settings = new SettingsCarcassonne();
         javax.swing.JFrame frame = new javax.swing.JFrame();
-        frame.setPreferredSize(new java.awt.Dimension(900, 900));
+
+        StartMenu home = new StartMenu(frame);
+
+        SettingsCarcassonne settings = new SettingsCarcassonne(frame, home);
+
+        frame.setPreferredSize(new java.awt.Dimension(950, 950));
         frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
         frame.add(settings);
         frame.pack();
         frame.setVisible(true);
     }
-
 }

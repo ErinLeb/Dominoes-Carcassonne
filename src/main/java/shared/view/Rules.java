@@ -128,7 +128,7 @@ public class Rules extends JPanel {
         carcassonneText += "<br><u> How to place tiles ?</u></br>";
         carcassonneText += "The tile you draw must be placed in contact with at least one tile already on the board. The type of every side that touches another tile must correspond. If you can not place the tile given the conditions, you draw another card to place instead.<br>";
         carcassonneText += "<br><u>How to place a pawn ?</u></br>";
-        carcassonneText += "Before you place the tile, you can place one of the pawns you still haven't place on the tile you placed. You can place it on one of the zones represented in the tile as shown in the exemples.</html>";
+        carcassonneText += "Before you place the tile, you can place one of the pawns you still haven't place on it. You can place it on one of the zones (path, city, meadow or abbey).</br></html>";
 
         carcassonne = new RulesGame(carcassonneText, "Domino");
 

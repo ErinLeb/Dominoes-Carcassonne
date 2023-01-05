@@ -39,13 +39,16 @@ public class TileDominoPanel extends TilePanel<TileDomino> {
         add(square);
     }
 
+    @Override
+    public Dimension getPreferredSize() {
+        return new Dimension(125, 125);
+    }
+
     /**
      * Initializes the panel with the model.
      */
     private void init() {
         setLayout(new GridLayout(5, 5));
-
-        setPreferredSize(new Dimension(125, 125));
 
         SideDomino[] sides = tileModel.getSides();
 

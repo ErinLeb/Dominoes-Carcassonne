@@ -12,6 +12,7 @@ import domino.model.PlayerDomino;
 import domino.model.SideDomino;
 import domino.model.TileDomino;
 import shared.view.GamePanel;
+import shared.view.StartMenu;
 
 /**
  * The GameDominoPanel class is the panel that contains the game of Domino.
@@ -22,9 +23,10 @@ public class GameDominoPanel extends GamePanel<SideDomino, TileDomino> {
 
     private BoardDomino board;
 
-    public GameDominoPanel(GameDomino gameModel, JFrame frame) {
+    public GameDominoPanel(GameDomino gameModel, JFrame frame, StartMenu homeMenu) {
         this.gameModel = gameModel;
         this.frame = frame;
+        this.homeMenu = homeMenu;
 
         gameModel.updateGameRound();
 
@@ -136,6 +138,14 @@ public class GameDominoPanel extends GamePanel<SideDomino, TileDomino> {
         repaint();
     }
 
+    @Override
+    protected void endGame() {
+        EndMenuDomino endMenu = new EndMenuDomino(gameModel.getNbPlayers(), gameModel.getWinners(),
+                gameModel.getRanking(), homeMenu, frame);
+        frame.setContentPane(endMenu);
+        frame.revalidate();
+    }
+
     protected class BoardDomino extends Board {
 
         @Override
@@ -155,11 +165,12 @@ public class GameDominoPanel extends GamePanel<SideDomino, TileDomino> {
         frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
 
         GameDomino model = new GameDomino(
-                new PlayerDomino[] { new BotDomino(), new BotDomino(), new BotDomino() },
+                new PlayerDomino[] { new PlayerDomino("Erin"), new PlayerDomino("Yago") },
                 28);
 
-        GameDominoPanel game = new GameDominoPanel(
-                model, frame);
+        StartMenu home = new StartMenu(frame);
+
+        GameDominoPanel game = new GameDominoPanel(model, frame, home);
 
         frame.setBackground(java.awt.Color.WHITE);
         frame.add(game);
