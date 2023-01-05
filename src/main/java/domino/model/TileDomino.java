@@ -3,6 +3,7 @@ package domino.model;
 import exceptions.UnableToTurnException;
 import interfaces.Placeable;
 import shared.model.Tile;
+import utilities.StringOperations;
 
 /**
  * This class represents a domino tile.
@@ -108,14 +109,14 @@ public class TileDomino extends Tile<SideDomino> {
 
         String[] sideValues1 = sides[1].toString().split(" ");
         String[] sideValues3 = sides[3].toString().split(" ");
-        String vide = " ".repeat(5);
+        String vide = StringOperations.repeat(" ", 5);
 
         String line3 = sideValues3[0] + "|" + vide + "|" + sideValues1[0] + " ";
         String line5 = sideValues3[1] + "|" + " " + String.format("%03d", id) + " " + "|" + sideValues1[1] + " ";
         String line7 = sideValues3[2] + "|" + vide + "|" + sideValues1[2] + " ";
 
         String line9 = " |" + sides[2] + "|  ";
-        String separatorLine = "--" + "-".repeat(5) + "-- ";
+        String separatorLine = "--" + StringOperations.repeat("-", 5) + "-- ";
 
         return new String[] { line0, separatorLine, line3, line5, line7, separatorLine, line9 };
     }
@@ -147,7 +148,7 @@ public class TileDomino extends Tile<SideDomino> {
 
         String[] tileInfo = tile.getStringRepresentation();
         for (String line : tileInfo)
-            System.out.println(line.repeat(5));
+            System.out.println(StringOperations.repeat(line, 5));
 
         for (int i = 0; i < 4; i++) {
             new TileDomino().printTile();
