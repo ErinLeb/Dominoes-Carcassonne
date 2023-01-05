@@ -23,6 +23,7 @@ import domino.model.BotDomino;
 import domino.model.PlayerDomino;
 import shared.model.Player;
 import utilities.Pair;
+import utilities.StringOperations;
 
 public abstract class Settings extends JPanel {
 
@@ -294,7 +295,7 @@ public abstract class Settings extends JPanel {
 
         for (Pair<JTextField, Integer> pair : playerNameSelectors) {
             String name = pair.first.getText();
-            if (name.isEmpty() || name.isBlank()) {
+            if (name.isEmpty() || StringOperations.isBlank(name)) {
                 JOptionPane.showMessageDialog(this, "Please enter a name for player " + pair.second);
                 return;
             }

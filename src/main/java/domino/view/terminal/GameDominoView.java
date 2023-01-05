@@ -7,6 +7,7 @@ import domino.model.GameDomino;
 import domino.model.PlayerDomino;
 import domino.model.TileDomino;
 import shared.model.Player;
+import utilities.StringOperations;
 
 public class GameDominoView {
     // Attributes
@@ -73,7 +74,7 @@ public class GameDominoView {
     private String[] getStringLine(List<List<TileDomino>> relativeBoard, int y) {
         String[] lines = new String[TileDomino.COLUMNS_LENGTH];
 
-        String voidLine = " ".repeat(TileDomino.LENGTH_OF_LINE);
+        String voidLine = StringOperations.repeat(" ", TileDomino.LENGTH_OF_LINE);
 
         // Get the line number
         for (int j = 0; j < lines.length; j++)
@@ -120,7 +121,7 @@ public class GameDominoView {
         // Print the column numbers
         System.out.print("  ");
 
-        String spaceString = " ".repeat((TileDomino.LENGTH_OF_LINE - 1) / 2);
+        String spaceString = StringOperations.repeat(" ", (TileDomino.LENGTH_OF_LINE - 1) / 2);
 
         for (int i = 1; i <= relativeBoard.get(0).size(); i++) {
             System.out.print(spaceString + i + spaceString + " ");
