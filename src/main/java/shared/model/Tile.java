@@ -5,7 +5,7 @@ import java.util.List;
 import domino.model.SideDomino;
 import exceptions.UnableToTurnException;
 import interfaces.Placeable;
-import utilities.Pair;
+import utils.Pair;
 
 public abstract class Tile<T extends Side> implements Placeable<T> {
 
@@ -64,15 +64,6 @@ public abstract class Tile<T extends Side> implements Placeable<T> {
     }
 
     // Methods
-
-    public abstract boolean validSides(T[] tab);
-
-    /**
-     * Returns a copy of the tile.
-     * 
-     * @return a copy of the tile
-     */
-    public abstract Tile<T> copy();
 
     /**
      * Turns left the {@code sides} {@code n} times.
@@ -155,5 +146,14 @@ public abstract class Tile<T extends Side> implements Placeable<T> {
         }
         return false;
     }
+
+    public abstract boolean validSides(T[] tab);
+
+    /**
+     * Returns a copy of the tile.
+     * 
+     * @return a copy of the tile
+     */
+    public abstract Tile<T> copy();
 
 }

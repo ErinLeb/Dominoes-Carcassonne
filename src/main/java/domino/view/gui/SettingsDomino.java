@@ -1,6 +1,5 @@
 package domino.view.gui;
 
-import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
 import javax.swing.JLabel;
@@ -13,7 +12,6 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 
 import shared.view.Settings;
-import utilities.Pair;
 
 /**
  * This settings class is the panel that contains the settings for the game
@@ -22,8 +20,6 @@ import utilities.Pair;
 public class SettingsDomino extends Settings {
 
     private JTextField numberOfDominoesText = new JTextField(3);
-
-    private Pair<JTextField, Integer>[] playerNameSelectors;
 
     private SettingsDominoModel settingsModel = new SettingsDominoModel();
 
@@ -45,13 +41,11 @@ public class SettingsDomino extends Settings {
         setLayout(new GridBagLayout());
         initFilters();
 
-        GridBagConstraints c = new GridBagConstraints();
+        initTotalNumberOfPlayers();
+        initNumberOfBots();
+        initNumberOfDominoes();
 
-        initTotalNumberOfPlayers(c);
-        initNumberOfBots(c);
-        initNumberOfDominoes(c);
-
-        initNextButton(c);
+        initNextButton();
 
     }
 
@@ -62,7 +56,7 @@ public class SettingsDomino extends Settings {
 
     }
 
-    protected void initNumberOfDominoes(GridBagConstraints c) {
+    protected void initNumberOfDominoes() {
         numberOfDominoesText.setText("28");
 
         c.gridx = 0;
@@ -139,10 +133,6 @@ public class SettingsDomino extends Settings {
 
         public boolean isCorrectNumberOfDominoes() {
             return numberOfDominoes >= 15 && numberOfDominoes <= 100;
-        }
-
-        public int getNumberOfDominoes() {
-            return numberOfDominoes;
         }
     }
 

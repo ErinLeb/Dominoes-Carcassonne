@@ -5,7 +5,7 @@ import java.util.List;
 import exceptions.NoPossibleMovementsException;
 import exceptions.TileNotFoundException;
 import exceptions.UnableToTurnException;
-import utilities.Pair;
+import utils.Pair;
 
 public class BotDomino extends PlayerDomino {
 

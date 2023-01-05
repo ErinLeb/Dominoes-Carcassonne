@@ -1,4 +1,4 @@
-package utilities.geometry;
+package utils.geometry;
 
 /**
  * Class for squares.

@@ -20,7 +20,7 @@ import interfaces.Placeable.Direction;
 import shared.model.Game;
 import shared.model.Side;
 import shared.model.Tile;
-import utilities.GraphicalImageSetter;
+import utils.GraphicalImageSetter;
 
 /**
  * Abstract class that contains the common elements of the game panel.
@@ -274,7 +274,7 @@ public abstract class GamePanel<S extends Side, T extends Tile<S>> extends JPane
         protected Board() {
             setLayout(new GridLayout(5, 5));
 
-            gameModel.applyFunctionMinimap((x, y, tile) -> {
+            gameModel.iteriMinimap((x, y, tile) -> {
                 initTile(x, y, tile);
 
                 tiles[x + y * 5].addMouseListener(new MouseAdapter() {

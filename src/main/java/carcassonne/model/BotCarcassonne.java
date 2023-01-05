@@ -7,7 +7,7 @@ import carcassonne.model.TileCarcassonne.SideSelector;
 import exceptions.NoPossibleMovementsException;
 import exceptions.TileNotFoundException;
 import exceptions.UnableToTurnException;
-import utilities.Pair;
+import utils.Pair;
 
 public class BotCarcassonne extends PlayerCarcassonne {
 

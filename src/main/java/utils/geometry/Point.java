@@ -1,4 +1,4 @@
-package utilities.geometry;
+package utils.geometry;
 
 /**
  * Class for points in a 2D plane.

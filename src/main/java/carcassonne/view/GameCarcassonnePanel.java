@@ -161,11 +161,11 @@ public class GameCarcassonnePanel extends GamePanel<SideCarcassonne, TileCarcass
 
         @Override
         public void update() {
-            gameModel.applyFunctionMinimap((x, y, tile) -> tiles[x + y * 5] = new TileCarcassonnePanel(tile));
+            gameModel.iteriMinimap((x, y, tile) -> tiles[x + y * 5] = new TileCarcassonnePanel(tile));
         }
 
         public void updatePawns() {
-            gameModel.applyFunctionMinimap((x, y, tile) -> ((TileCarcassonnePanel) tiles[x + y * 5]).drawPawn());
+            gameModel.iteriMinimap((x, y, tile) -> ((TileCarcassonnePanel) tiles[x + y * 5]).drawPawn());
         }
     }
 
@@ -174,10 +174,9 @@ public class GameCarcassonnePanel extends GamePanel<SideCarcassonne, TileCarcass
         frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
 
-        GameCarcassonne model = new GameCarcassonne(new PlayerCarcassonne[] { new BotCarcassonne(LIGHT_RED),
+        GameCarcassonne model = new GameCarcassonne(new PlayerCarcassonne[] { new PlayerCarcassonne("Grep", LIGHT_RED),
                 new BotCarcassonne(LIGHT_RED), new BotCarcassonne(LIGHT_RED) });
 
-        model.updateGameRound();
         GameCarcassonnePanel game = new GameCarcassonnePanel(model, frame);
 
         frame.setBackground(java.awt.Color.WHITE);

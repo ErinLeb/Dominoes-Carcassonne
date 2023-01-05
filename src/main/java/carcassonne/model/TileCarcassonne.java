@@ -6,7 +6,7 @@ import java.util.List;
 import carcassonne.model.SideCarcassonne.Type;
 import exceptions.UnableToTurnException;
 import shared.model.Tile;
-import utilities.Pair;
+import utils.Pair;
 
 public class TileCarcassonne extends Tile<SideCarcassonne> {
 
@@ -34,8 +34,9 @@ public class TileCarcassonne extends Tile<SideCarcassonne> {
         initPossiblePawnPositions();
     }
 
-    private TileCarcassonne(SideCarcassonne[] tab, PlayerCarcassonne player) {
+    TileCarcassonne(SideCarcassonne[] tab, PlayerCarcassonne player, boolean hasAbbey) {
         this.player = player;
+        this.hasAbbey = hasAbbey;
 
         if (validSides(tab)) {
             sides = tab;
@@ -43,6 +44,54 @@ public class TileCarcassonne extends Tile<SideCarcassonne> {
             throw new IllegalArgumentException("The array is not valid");
         }
         initPossiblePawnPositions();
+    }
+
+    public int getNbOfRotations() {
+        return nbOfRotations;
+    }
+
+    public PlayerCarcassonne getPlayer() {
+        return player;
+    }
+
+    public boolean hasAbbey() {
+        return hasAbbey;
+    }
+
+    public Pair<SideSelector, Integer> getPawnPosition() {
+        for (int i = 0; i < 4; i++) {
+            boolean[] side = possiblePawnPositions.get(i);
+            for (int j = 0; j < side.length; j++) {
+                if (side[j])
+                    return new Pair<>(SideSelector.values()[i], j);
+            }
+        }
+        if (possiblePawnPositions.size() == 5 && possiblePawnPositions.get(4)[0])
+            return new Pair<>(SideSelector.CENTER, 0);
+
+        return null;
+    }
+
+    public Pair<SideSelector, Integer> getRandomPlacingPosition() {
+        if (isPawnPlaced()) {
+            throw new IllegalStateException("Pawn is already placed");
+        }
+
+        int side = (int) (Math.random() * possiblePawnPositions.size());
+
+        int position;
+
+        if (possiblePawnPositions.get(side).length == 0) {
+            position = 0;
+        } else {
+            position = (int) (Math.random() * possiblePawnPositions.get(side).length);
+        }
+
+        return new Pair<>(SideSelector.values()[side], position);
+    }
+
+    public void setPlayer(PlayerCarcassonne player) {
+        this.player = player;
     }
 
     private void initPossiblePawnPositions() {
@@ -129,7 +178,7 @@ public class TileCarcassonne extends Tile<SideCarcassonne> {
     public TileCarcassonne copy() {
         return new TileCarcassonne(
                 new SideCarcassonne[] { sides[0].copy(), sides[1].copy(), sides[2].copy(), sides[3].copy() },
-                player);
+                player, hasAbbey);
     }
 
     @Override
@@ -348,54 +397,6 @@ public class TileCarcassonne extends Tile<SideCarcassonne> {
                 break;
             default:
         }
-    }
-
-    public boolean hasAbbey() {
-        return hasAbbey;
-    }
-
-    public Pair<SideSelector, Integer> getPawnPosition() {
-        for (int i = 0; i < 4; i++) {
-            boolean[] side = possiblePawnPositions.get(i);
-            for (int j = 0; j < side.length; j++) {
-                if (side[j])
-                    return new Pair<>(SideSelector.values()[i], j);
-            }
-        }
-        if (possiblePawnPositions.size() == 5 && possiblePawnPositions.get(4)[0])
-            return new Pair<>(SideSelector.CENTER, 0);
-
-        return null;
-    }
-
-    public Pair<SideSelector, Integer> getRandomPlacingPosition() {
-        if (isPawnPlaced()) {
-            throw new IllegalStateException("Pawn is already placed");
-        }
-
-        int side = (int) (Math.random() * possiblePawnPositions.size());
-
-        int position;
-
-        if (possiblePawnPositions.get(side).length == 0) {
-            position = 0;
-        } else {
-            position = (int) (Math.random() * possiblePawnPositions.get(side).length);
-        }
-
-        return new Pair<>(SideSelector.values()[side], position);
-    }
-
-    public int getNbOfRotations() {
-        return nbOfRotations;
-    }
-
-    public PlayerCarcassonne getPlayer() {
-        return player;
-    }
-
-    public void setPlayer(PlayerCarcassonne player) {
-        this.player = player;
     }
 
     public String toString() {

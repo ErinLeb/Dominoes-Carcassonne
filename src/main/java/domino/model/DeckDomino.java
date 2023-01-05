@@ -61,16 +61,12 @@ public class DeckDomino extends Deck<SideDomino, TileDomino> {
             }
 
             SideDomino side = tiles.get(tiles.size() - 1).getSide(freeDirection);
-
             // We generate the new tile
             TileDomino tile = new TileDomino(side, freeDirection);
-
             tiles.add(tile);
 
             Direction directionToGenerate = freeDirection;
-
             Set<Direction> usedDirections = new HashSet<>();
-
             usedDirections.add(Placeable.getOpposite(freeDirection));
             // We generate the other tiles to link to the new one
             for (int i = 0; i < toGenerate - 1; i++) {

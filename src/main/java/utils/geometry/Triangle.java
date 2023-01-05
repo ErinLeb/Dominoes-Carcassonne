@@ -1,4 +1,4 @@
-package utilities.geometry;
+package utils.geometry;
 
 /**
  * Class for triangles in a 2D plane.

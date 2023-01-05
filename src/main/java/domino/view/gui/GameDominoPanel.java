@@ -140,7 +140,7 @@ public class GameDominoPanel extends GamePanel<SideDomino, TileDomino> {
 
         @Override
         public void update() {
-            gameModel.applyFunctionMinimap((x, y, tile) -> tiles[x + y * 5].updateModel(tile));
+            gameModel.iteriMinimap((x, y, tile) -> tiles[x + y * 5].updateModel(tile));
         }
 
         @Override

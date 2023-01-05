@@ -1,4 +1,4 @@
-package utilities;
+package utils;
 
 /**
  * This class represents a pair of objects of type {@code A} and {@code B}.

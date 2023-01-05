@@ -22,8 +22,8 @@ import carcassonne.model.BotCarcassonne;
 import domino.model.BotDomino;
 import domino.model.PlayerDomino;
 import shared.model.Player;
-import utilities.Pair;
-import utilities.StringOperations;
+import utils.Pair;
+import utils.StringOperations;
 
 public abstract class Settings extends JPanel {
 
@@ -33,6 +33,8 @@ public abstract class Settings extends JPanel {
     protected Pair<JTextField, Integer>[] playerNameSelectors;
 
     public abstract SettingsModel getSettingsModel();
+
+    protected GridBagConstraints c = new GridBagConstraints();
 
     protected int maxPlayers;
 
@@ -45,71 +47,11 @@ public abstract class Settings extends JPanel {
         setLayout(new GridBagLayout());
         initFilters();
 
-        GridBagConstraints c = new GridBagConstraints();
+        initTotalNumberOfPlayers();
+        initNumberOfBots();
 
-        initTotalNumberOfPlayers(c);
-        initNumberOfBots(c);
+        initNextButton();
 
-        initNextButton(c);
-
-    }
-
-    protected void initNextButton(GridBagConstraints c) {
-        c.gridx = 0;
-        c.gridy = 3;
-        JButton nextButton = new JButton("Next");
-        nextButton.addActionListener(e -> nextSettingsPanel());
-        setButtonFontSize(nextButton);
-        add(nextButton, c);
-    }
-
-    protected void initNumberOfBots(GridBagConstraints c) {
-        numberOfBotsText.setText("0");
-
-        c.gridx = 0;
-        c.gridy = 1;
-        JLabel numberOfBotsLabel = new JLabel("Number of bots: ");
-        setLabelFontSize(numberOfBotsLabel);
-        numberOfBotsLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        add(numberOfBotsLabel, c);
-
-        c.gridx = 1;
-        c.gridy = 1;
-        setTextFieldFontSize(numberOfBotsText);
-        add(numberOfBotsText, c);
-    }
-
-    protected void initTotalNumberOfPlayers(GridBagConstraints c) {
-        numberOfPlayersText.setText("2");
-
-        c.gridx = 0;
-        c.gridy = 0;
-
-        JLabel numberOfPlayersLabel = new JLabel("Total number of players: ");
-        setLabelFontSize(numberOfPlayersLabel);
-        numberOfPlayersLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        add(numberOfPlayersLabel, c);
-
-        c.gridx = 1;
-        c.gridy = 0;
-        setTextFieldFontSize(numberOfPlayersText);
-        add(numberOfPlayersText, c);
-    }
-
-    protected void setComponentFontSize(JComponent component, float size) {
-        component.setFont(component.getFont().deriveFont(size));
-    }
-
-    protected void setLabelFontSize(JLabel label) {
-        setComponentFontSize(label, 26);
-    }
-
-    protected void setTextFieldFontSize(JTextField textZone) {
-        setComponentFontSize(textZone, 22);
-    }
-
-    protected void setButtonFontSize(JButton button) {
-        setComponentFontSize(button, 22);
     }
 
     /**
@@ -203,6 +145,64 @@ public abstract class Settings extends JPanel {
         ((AbstractDocument) numberOfBotsText.getDocument()).setDocumentFilter(filterNbOfBots);
     }
 
+    protected void initTotalNumberOfPlayers() {
+        numberOfPlayersText.setText("2");
+
+        c.gridx = 0;
+        c.gridy = 0;
+
+        JLabel numberOfPlayersLabel = new JLabel("Total number of players: ");
+        setLabelFontSize(numberOfPlayersLabel);
+        numberOfPlayersLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        add(numberOfPlayersLabel, c);
+
+        c.gridx = 1;
+        c.gridy = 0;
+        setTextFieldFontSize(numberOfPlayersText);
+        add(numberOfPlayersText, c);
+    }
+
+    protected void initNumberOfBots() {
+        numberOfBotsText.setText("0");
+
+        c.gridx = 0;
+        c.gridy = 1;
+        JLabel numberOfBotsLabel = new JLabel("Number of bots: ");
+        setLabelFontSize(numberOfBotsLabel);
+        numberOfBotsLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        add(numberOfBotsLabel, c);
+
+        c.gridx = 1;
+        c.gridy = 1;
+        setTextFieldFontSize(numberOfBotsText);
+        add(numberOfBotsText, c);
+    }
+
+    protected void initNextButton() {
+        c.gridx = 0;
+        c.gridy = 3;
+        JButton nextButton = new JButton("Next");
+        nextButton.addActionListener(e -> nextSettingsPanel());
+        setButtonFontSize(nextButton);
+        add(nextButton, c);
+    }
+
+    protected void setComponentFontSize(JComponent component, float size) {
+        component.setFont(component.getFont().deriveFont(size));
+    }
+
+    protected void setLabelFontSize(JLabel label) {
+        setComponentFontSize(label, 26);
+    }
+
+    protected void setTextFieldFontSize(JTextField textZone) {
+        setComponentFontSize(textZone, 22);
+    }
+
+    protected void setButtonFontSize(JButton button) {
+        setComponentFontSize(button, 22);
+    }
+
     /**
      * Updates the settings and initializes the panel that contains the settings
      * for the players.
@@ -241,7 +241,6 @@ public abstract class Settings extends JPanel {
         revalidate();
         repaint();
 
-        GridBagConstraints c = new GridBagConstraints();
         playerNameSelectors = new Pair[getSettingsModel().totalNumberOfPlayers - getSettingsModel().numberOfBots];
 
         int counter = 0;
@@ -251,16 +250,16 @@ public abstract class Settings extends JPanel {
                 continue;
             }
 
-            initPlayerTextZone(c, counter, i);
+            initPlayerTextZone(counter, i);
 
             counter++;
         }
 
-        initStartGameButton(c, counter);
+        initStartGameButton(counter);
 
     }
 
-    private void initPlayerTextZone(GridBagConstraints c, int counter, int i) {
+    private void initPlayerTextZone(int counter, int i) {
 
         c.gridx = 0;
         c.gridy = counter;
@@ -277,7 +276,7 @@ public abstract class Settings extends JPanel {
         playerNameSelectors[counter] = new Pair<>(playerName, i + 1);
     }
 
-    private void initStartGameButton(GridBagConstraints c, int counter) {
+    private void initStartGameButton(int counter) {
         c.gridx = 0;
         c.gridy = counter + 1;
         JButton startGameButton = new JButton("Start game");
