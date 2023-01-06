@@ -52,7 +52,7 @@ public class DeckDomino extends Deck<SideDomino, TileDomino> {
             int toGenerate = Math.min(rand.nextInt(3), nbTiles - tiles.size() - 1);
 
             // We choose a random free side of the last tile of the list to link to a new
-            // tile\
+            // tile
 
             Direction freeDirection = occupied;
 
@@ -71,7 +71,6 @@ public class DeckDomino extends Deck<SideDomino, TileDomino> {
             // We generate the other tiles to link to the new one
             for (int i = 0; i < toGenerate - 1; i++) {
                 // Random side selector
-
                 do {
                     directionToGenerate = Direction.values()[rand.nextInt(4)];
                 } while (usedDirections.contains(Placeable.getOpposite(directionToGenerate)));

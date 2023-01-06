@@ -108,7 +108,7 @@ public interface Placeable<T extends Side> {
      * @param direction {@code Direction to convert}
      * @return the converted {@code int}
      */
-    public default int directionToInt(Direction direction) {
+    public static int directionToInt(Direction direction) {
         switch (direction) {
             case UP:
                 return 0;
@@ -139,7 +139,7 @@ public interface Placeable<T extends Side> {
      * @param direction {@code Direction} to convert
      * @return the converted {@code int}
      */
-    public default Direction intToDirection(int i) {
+    public static Direction intToDirection(int i) {
         switch (i) {
             case 0:
                 return Direction.UP;

@@ -1,7 +1,8 @@
 package utils;
 
 /**
- * This class represents a pair of objects of type {@code A} and {@code B}.
+ * This data structure represents a pair of objects of type {@code A} and
+ * {@code B}.
  */
 public class Pair<A, B> {
 

@@ -3,6 +3,7 @@ package carcassonne.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import interfaces.Placeable;
 import carcassonne.model.SideCarcassonne.Type;
 import exceptions.UnableToTurnException;
 import shared.model.Tile;
@@ -34,7 +35,7 @@ public class TileCarcassonne extends Tile<SideCarcassonne> {
         initPossiblePawnPositions();
     }
 
-    TileCarcassonne(SideCarcassonne[] tab, PlayerCarcassonne player, boolean hasAbbey) {
+    private TileCarcassonne(SideCarcassonne[] tab, PlayerCarcassonne player, boolean hasAbbey) {
         this.player = player;
         this.hasAbbey = hasAbbey;
 
@@ -59,14 +60,14 @@ public class TileCarcassonne extends Tile<SideCarcassonne> {
     }
 
     public Pair<SideSelector, Integer> getPawnPosition() {
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < sides.length; i++) {
             boolean[] side = possiblePawnPositions.get(i);
             for (int j = 0; j < side.length; j++) {
                 if (side[j])
                     return new Pair<>(SideSelector.values()[i], j);
             }
         }
-        if (possiblePawnPositions.size() == 5 && possiblePawnPositions.get(4)[0])
+        if (possiblePawnPositions.size() == sides.length + 1 && possiblePawnPositions.get(sides.length)[0])
             return new Pair<>(SideSelector.CENTER, 0);
 
         return null;
@@ -158,7 +159,7 @@ public class TileCarcassonne extends Tile<SideCarcassonne> {
 
     @Override
     public boolean doesSideMatch(SideCarcassonne side, Direction direction) {
-        return sides[directionToInt(direction)].hasSameType(side);
+        return sides[Placeable.directionToInt(direction)].hasSameType(side);
     }
 
     @Override

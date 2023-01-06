@@ -5,7 +5,7 @@ import java.awt.Color;
 import shared.model.Player;
 
 public class PlayerCarcassonne extends Player {
-    // Atributes
+    // Attributes
 
     private static int nbPlayers;
     private int id;

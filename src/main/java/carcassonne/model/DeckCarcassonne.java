@@ -79,14 +79,4 @@ public class DeckCarcassonne extends Deck<SideCarcassonne, TileCarcassonne> {
             tiles.add(new TileCarcassonne(i));
         }
     }
-
-    public static void main(String[] args) {
-        DeckCarcassonne deck = new DeckCarcassonne();
-        System.out.println(deck.size());
-        System.out.println(deck.isEmpty());
-        for (int i = 0; i < 72; i++) {
-            System.out.println(deck.draw());
-        }
-        System.out.println(deck.isEmpty());
-    }
 }

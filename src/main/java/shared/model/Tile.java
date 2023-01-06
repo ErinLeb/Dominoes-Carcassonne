@@ -20,7 +20,7 @@ public abstract class Tile<T extends Side> implements Placeable<T> {
 
     @Override
     public T getSide(Direction direction) {
-        return sides[directionToInt(direction)];
+        return sides[Placeable.directionToInt(direction)];
     }
 
     @Override
@@ -46,7 +46,7 @@ public abstract class Tile<T extends Side> implements Placeable<T> {
      * @param direction the direction of the side to set
      */
     public void setSide(T side, Direction direction) {
-        this.sides[directionToInt(direction)] = side;
+        this.sides[Placeable.directionToInt(direction)] = side;
     }
 
     /**

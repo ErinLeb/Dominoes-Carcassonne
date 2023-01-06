@@ -203,7 +203,7 @@ public class GameDominoController {
                 view.printUpdateGameRound();
                 System.out.println("Bot " + model.getCurrentPlayer().getName() + " passed");
             } catch (Exception e) {
-                e.printStackTrace();
+                //
             }
 
         } else {

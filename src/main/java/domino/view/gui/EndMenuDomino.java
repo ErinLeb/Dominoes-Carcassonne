@@ -1,23 +1,19 @@
 package domino.view.gui;
 
-import shared.model.Player;
-import shared.view.EndMenu;
-import shared.view.StartMenu;
-
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.Insets;
-
-import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 
-import domino.model.BotDomino;
+import shared.model.Player;
+import shared.view.EndMenu;
+import shared.view.StartMenu;
 
 /**
  * The EndMenuDomino class is the panel that contains the end menu for the
@@ -112,30 +108,4 @@ public class EndMenuDomino extends EndMenu {
 
         return panel;
     }
-
-    public static void main(String[] args) {
-        javax.swing.JFrame frame = new javax.swing.JFrame();
-        frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800, 600);
-
-        Player p1 = new Player("Yago");
-        Player p2 = new Player("Erin");
-        Player p3 = new BotDomino();
-
-        p1.incrementScore(23);
-        p2.incrementScore(24);
-        p2.setInGame(false);
-        p3.incrementScore(23);
-
-        List<Player> winners = new ArrayList<>();
-        winners.add(p1);
-        winners.add(p3);
-
-        Player[] ranking = { p1, p3, p2 };
-
-        EndMenuDomino menu = new EndMenuDomino(3, winners, ranking, null, frame);
-        frame.add(menu);
-        frame.setVisible(true);
-    }
-
 }

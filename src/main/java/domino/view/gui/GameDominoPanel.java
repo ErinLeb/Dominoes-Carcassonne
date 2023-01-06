@@ -8,7 +8,6 @@ import javax.swing.JOptionPane;
 
 import domino.model.BotDomino;
 import domino.model.GameDomino;
-import domino.model.PlayerDomino;
 import domino.model.SideDomino;
 import domino.model.TileDomino;
 import shared.view.GamePanel;
@@ -158,23 +157,5 @@ public class GameDominoPanel extends GamePanel<SideDomino, TileDomino> {
             tiles[x + y * 5] = new TileDominoPanel(tile);
         }
 
-    }
-
-    public static void main(String[] args) {
-        javax.swing.JFrame frame = new javax.swing.JFrame();
-        frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
-
-        GameDomino model = new GameDomino(
-                new PlayerDomino[] { new PlayerDomino("Erin"), new PlayerDomino("Yago") },
-                28);
-
-        StartMenu home = new StartMenu(frame);
-
-        GameDominoPanel game = new GameDominoPanel(model, frame, home);
-
-        frame.setBackground(java.awt.Color.WHITE);
-        frame.add(game);
-        frame.pack();
-        frame.setVisible(true);
     }
 }

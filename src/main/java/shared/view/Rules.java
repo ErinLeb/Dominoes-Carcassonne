@@ -289,13 +289,4 @@ public class Rules extends JPanel {
             });
         }
     }
-
-    public static void main(String[] args) {
-        javax.swing.JFrame frame = new javax.swing.JFrame();
-        frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800, 600);
-
-        frame.add(new Rules());
-        frame.setVisible(true);
-    }
 }

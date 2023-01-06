@@ -10,12 +10,10 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
@@ -23,7 +21,6 @@ import carcassonne.model.PlayerCarcassonne;
 import carcassonne.model.SideCarcassonne.Type;
 import carcassonne.model.TileCarcassonne;
 import carcassonne.model.TileCarcassonne.SideSelector;
-import exceptions.UnableToTurnException;
 import interfaces.Placeable.Direction;
 import shared.view.TilePanel;
 import utils.Pair;
@@ -250,20 +247,4 @@ public class TileCarcassonnePanel extends TilePanel<TileCarcassonne> {
     private double rotationsToAngle() {
         return tileModel.getNbOfRotations() * Math.PI / 2.;
     }
-
-    public static void main(String[] args) throws UnableToTurnException, InterruptedException {
-        javax.swing.JFrame frame = new javax.swing.JFrame();
-        frame.setSize(new Dimension(205, 205));
-        frame.setBackground(Color.BLACK);
-        frame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        TileCarcassonne tileModel = new TileCarcassonne(0);
-        tileModel.turnRight(3);
-        tileModel.setPlayer(new PlayerCarcassonne("Grep", Color.GREEN));
-        TileCarcassonnePanel tile = new TileCarcassonnePanel(tileModel);
-        tile.setCanPawnBePlaced(true);
-        frame.add(tile);
-        frame.pack();
-        frame.setVisible(true);
-    }
-
 }
