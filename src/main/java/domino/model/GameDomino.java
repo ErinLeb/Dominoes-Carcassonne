@@ -40,8 +40,6 @@ public class GameDomino extends Game<SideDomino, TileDomino> {
         board = new Expandable2DArray<>(currentTile);
 
         currentPlayer = 0;
-
-        deck.shuffle();
     }
 
     public GameDomino(PlayerDomino[] players, int nbTiles) {
@@ -56,8 +54,6 @@ public class GameDomino extends Game<SideDomino, TileDomino> {
         board = new Expandable2DArray<>(currentTile);
 
         currentPlayer = 0;
-
-        deck.shuffle();
     }
 
     // Methods
