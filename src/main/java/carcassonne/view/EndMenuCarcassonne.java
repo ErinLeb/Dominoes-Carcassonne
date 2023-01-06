@@ -27,16 +27,4 @@ public class EndMenuCarcassonne extends EndMenu {
         c.gridy = 0;
         add(message, c);
     }
-
-    public static void main(String[] args) {
-        javax.swing.JFrame frame = new javax.swing.JFrame();
-        frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800, 600);
-
-        StartMenu homeMenu = new StartMenu(frame);
-
-        EndMenuCarcassonne menu = new EndMenuCarcassonne(homeMenu, frame);
-        frame.add(menu);
-        frame.setVisible(true);
-    }
 }

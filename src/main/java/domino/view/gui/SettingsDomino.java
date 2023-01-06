@@ -156,10 +156,6 @@ public class SettingsDomino extends Settings {
             return numberOfDominoes >= 15 && numberOfDominoes <= 100;
         }
 
-        public int getNumberOfDominoes() {
-            return numberOfDominoes;
-        }
-
         @Override
         public void generatePlayers() {
             players = new PlayerDomino[totalNumberOfPlayers];
@@ -185,19 +181,4 @@ public class SettingsDomino extends Settings {
     public SettingsModel getSettingsModel() {
         return settingsModel;
     }
-
-    public static void main(String[] args) {
-        javax.swing.JFrame frame = new javax.swing.JFrame();
-
-        StartMenu home = new StartMenu(frame);
-
-        SettingsDomino settings = new SettingsDomino(frame, home);
-
-        frame.setPreferredSize(new java.awt.Dimension(950, 950));
-        frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
-        frame.add(settings);
-        frame.pack();
-        frame.setVisible(true);
-    }
-
 }

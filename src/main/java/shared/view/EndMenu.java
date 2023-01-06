@@ -11,9 +11,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-
 /**
  * The EndMenu class is the panel that contains the end menu.
  */
@@ -38,12 +35,9 @@ public class EndMenu extends JPanel {
 
         // Button Home
         home = new JButton("Home");
-        home.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                frame.setContentPane(homeMenu);
-                frame.revalidate();
-            }
+        home.addActionListener(e -> {
+            frame.setContentPane(homeMenu);
+            frame.revalidate();
         });
         c.gridx = 0;
         c.gridy = 2;
@@ -52,12 +46,7 @@ public class EndMenu extends JPanel {
 
         // Button Quit
         quit = new JButton("Quit");
-        quit.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                frame.dispose();
-            }
-        });
+        quit.addActionListener(e -> frame.dispose());
         quit.setBackground(LIGHT_RED);
         quit.setForeground(Color.WHITE);
         c.gridx = 2;

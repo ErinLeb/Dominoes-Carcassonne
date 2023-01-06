@@ -19,8 +19,6 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 
 /**
@@ -66,12 +64,9 @@ public class StartMenu extends JPanel {
         // Buttons
         // Rules Button
         rulesButton = new JButton("Rules");
-        rulesButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                frame.setContentPane(rules);
-                frame.revalidate();
-            }
+        rulesButton.addActionListener(e -> {
+            frame.setContentPane(rules);
+            frame.revalidate();
         });
         c.gridx = 1;
         c.gridy = 1;
@@ -90,7 +85,7 @@ public class StartMenu extends JPanel {
         c.gridy = 2;
         add(domino, c);
 
-        // Carcassonne Buttton
+        // Carcassonne Button
         carcassonne = new TileCarcassonnePanel(new TileCarcassonne(15));
         carcassonne.addMouseListener(new MouseInputAdapter() {
             @Override
@@ -113,16 +108,6 @@ public class StartMenu extends JPanel {
         c.gridx = 2;
         c.gridy = 3;
         add(carcassonneTitle, c);
-    }
-
-    public static void main(String[] args) {
-        javax.swing.JFrame frame = new javax.swing.JFrame();
-        frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
-        frame.setSize(950, 950);
-
-        StartMenu menu = new StartMenu(frame);
-        frame.add(menu);
-        frame.setVisible(true);
     }
 
 }

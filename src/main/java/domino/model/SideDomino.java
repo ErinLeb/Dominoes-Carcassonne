@@ -102,6 +102,7 @@ public class SideDomino extends Side {
      * 
      * @return a copy of the side
      */
+    @Override
     public SideDomino copy() {
         return new SideDomino(new int[] { fig[0], fig[1], fig[2] });
     }

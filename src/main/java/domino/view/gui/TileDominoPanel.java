@@ -126,6 +126,7 @@ public class TileDominoPanel extends TilePanel<TileDomino> {
      * 
      * @param model the new model
      */
+    @Override
     public void updateModel(TileDomino model) {
         this.tileModel = model;
         update();

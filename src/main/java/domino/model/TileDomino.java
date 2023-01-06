@@ -1,6 +1,5 @@
 package domino.model;
 
-import exceptions.UnableToTurnException;
 import interfaces.Placeable;
 import shared.model.Tile;
 import utils.StringOperations;
@@ -57,7 +56,7 @@ public class TileDomino extends Tile<SideDomino> {
 
     @Override
     public SideDomino getSide(Direction direction) {
-        return sides[directionToInt(direction)];
+        return sides[Placeable.directionToInt(direction)];
     }
 
     // Setters
@@ -74,7 +73,7 @@ public class TileDomino extends Tile<SideDomino> {
 
     @Override
     public void setSide(SideDomino side, Direction direction) {
-        this.sides[directionToInt(direction)] = side;
+        this.sides[Placeable.directionToInt(direction)] = side;
     }
 
     // Methods
@@ -94,7 +93,7 @@ public class TileDomino extends Tile<SideDomino> {
 
     @Override
     public boolean doesSideMatch(SideDomino side, Direction direction) {
-        return sides[directionToInt(direction)].hasSameFig(side);
+        return sides[Placeable.directionToInt(direction)].hasSameFig(side);
     }
 
     /**
@@ -135,83 +134,4 @@ public class TileDomino extends Tile<SideDomino> {
     public TileDomino copy() {
         return new TileDomino(new SideDomino[] { sides[0].copy(), sides[1].copy(), sides[2].copy(), sides[3].copy() });
     }
-
-    public static void main(String[] args) {
-        // Test
-        SideDomino[] tab = new SideDomino[4];
-        tab[0] = new SideDomino(new int[] { 0, 0, 0 });
-        tab[1] = new SideDomino(new int[] { 1, 1, 1 });
-        tab[2] = new SideDomino(new int[] { 2, 2, 2 });
-        tab[3] = new SideDomino(new int[] { 3, 3, 3 });
-
-        TileDomino tile = new TileDomino(tab);
-
-        String[] tileInfo = tile.getStringRepresentation();
-        for (String line : tileInfo)
-            System.out.println(StringOperations.repeat(line, 5));
-
-        for (int i = 0; i < 4; i++) {
-            new TileDomino().printTile();
-        }
-
-        System.out.println("Turn left");
-
-        for (int i = 0; i < 4; i++) {
-            try {
-                tile.turnLeft(1);
-                tile.printTile();
-
-            } catch (UnableToTurnException e) {
-                System.out.println("Unable to turn");
-            }
-
-        }
-
-        System.out.println("Turn right");
-
-        for (int i = 0; i < 4; i++) {
-            try {
-                tile.turnRight(1);
-                tile.printTile();
-
-            } catch (UnableToTurnException e) {
-                System.out.println("Unable to turn");
-            }
-
-        }
-
-        try {
-            tile.turnRight(4);
-            tile.printTile();
-
-        } catch (UnableToTurnException e) {
-            System.out.println("Unable to turn");
-        }
-
-        try {
-            tile.turnLeft(4);
-            tile.printTile();
-
-        } catch (UnableToTurnException e) {
-            System.out.println("Unable to turn");
-        }
-
-        try {
-            tile.turnRight(3);
-            tile.printTile();
-
-        } catch (UnableToTurnException e) {
-            System.out.println("Unable to turn");
-        }
-
-        try {
-            tile.turnLeft(3);
-            tile.printTile();
-
-        } catch (UnableToTurnException e) {
-            System.out.println("Unable to turn");
-        }
-
-    }
-
 }

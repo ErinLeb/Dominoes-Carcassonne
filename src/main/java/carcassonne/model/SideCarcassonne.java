@@ -24,13 +24,13 @@ public class SideCarcassonne extends Side {
     }
 
     // Methods
-
-    public SideCarcassonne copy() {
-        return new SideCarcassonne(type);
-    }
-
     public boolean hasSameType(SideCarcassonne side) {
         return type == side.getType();
+    }
+
+    @Override
+    public SideCarcassonne copy() {
+        return new SideCarcassonne(type);
     }
 
     public String toString() {

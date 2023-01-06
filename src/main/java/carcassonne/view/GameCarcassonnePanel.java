@@ -175,24 +175,4 @@ public class GameCarcassonnePanel extends GamePanel<SideCarcassonne, TileCarcass
             gameModel.iteriMinimap((x, y, tile) -> ((TileCarcassonnePanel) tiles[x + y * 5]).drawPawn());
         }
     }
-
-    public static void main(String[] args) {
-        JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
-        frame.setResizable(false);
-
-        GameCarcassonne model = new GameCarcassonne(
-                new PlayerCarcassonne[] { new PlayerCarcassonne(LIGHT_RED), new PlayerCarcassonne(LIGHT_RED) });
-
-        StartMenu home = new StartMenu(frame);
-
-        model.updateGameRound();
-        GameCarcassonnePanel game = new GameCarcassonnePanel(model, frame, home);
-
-        frame.setBackground(java.awt.Color.WHITE);
-        frame.add(game);
-        frame.pack();
-        frame.setVisible(true);
-    }
-
 }

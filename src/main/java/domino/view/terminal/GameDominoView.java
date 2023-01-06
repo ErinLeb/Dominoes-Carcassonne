@@ -4,7 +4,6 @@ import java.util.List;
 
 import domino.model.BotDomino;
 import domino.model.GameDomino;
-import domino.model.PlayerDomino;
 import domino.model.TileDomino;
 import shared.model.Player;
 import utils.StringOperations;
@@ -218,25 +217,5 @@ public class GameDominoView {
                 System.out.println(" (surrendered)");
             }
         }
-    }
-
-    public static void main(String[] args) {
-        // printRules();
-        // printCommands();
-
-        PlayerDomino p1 = new PlayerDomino("Erin");
-        PlayerDomino p2 = new PlayerDomino("Yago");
-        PlayerDomino p3 = new PlayerDomino("Surrendered");
-
-        PlayerDomino[] players = { p1, p2, p3 };
-        GameDomino game = new GameDomino(players, 4);
-        GameDominoView view = new GameDominoView(game);
-
-        p1.incrementScore(10);
-        p2.incrementScore(10);
-        p3.incrementScore(12);
-        game.surrender(p3);
-
-        view.endGame();
     }
 }

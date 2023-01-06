@@ -37,8 +37,6 @@ public abstract class Settings extends JPanel {
 
     protected Pair<JTextField, Integer>[] playerNameSelectors;
 
-    public abstract SettingsModel getSettingsModel();
-
     protected GridBagConstraints c = new GridBagConstraints();
 
     protected int maxPlayers;
@@ -51,6 +49,8 @@ public abstract class Settings extends JPanel {
         // Background
         setBackground(new Color(0xAFEEEE));
     }
+
+    public abstract SettingsModel getSettingsModel();
 
     /**
      * Initializes the panel that contains the settings for the number of players,
@@ -327,12 +327,12 @@ public abstract class Settings extends JPanel {
 
     protected abstract void startGame();
 
-    protected abstract class SettingsModel<T extends Player> {
+    protected abstract class SettingsModel<S extends Player> {
 
         public int totalNumberOfPlayers;
         public int numberOfBots;
 
-        public T[] players;
+        public S[] players;
 
         /**
          * Creates a new settings model.
@@ -386,7 +386,7 @@ public abstract class Settings extends JPanel {
             for (int i = 0; i < totalNumberOfPlayers; i++) {
                 int j = rand.nextInt(totalNumberOfPlayers);
 
-                T temp = players[i];
+                S temp = players[i];
                 players[i] = players[j];
                 players[j] = temp;
             }

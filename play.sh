@@ -15,8 +15,12 @@ run (){
 
     echo "Launching..."
 
-    java -cp bin/ App
+    if [ "$1" = "terminal" ]; then
+        java -cp bin/ TerminalLauncher
+    else
+        java -cp bin/ GraphicalLauncher
+    fi
 
 }
 
-compile && run
+compile && run $1

@@ -67,18 +67,4 @@ public class SettingsCarcassonne extends Settings {
             }
         }
     }
-
-    public static void main(String[] args) {
-        javax.swing.JFrame frame = new javax.swing.JFrame();
-
-        StartMenu home = new StartMenu(frame);
-
-        SettingsCarcassonne settings = new SettingsCarcassonne(frame, home);
-
-        frame.setPreferredSize(new java.awt.Dimension(950, 950));
-        frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
-        frame.add(settings);
-        frame.pack();
-        frame.setVisible(true);
-    }
 }
